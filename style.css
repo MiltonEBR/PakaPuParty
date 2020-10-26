@@ -81,3 +81,20 @@
 #create {
 	background-color: rgb(89, 175, 92);
 }
+
+.lobby-input {
+	padding: 10px;
+	color: rgb(158, 158, 158);
+	font-size: 2em;
+	border-color: rgb(158, 158, 158);
+	border-width: 3px;
+	border-style: solid;
+}
+
+#room {
+	border-radius: 20px 20px 0px 0px;
+}
+
+#password {
+	border-radius: 0px 0px 20px 20px;
+}

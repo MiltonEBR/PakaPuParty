@@ -56,9 +56,9 @@
 #button-holder {
 	margin-top: 100px;
 	width: 100%;
-	display: grid;
-	grid-template-columns: auto 450px auto;
-	grid-template-rows: 75px 75px 75px;
+	display: flex;
+	align-items: center;
+	flex-flow: column;
 }
 
 .lobby-btn {
@@ -67,16 +67,17 @@
 	font-size: 2.5em;
 	font-weight: 700;
 	color: white;
+	outline: none;
+
+	width: 450px;
+	height: 75px;
+	margin: 25px 0;
 }
 
 #join {
 	background-color: rgb(115, 230, 134);
-	grid-column: 2/3;
-	grid-row: 1/2;
 }
 
 #create {
 	background-color: rgb(89, 175, 92);
-	grid-column: 2/3;
-	grid-row: 3/4;
 }

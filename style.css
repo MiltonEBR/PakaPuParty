@@ -71,24 +71,35 @@
 
 	width: 450px;
 	height: 75px;
-	margin: 25px 0;
 }
 
 #join {
+	margin: 25px 0;
 	background-color: rgb(115, 230, 134);
 }
 
 #create {
+	margin: 25px 0;
 	background-color: rgb(89, 175, 92);
 }
 
 .lobby-input {
+	width: 450px;
 	padding: 10px;
 	color: rgb(158, 158, 158);
 	font-size: 2em;
-	border-color: rgb(158, 158, 158);
+	border-color: rgb(179, 179, 179);
 	border-width: 3px;
 	border-style: solid;
+}
+
+.lobby-form {
+	visibility: hidden;
+	position: absolute;
+	z-index: 10;
+	display: flex;
+	width: 450px;
+	flex-wrap: wrap;
 }
 
 #room {
@@ -96,5 +107,41 @@
 }
 
 #password {
-	border-radius: 0px 0px 20px 20px;
+	margin-top: -4px;
+	border-radius: 0;
+}
+
+#password:invalid,
+#room:invalid {
+	box-shadow: none;
+	border-color: rgb(255, 168, 168);
+}
+
+#accept {
+	width: 225px;
+	border-radius: 0 0 0 20px;
+	background-color: rgb(115, 230, 134);
+}
+
+#back {
+	width: 225px;
+	border-radius: 0 0 20px 0;
+	background-color: rgb(230, 119, 115);
+}
+
+#accept:active,
+#join:active {
+	background-color: rgb(122, 245, 143);
+}
+
+#create:active {
+	background-color: rgb(99, 194, 102);
+}
+
+#back:active {
+	background-color: rgb(243, 128, 124);
+}
+
+.hidden {
+	opacity: 0;
 }

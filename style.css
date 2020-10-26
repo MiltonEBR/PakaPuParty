@@ -54,6 +54,7 @@
 }
 
 #button-holder {
+	position: relative;
 	margin-top: 100px;
 	width: 100%;
 	display: flex;
@@ -74,11 +75,15 @@
 }
 
 #join {
+	position: relative;
+	z-index: 0;
 	margin: 25px 0;
 	background-color: rgb(115, 230, 134);
 }
 
 #create {
+	position: relative;
+	z-index: 0;
 	margin: 25px 0;
 	background-color: rgb(89, 175, 92);
 }
@@ -93,13 +98,22 @@
 	border-style: solid;
 }
 
-.lobby-form {
-	visibility: hidden;
+#lobby-form {
+	margin-top: 25px;
 	position: absolute;
-	z-index: 10;
 	display: flex;
 	width: 450px;
 	flex-wrap: wrap;
+}
+
+.visible {
+	z-index: 100;
+	opacity: 1;
+}
+
+.hidden {
+	z-index: -100;
+	opacity: 0;
 }
 
 #room {
@@ -114,7 +128,7 @@
 #password:invalid,
 #room:invalid {
 	box-shadow: none;
-	border-color: rgb(255, 168, 168);
+	/*border-color: rgb(255, 168, 168);*/
 }
 
 #accept {
@@ -140,8 +154,4 @@
 
 #back:active {
 	background-color: rgb(243, 128, 124);
-}
-
-.hidden {
-	opacity: 0;
 }

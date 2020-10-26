@@ -18,19 +18,20 @@
 
         <div id="button-holder">
             
-            <form class="lobby-form hidden">
-                <input type="text" name="room" id="room" class="lobby-input" placeholder="Room number" required>
+            <form id="lobby-form" class="hidden">
+                <input type="text" name="room" id="room" class="lobby-input" placeholder="Room number" >
 
-                <input type="text" name="room" id="password" class="lobby-input" placeholder="Password (Optional)" required>
+                <input type="text" name="room" id="password" class="lobby-input" placeholder="Password (Optional)" >
 
                 <button type="submit" class="lobby-btn" id="accept">Join</button>
                 <button type="submit" class="lobby-btn" id="back">Back</button>
             </form>
 
-            <button id="join" class="lobby-btn">Join game</button>
+            <button id="join" class="lobby-btn ">Join game</button>
             <button id="create" class="lobby-btn">Create game</button>
         </div>
         
     </div>
+    <script src="./lobby.js"></script>
 </body>
 </html>

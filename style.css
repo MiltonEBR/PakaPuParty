@@ -94,8 +94,13 @@
 	color: rgb(158, 158, 158);
 	font-size: 2em;
 	border-color: rgb(179, 179, 179);
+	background-color: white;
 	border-width: 3px;
 	border-style: solid;
+}
+
+.lobby-input:focus {
+	outline: none;
 }
 
 #lobby-form {
@@ -116,13 +121,56 @@
 	opacity: 0;
 }
 
-#room {
+#room,
+#players {
 	border-radius: 20px 20px 0px 0px;
+}
+
+#players {
+	font-weight: 700;
 }
 
 #password {
 	margin-top: -4px;
 	border-radius: 0;
+}
+
+#player-select {
+	height: 60px;
+	position: relative;
+	z-index: 10;
+	font-family: 'Nunito', sans-serif;
+	font-size: 1em;
+	padding: 0 2em;
+	color: rgb(129, 129, 129);
+	border-color: rgb(179, 179, 179);
+	background-color: transparent;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 20px;
+	margin-left: 2em;
+
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.arrow {
+	z-index: 0;
+	position: absolute;
+	font-size: 1.5em;
+	top: 15px;
+	margin-left: -0.8em;
+}
+
+/*#player-select:focus + .arrow {
+	transform: rotate(180deg);
+} Unselection still doesn't work*/
+
+#player-select:focus {
+	outline: none;
 }
 
 #password:invalid,

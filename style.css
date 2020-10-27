@@ -103,6 +103,10 @@
 	outline: none;
 }
 
+.lobby-input::placeholder {
+	opacity: 0.5;
+}
+
 #lobby-form {
 	margin-top: 25px;
 	position: absolute;

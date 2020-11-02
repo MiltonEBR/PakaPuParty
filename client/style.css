@@ -12,7 +12,7 @@
 .background-img {
   position: absolute;
   z-index: -100;
-  background-image: url("../images/lobbybg.jpg");
+  background-image: url("./images/lobbybg.jpg");
   width: 100%;
   height: 100%;
   background-size: cover;

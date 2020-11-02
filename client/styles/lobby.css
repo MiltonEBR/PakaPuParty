@@ -1,0 +1,33 @@
+body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.game-holder {
+  display: flex;
+  margin-top: 100px;
+  width: 1750px;
+  background-color: red;
+  overflow: hidden;
+}
+
+#game {
+  position: relative;
+  z-index: 0;
+  background-color: yellow;
+  width: 1470px;
+  height: 750px;
+  margin-left: -20px;
+}
+
+#menu {
+  position: relative;
+  z-index: 1;
+  width: 300px;
+  height: 750px;
+
+  background-color: rgb(245, 245, 245);
+  border-radius: 0 20px 20px 0;
+  box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1);
+}

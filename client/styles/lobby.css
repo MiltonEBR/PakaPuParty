@@ -9,8 +9,13 @@ body {
   margin-top: 100px;
   width: 1750px;
   /*background-color: red;*/
-  overflow: hidden;
   box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1); /*Temporal*/
+}
+
+@media (max-width: 1750px) {
+  body {
+    justify-content: start;
+  }
 }
 
 #game {

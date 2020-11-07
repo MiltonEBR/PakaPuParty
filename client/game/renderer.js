@@ -1,14 +1,52 @@
 class Renderer{
-    constructor({bodies},canvas){
+    constructor({bodies},canvas,options){
         this.bodies=bodies;
         this.canvas=canvas;
         this.ctx=canvas.getContext('2d');
+
+        if(!options){
+            this.options={};
+        }else{
+            this.options=options;
+        }
     }
 
     draw(){
         const ctx=this.ctx;
+        const options=this.options;
+
         this.bodies.forEach(body => {
-            body.draw(ctx);
+            let optionsWireframe = options.wireframes && (body.render.wireframe || body.render.wireframe===undefined);
+            
+
+
+            if(optionsWireframe || body.render.wireframe){
+                ctx.beginPath();
+                ctx.moveTo(body.vertices[0].x,body.vertices[0].y);
+
+                for (var j = 1; j < body.vertices.length; j += 1) {
+                    ctx.lineTo(body.vertices[j].x, body.vertices[j].y);
+                }
+                ctx.closePath();
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = 'black';
+                if(body.render){
+                    if(body.render.lineWidth){
+                        ctx.lineWidth=body.render.lineWidth;
+                    }
+    
+                    if(body.render.strokeStyle){
+                        ctx.strokeStyle=body.render.strokeStyle;
+                    }
+                }
+                
+
+                ctx.stroke();
+            }
+
+            if(body.draw){
+                body.draw(ctx);
+            }
         });
     }
 

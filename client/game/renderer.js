@@ -39,7 +39,11 @@ class Renderer{
                         ctx.strokeStyle=body.render.strokeStyle;
                     }
                 }
-                
+                //Fill wireframes, but kind of useless so it's commented out for now
+//               if(body.render.fillStyle){
+//                   ctx.fillStyle=body.render.fillStyle;
+//                    ctx.fill();
+//                }
 
                 ctx.stroke();
             }

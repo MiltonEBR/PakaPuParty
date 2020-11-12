@@ -1,12 +1,12 @@
-function initFormToggle(elementList, form) {
-    const showForm = function (element) {
-        if (element.classList.contains("hidden")) {
-            element.classList.remove("hidden");
-            element.classList.add("visible");
+function setButtonToggles(btnList, form) {
+    const showForm = function (form) {
+        if (form.classList.contains("hidden")) {
+            form.classList.remove("hidden");
+            form.classList.add("visible");
         }
     };
 
-    const toggleElements = function (toShow, toHide) {
+    const toggle = function (toShow, toHide) {
         if (toShow.classList.contains("disabled")) {
             toShow.classList.remove("disabled");
         }
@@ -16,21 +16,18 @@ function initFormToggle(elementList, form) {
         }
     };
 
-    elementList.forEach(({ button, show, hide }) => {
+    btnList.forEach(({ button, show, hide }) => {
         button.addEventListener("click", () => {
             showForm(form);
-            toggleElements(show, hide);
+            toggle(show, hide);
         });
     });
-    // if (create.classList.contains("disabled")) {
-    //     create.classList.remove("disabled");
-    // }
 }
 
-function hideElement(form) {
-    if (form.classList.contains("visible")) {
-        form.classList.remove("visible");
-        form.classList.add("hidden");
+function hideElement(element) {
+    if (element.classList.contains("visible")) {
+        element.classList.remove("visible");
+        element.classList.add("hidden");
     }
 }
 
@@ -49,11 +46,11 @@ function initForm() {
     const playersHolder = document.querySelector("#players");
     const playerOptions = document.getElementsByTagName("option");
 
-    const formOptions = [
+    const btnToggles = [
         { button: createOpenBtn, show: playersHolder, hide: roomInput },
         { button: joinOpenBtn, show: roomInput, hide: playersHolder },
     ];
-    initFormToggle(formOptions, form);
+    setButtonToggles(btnToggles, form);
 
     backBtn.addEventListener("click", (e) => {
         e.preventDefault();

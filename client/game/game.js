@@ -5,19 +5,23 @@ const Engine = Matter.Engine,
     World = Matter.World,
     Bodies = Matter.Bodies;
 
-const engine = Engine.create();
+function initGame() {
+    const gameCanvas = document.querySelector("canvas");
+    const engine = Engine.create();
+    const renderer = new Renderer(engine.world, gameCanvas, {
+        wireframes: true,
+    });
 
-const gameCanvas=document.querySelector('canvas');
+    //Dummy items on the world
+    const box = Bodies.rectangle(100, 100, 50, 50);
+    box.render.lineWidth = 4;
+    const base = Bodies.rectangle(100, 400, 200, 50, { isStatic: true });
 
+    World.add(engine.world, [box, base]);
 
-const box=Bodies.rectangle(100,100,50,50);
-box.render.lineWidth=4;
+    renderer.run();
 
-const base=Bodies.rectangle(100,400,200,50,{isStatic:true});
+    Engine.run(engine);
+}
 
-World.add(engine.world,[box,base]);
-
-const renderer=new Renderer(engine.world,gameCanvas,{wireframes:true});
-renderer.run();
-
-Engine.run(engine);
+initGame();

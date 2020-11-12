@@ -1,56 +1,80 @@
-const joinBtn=document.querySelector('#join');
-const createBtn=document.querySelector('#create');
+function initFormToggle(elementList, form) {
+    const showForm = function (element) {
+        if (element.classList.contains("hidden")) {
+            element.classList.remove("hidden");
+            element.classList.add("visible");
+        }
+    };
 
-const form=document.querySelector('#lobby-form');
-const backBtn=form.querySelector('#back');
+    const toggleElements = function (toShow, toHide) {
+        if (toShow.classList.contains("disabled")) {
+            toShow.classList.remove("disabled");
+        }
 
-const playerInput=document.querySelector('#players');
-const roomInput=document.querySelector('#room');
-const passInput=document.querySelector('#password');
+        if (!toHide.classList.contains("disabled")) {
+            toHide.classList.add("disabled");
+        }
+    };
 
-const joinForm=function(){
+    elementList.forEach(({ button, show, hide }) => {
+        button.addEventListener("click", () => {
+            showForm(form);
+            toggleElements(show, hide);
+        });
+    });
+    // if (create.classList.contains("disabled")) {
+    //     create.classList.remove("disabled");
+    // }
+}
 
-    if(form.classList.contains('hidden')){
-        form.classList.remove('hidden');
-        form.classList.add('visible');
-    }
-
-    if(roomInput.classList.contains('disabled')){
-        roomInput.classList.remove('disabled');
-    }
-
-    if(!playerInput.classList.contains('disabled')){
-        playerInput.classList.add('disabled');
+function hideElement(form) {
+    if (form.classList.contains("visible")) {
+        form.classList.remove("visible");
+        form.classList.add("hidden");
     }
 }
 
-const createForm=function(){
-    if(form.classList.contains('hidden')){
-        form.classList.remove('hidden');
-        form.classList.add('visible');
-    }
+function initForm() {
+    const joinOpenBtn = document.querySelector("#join");
+    const createOpenBtn = document.querySelector("#create");
 
-    if(!roomInput.classList.contains('disabled')){
-        roomInput.classList.add('disabled');
-    }
+    const form = document.querySelector("#lobby-form");
 
-    if(playerInput.classList.contains('disabled')){
-        playerInput.classList.remove('disabled');
-    }
+    const acceptBtn = document.querySelector("#accept");
+    const backBtn = form.querySelector("#back");
+
+    const roomInput = document.querySelector("#room");
+    const passInput = document.querySelector("#password");
+    const playerSelect = document.querySelector("#player-select");
+    const playersHolder = document.querySelector("#players");
+    const playerOptions = document.getElementsByTagName("option");
+
+    const formOptions = [
+        { button: createOpenBtn, show: playersHolder, hide: roomInput },
+        { button: joinOpenBtn, show: roomInput, hide: playersHolder },
+    ];
+    initFormToggle(formOptions, form);
+
+    backBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        roomInput.value = "";
+        passInput.value = "";
+        playerOptions[0].selected = "selected";
+        hideElement(form);
+    });
+
+    acceptBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (playersHolder.classList.contains("disabled")) {
+            const roomNum = roomInput.value;
+            const pass = passInput.value;
+            console.log(roomNum, pass);
+        } else {
+            const pass = passInput.value;
+            const players = playerSelect.value;
+            console.log(pass, players);
+        }
+    });
 }
 
-const hideForm=function(){
-    if(form.classList.contains('visible')){
-        form.classList.remove('visible');
-        form.classList.add('hidden');
-    }
-}
-
-joinBtn.addEventListener('click',joinForm);
-createBtn.addEventListener('click',createForm);
-
-backBtn.addEventListener('click',(e)=>{
-    e.preventDefault();
-    roomInput.value='';
-    passInput.value='';
-    hideForm()});
+initForm();

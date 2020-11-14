@@ -57,13 +57,35 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
                     }
                 })
                 .then((url) => {
-                    window.location.replace(window.location + 'play?room=' + '123');
+                    window.location.replace(window.location + 'play?room=' + url);
                 });
         });
     } else {
         acceptBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Join req ' + passInput.value + ' | ' + roomInput.value);
+            e.preventDefault();
+
+            const password = passInput.value;
+            const room = roomInput.value;
+
+            fetch('/play', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ room, password }),
+            })
+                .then((res) => {
+                    if (res.ok) {
+                        return res.text();
+                    } else {
+                        throw 'Error on the AJAX call';
+                    }
+                })
+                .then((url) => {
+                    window.location.replace(window.location + 'play?room=' + url);
+                });
         });
     }
 }

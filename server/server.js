@@ -1,25 +1,29 @@
 const express = require('express');
-const socketio=require('socket.io');
+const bodyParser = require('body-parser');
+const socketio = require('socket.io');
 
-const app=express();
+const app = express();
+app.use('/public', express.static(`${__dirname}/../client`));
+app.use(bodyParser.json());
 
-app.use('/public',express.static(`${__dirname}/../client`));
-
-app.get('/',(req,res)=>{
-    res.sendFile('index.html',{root:`../client`});
+app.get('/', (req, res) => {
+    res.sendFile('index.html', { root: `../client` });
 });
 
-app.get('/play',(req,res)=>{
-    res.sendFile('lobby.html',{root:`../client`})
-})
-
-const server= app.listen(3000,()=>{
-    console.log('listening')
+app.get('/play', (req, res) => {
+    res.sendFile('lobby.html', { root: `../client` });
 });
 
-const io=socketio(server);
+app.post('/play', (req, res) => {
+    console.log(req.body);
+});
 
-io.on('connection',(sock)=>{
+const server = app.listen(3000, () => {
+    console.log('listening');
+});
+
+const io = socketio(server);
+
+io.on('connection', (sock) => {
     console.log('someone conected');
-})
-
+});

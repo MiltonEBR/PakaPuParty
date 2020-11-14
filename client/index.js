@@ -41,16 +41,24 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
             const password = passInput.value;
             const players = playerSelect.value;
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', '/play', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({ password, players }));
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    console.log(xhr.responseText);
-                }
-            };
-            console.log('Create req ' + password + ' | ' + players);
+            fetch('/play', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ players, password }),
+            })
+                .then((res) => {
+                    if (res.ok) {
+                        return res.text();
+                    } else {
+                        throw 'Error on the AJAX call';
+                    }
+                })
+                .then((url) => {
+                    window.location.replace(window.location + 'play?room=' + '123');
+                });
         });
     } else {
         acceptBtn.addEventListener('click', (e) => {

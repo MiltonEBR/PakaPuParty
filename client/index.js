@@ -1,77 +1,82 @@
-function setButtonToggles(btnList, form) {
-    const showForm = function (form) {
-        if (form.classList.contains("hidden")) {
-            form.classList.remove("hidden");
-            form.classList.add("visible");
-        }
-    };
-
+//Sets button to show an element while hiding another
+function setButtonToggle(button, show, hide) {
     const toggle = function (toShow, toHide) {
-        if (toShow.classList.contains("disabled")) {
-            toShow.classList.remove("disabled");
+        if (toShow.classList.contains('disabled')) {
+            toShow.classList.remove('disabled');
         }
 
-        if (!toHide.classList.contains("disabled")) {
-            toHide.classList.add("disabled");
+        if (!toHide.classList.contains('disabled')) {
+            toHide.classList.add('disabled');
         }
     };
 
-    btnList.forEach(({ button, show, hide }) => {
-        button.addEventListener("click", () => {
-            showForm(form);
-            toggle(show, hide);
-        });
+    button.addEventListener('click', () => {
+        toggle(show, hide);
     });
 }
 
-function hideElement(element) {
-    if (element.classList.contains("visible")) {
-        element.classList.remove("visible");
-        element.classList.add("hidden");
+//Hides given target
+function hideElement(target) {
+    if (!target.classList.contains('disabled')) {
+        target.classList.add('disabled');
     }
 }
 
-function initForm() {
-    const joinOpenBtn = document.querySelector("#join");
-    const createOpenBtn = document.querySelector("#create");
-
-    const form = document.querySelector("#lobby-form");
-
-    const acceptBtn = document.querySelector("#accept");
-    const backBtn = form.querySelector("#back");
-
-    const roomInput = document.querySelector("#room");
-    const passInput = document.querySelector("#password");
-    const playerSelect = document.querySelector("#player-select");
-    const playersHolder = document.querySelector("#players");
-    const playerOptions = document.getElementsByTagName("option");
-
-    const btnToggles = [
-        { button: createOpenBtn, show: playersHolder, hide: roomInput },
-        { button: joinOpenBtn, show: roomInput, hide: playersHolder },
-    ];
-    setButtonToggles(btnToggles, form);
-
-    backBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        roomInput.value = "";
-        passInput.value = "";
-        playerOptions[0].selected = "selected";
+//Sets the form's back button (Clears user input)
+function setBackBtn({ backBtn, form, roomInput, passInput, playerOptions }) {
+    backBtn.addEventListener('click', (e) => {
         hideElement(form);
-    });
-
-    acceptBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (playersHolder.classList.contains("disabled")) {
-            const roomNum = roomInput.value;
-            const pass = passInput.value;
-            console.log(roomNum, pass);
-        } else {
-            const pass = passInput.value;
-            const players = playerSelect.value;
-            console.log(pass, players);
-        }
+        if (roomInput) roomInput.value = '';
+        if (playerOptions) playerOptions[0].selected = 'selected';
+        passInput.value = '';
     });
 }
 
-initForm();
+//Sets the form's accept button (Sends request to join/create)
+function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
+    if (playerSelect) {
+        acceptBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Create req ' + passInput.value + ' | ' + playerSelect.value);
+        });
+    } else {
+        acceptBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Join req ' + passInput.value + ' | ' + roomInput.value);
+        });
+    }
+}
+
+function initLobby() {
+    const joinElements = {
+        form: document.querySelector('#lobby-form-join'),
+        backBtn: document.querySelector('#back-join'),
+        acceptBtn: document.querySelector('#accept-join'),
+        roomInput: document.querySelector('#room'),
+        passInput: document.querySelector('#password-join'),
+    };
+
+    const createElements = {
+        form: document.querySelector('#lobby-form-create'),
+        backBtn: document.querySelector('#back-create'),
+        acceptBtn: document.querySelector('#accept-create'),
+        passInput: document.querySelector('#password-create'),
+        playerSelect: document.querySelector('#player-select'),
+        playerOptions: document.getElementsByTagName('option'),
+    };
+
+    const joinBtn = document.querySelector('#join');
+    const createBtn = document.querySelector('#create');
+
+    //Join form setup
+    setButtonToggle(joinBtn, joinElements.form, createElements.form);
+    setBackBtn(joinElements);
+    setAcceptBtn(joinElements);
+
+    //Create form setup
+    setButtonToggle(createBtn, createElements.form, joinElements.form);
+    setBackBtn(createElements);
+    setAcceptBtn(createElements);
+}
+
+initLobby();

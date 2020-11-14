@@ -18,7 +18,13 @@ app.get('/play', (req, res) => {
 
 app.post('/play', (req, res) => {
     console.log(req.body);
-    res.send('numero');
+    let room;
+    if (req.body.room) {
+        room = 'join';
+    } else if (req.body.players) {
+        room = 'create';
+    }
+    res.send(room);
 });
 
 const server = app.listen(3000, () => {

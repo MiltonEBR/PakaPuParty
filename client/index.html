@@ -10,10 +10,7 @@
         />
         <link rel="stylesheet" href="./public/styles/style.css" />
         <link rel="stylesheet" href="./public/styles/index.css" />
-        <script
-            src="https://kit.fontawesome.com/d9fef58c4b.js"
-            crossorigin="anonymous"
-        ></script>
+        <script src="https://kit.fontawesome.com/d9fef58c4b.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <div class="lobby">
@@ -24,7 +21,28 @@
             </div>
 
             <div id="button-holder">
-                <form id="lobby-form" class="hidden">
+                <form id="lobby-form-join" class="form disabled" method="GET">
+                    <input
+                        type="text"
+                        name="room"
+                        id="room"
+                        class="lobby-input"
+                        placeholder="Room number"
+                    />
+
+                    <input
+                        type="text"
+                        name="room"
+                        id="password-join"
+                        class="password lobby-input"
+                        placeholder="Password (Optional)"
+                    />
+
+                    <button type="submit" class="accept lobby-btn" id="accept-join">Join</button>
+                    <button type="button" class="back lobby-btn" id="back-join">Back</button>
+                </form>
+
+                <form id="lobby-form-create" class="form disabled" method="POST">
                     <div class="lobby-input" id="players">
                         Players:
                         <select name="players" id="player-select">
@@ -42,25 +60,15 @@
                     <input
                         type="text"
                         name="room"
-                        id="room"
-                        class="lobby-input"
-                        placeholder="Room number"
-                    />
-
-                    <input
-                        type="text"
-                        name="room"
-                        id="password"
-                        class="lobby-input"
+                        id="password-create"
+                        class="password lobby-input"
                         placeholder="Password (Optional)"
                     />
 
-                    <button type="submit" class="lobby-btn" id="accept">
-                        Join
+                    <button type="submit" class="accept lobby-btn" id="accept-create">
+                        Create
                     </button>
-                    <button type="button" class="lobby-btn" id="back">
-                        Back
-                    </button>
+                    <button type="button" class="back lobby-btn" id="back-create">Back</button>
                 </form>
 
                 <button id="join" class="lobby-btn">Join game</button>

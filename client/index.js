@@ -37,7 +37,20 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
     if (playerSelect) {
         acceptBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Create req ' + passInput.value + ' | ' + playerSelect.value);
+
+            const password = passInput.value;
+            const players = playerSelect.value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/play', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ password, players }));
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    console.log(xhr.responseText);
+                }
+            };
+            console.log('Create req ' + password + ' | ' + players);
         });
     } else {
         acceptBtn.addEventListener('click', (e) => {

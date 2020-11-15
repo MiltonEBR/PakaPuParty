@@ -1,39 +1,106 @@
 body {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .game-holder {
-  display: flex;
-  margin-top: 100px;
-  width: 1750px;
-  /*background-color: red;*/
-  box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1); /*Temporal*/
+    display: flex;
+    margin-top: 100px;
+    width: 1750px;
+    /*background-color: red;*/
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1); /*Temporal*/
 }
 
 @media (max-width: 1750px) {
-  body {
-    justify-content: start;
-  }
+    body {
+        justify-content: start;
+    }
 }
 
 #game {
-  position: relative;
-  z-index: 0;
-  /*background-color: black;
+    position: relative;
+    z-index: 0;
+    /*background-color: black;
   width: 1470px;
   height: 750px;*/
-  margin-left: -20px;
+    margin-left: -20px;
 }
 
 #menu {
-  position: relative;
-  z-index: 1;
-  width: 300px;
-  height: 750px;
+    position: relative;
+    z-index: 1;
+    width: 300px;
+    height: 750px;
+    padding: 20px;
 
-  background-color: rgb(245, 245, 245);
-  border-radius: 0 20px 20px 0;
-  box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1);
+    background-color: rgb(245, 245, 245);
+    border-radius: 0 20px 20px 0;
+    box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-holder {
+    background-color: rgb(218, 218, 218);
+    border-radius: 20px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.07);
+}
+
+.player-holder {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    height: 55px;
+}
+
+.player-holder {
+    box-shadow: 0px 1px rgb(160, 160, 160);
+}
+.player-holder:last-child {
+    box-shadow: 0px 0px rgb(160, 160, 160);
+}
+
+.player-txt {
+    flex-shrink: 0;
+    flex-grow: 0;
+    font-family: Dosis;
+    font-weight: 700;
+    font-size: 2em;
+    margin-left: 10px;
+    max-width: 190px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-icon {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 35px;
+    height: 35px;
+    background-color: blue;
+    border-radius: 20px;
+}
+
+#items-holder {
+    position: absolute;
+    bottom: 20px;
+    width: 260px;
+    height: 230px;
+    padding: 10px 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.item-ico {
+    flex-grow: 0;
+    flex-shrink: 0;
+    background-color: rgb(204, 204, 204);
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
 }

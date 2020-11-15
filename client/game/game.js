@@ -1,7 +1,8 @@
 //const sock=io();
 
 const Engine = Matter.Engine,
-    //Render = Matter.Render,
+    Mouse = Matter.Mouse,
+    MouseConstraint = Matter.MouseConstraint,
     World = Matter.World,
     Bodies = Matter.Bodies;
 
@@ -15,22 +16,17 @@ function initGame() {
 
     const player = objects.createPlayer(200, 200);
     const tile = objects.createTile(400, 200);
-    World.add(engine.world, [player, tile]);
+
+    const mouse = Mouse.create(gameCanvas);
+    const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+    });
+    console.log(mouse);
+    World.add(engine.world, [player, tile, mouseConstraint]);
 
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);
-
-    const clickEvent = (e) => {
-        console.log(e);
-    };
-
-    let mouse = Matter.Mouse.create(gameCanvas);
-    let mouseConstraint = Matter.MouseConstraint.create(engine, {
-        mouse: mouse,
-    });
-
-    Matter.World.add(engine.world, mouseConstraint);
 }
 
 initGame();

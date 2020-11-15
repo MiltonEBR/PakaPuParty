@@ -6,22 +6,31 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies;
 
 function initGame() {
-    const gameCanvas = document.querySelector("canvas");
+    const gameCanvas = document.querySelector('canvas');
     const engine = Engine.create();
     const renderer = new Renderer(engine.world, gameCanvas, {
         wireframes: true,
     });
+    const objects = new WorldObjects();
 
-    //Dummy items on the world
-    const box = Bodies.rectangle(100, 100, 50, 50);
-    box.render.lineWidth = 4;
-    const base = Bodies.rectangle(100, 400, 200, 50, { isStatic: true });
-
-    World.add(engine.world, [box, base]);
+    const player = objects.createPlayer(200, 200);
+    const tile = objects.createTile(400, 200);
+    World.add(engine.world, [player, tile]);
 
     renderer.run();
-
+    engine.world.gravity.y = 0;
     Engine.run(engine);
+
+    const clickEvent = (e) => {
+        console.log(e);
+    };
+
+    let mouse = Matter.Mouse.create(gameCanvas);
+    let mouseConstraint = Matter.MouseConstraint.create(engine, {
+        mouse: mouse,
+    });
+
+    Matter.World.add(engine.world, mouseConstraint);
 }
 
 initGame();

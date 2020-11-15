@@ -8,6 +8,8 @@ class WorldObjects {
 
     createTile(x, y) {
         const tile = Bodies.rectangle(x, y, 100, 100);
+        Body.setStatic(tile, true);
+        tile.isSensor = true;
         tile.render.lineWidth = 2;
         tile.render.strokeStyle = 'gray';
         tile.draw = (ctx) => {

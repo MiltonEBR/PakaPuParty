@@ -4,7 +4,8 @@ const Engine = Matter.Engine,
     Mouse = Matter.Mouse,
     MouseConstraint = Matter.MouseConstraint,
     World = Matter.World,
-    Bodies = Matter.Bodies;
+    Bodies = Matter.Bodies,
+    Body = Matter.Body;
 
 function initGame() {
     const gameCanvas = document.querySelector('canvas');
@@ -22,7 +23,7 @@ function initGame() {
         mouse: mouse,
     });
     console.log(mouse);
-    World.add(engine.world, [player, tile, mouseConstraint]);
+    World.add(engine.world, [tile, player, mouseConstraint]);
 
     renderer.run();
     engine.world.gravity.y = 0;

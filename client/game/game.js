@@ -19,8 +19,14 @@ function initGame() {
     const player = objects.createPlayer(200, 200);
     const tiles = [
         objects.createTile(400, 200, 'up'),
-        objects.createTile(500, 200, 'side'),
+        objects.createTile(500, 200, 'sides'),
         objects.createTile(600, 200, 'null'),
+        objects.createTile(700, 200, 'left'),
+        objects.createTile(400, 300, 'right'),
+        objects.createTile(500, 300, 'right-down'),
+        objects.createTile(600, 300, 'right-up'),
+        objects.createTile(700, 300, 'left-up'),
+        objects.createTile(800, 300, 'left-down'),
     ];
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {

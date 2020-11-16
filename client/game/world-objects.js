@@ -22,10 +22,10 @@ class WorldObjects {
     }
 
     createTile(x, y, towards) {
-        const tile = Bodies.rectangle(x, y, 100, 100, { isStatic: true });
+        const tile = Bodies.rectangle(x, y, 50, 50, { isStatic: true });
         tile.isSensor = true;
         tile.render.lineWidth = 2;
-        tile.render.strokeStyle = 'gray';
+        tile.render.strokeStyle = 'red';
         tile.draw = (ctx) => {
             switch (towards) {
                 case 'null':
@@ -36,9 +36,37 @@ class WorldObjects {
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
                     break;
-                case 'side':
+                case 'sides':
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    break;
+                case 'left':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    break;
+                case 'left-down':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    break;
+                case 'left-up':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                    break;
+                case 'right':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    break;
+                case 'right-down':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    break;
+                case 'right-up':
+                    ctx.fillStyle = 'green';
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
                     break;
 
                 default:

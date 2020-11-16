@@ -5,6 +5,7 @@ const Engine = Matter.Engine,
     MouseConstraint = Matter.MouseConstraint,
     World = Matter.World,
     Bodies = Matter.Bodies,
+    Render = Matter.Render,
     Body = Matter.Body;
 
 function initGame() {
@@ -22,7 +23,6 @@ function initGame() {
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
     });
-    console.log(mouse);
     World.add(engine.world, [tile, player, mouseConstraint]);
 
     renderer.run();

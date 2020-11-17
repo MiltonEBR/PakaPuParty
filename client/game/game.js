@@ -1,11 +1,12 @@
 //const sock=io();
 
 const Engine = Matter.Engine,
+    Vector = Matter.Vector,
     Mouse = Matter.Mouse,
     MouseConstraint = Matter.MouseConstraint,
     World = Matter.World,
     Bodies = Matter.Bodies,
-    Render = Matter.Render,
+    Events = Matter.Events,
     Body = Matter.Body;
 
 function initGame() {
@@ -16,7 +17,6 @@ function initGame() {
     });
     const objects = new WorldObjects();
 
-    const player = objects.createPlayer(200, 200);
     const tiles = [
         objects.createTile(400, 200, 'left'),
         objects.createTile(500, 200, 'sides'),
@@ -33,11 +33,23 @@ function initGame() {
         objects.createTile(700, 500, 'sides'),
         objects.createTile(800, 500, 'right'),
     ];
+    const player = objects.createPlayer(tiles[0]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
         collisionFilter: { mask: objects.filterList.interactable },
     });
+
+    document.body.addEventListener('keydown', (e) => {
+        player.game.setSpeed(1, 2);
+    });
+    Events.on(engine, 'collisionStart', (e) => {
+        console.log(e.pairs[0].bodyA);
+        if (e.pairs[0].bodyB.label === 'player' && e.pairs[0].bodyA.label === 'tile') {
+            player.game.stop();
+        }
+    });
+
     World.add(engine.world, [...tiles, player, mouseConstraint]);
 
     renderer.run();

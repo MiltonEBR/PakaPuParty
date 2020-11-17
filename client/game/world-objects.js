@@ -10,12 +10,27 @@ class WorldObjects {
         return this._filterList;
     }
 
-    createPlayer(x, y) {
+    createPlayer(spawnTile) {
+        const { x, y } = spawnTile.position;
         const player = Bodies.rectangle(x, y, 50, 50, {
+            frictionAir: 0.0,
+            // restitution: 0.0,
+            // density: 1,
             collisionFilter: {
                 category: this._filterList.notInteractable,
             },
         });
+        player.game = {
+            currentTile: spawnTile,
+            setSpeed(v, h) {
+                player.frictionAir = 0.0;
+                Body.setVelocity(player, { x: v, y: h });
+            },
+            stop() {
+                player.frictionAir = 0.1;
+            },
+        };
+        player.label = 'player';
         player.render.lineWidth = 4;
         player.render.strokeStyle = 'blue';
         return player;
@@ -24,6 +39,7 @@ class WorldObjects {
     createTile(x, y, towards) {
         const tile = Bodies.rectangle(x, y, 50, 50, { isStatic: true });
         tile.isSensor = true;
+        tile.label = 'tile';
         tile.render.lineWidth = 2;
         tile.render.strokeStyle = 'red';
         tile.draw = (ctx) => {

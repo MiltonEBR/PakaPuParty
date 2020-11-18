@@ -18,7 +18,6 @@ function initGame() {
     const objects = new WorldObjects();
 
     const gameBoard = objects.createMap('debug');
-    console.log(gameBoard);
     const player = objects.createPlayer(gameBoard[0]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
@@ -36,8 +35,8 @@ function initGame() {
     Events.on(engine, 'collisionStart', (e) => {
         const a = e.pairs[0].bodyA;
         const b = e.pairs[0].bodyB;
-        console.log(b);
         if (b.label === 'player' && a.label === 'tile') {
+            player.game.currentTile = a;
             player.game.stop();
         }
     });
@@ -47,6 +46,7 @@ function initGame() {
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);
+    console.log(gameBoard);
 }
 
 initGame();

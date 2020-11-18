@@ -17,7 +17,7 @@ function initGame() {
     });
     const objects = new WorldObjects();
 
-    const gameBoard = objects.createMap('debug');
+    const gameBoard = objects.createMap('debug', { x: 100, y: 300 });
     const player = objects.createPlayer(gameBoard[0]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {

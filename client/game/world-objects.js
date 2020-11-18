@@ -45,7 +45,7 @@ class WorldObjects {
         return player;
     }
 
-    createTile(x, y, dir) {
+    createTile(x, y) {
         const colSize = 50,
             tileSize = 100;
         const tile = Bodies.rectangle(x, y, colSize, colSize, { isStatic: true });
@@ -59,85 +59,121 @@ class WorldObjects {
             down: null,
             left: null,
             right: null,
+            parent: null,
         };
 
         tile.draw = (ctx) => {
-            switch (dir) {
-                case 'null':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 50);
-                    break;
-                case 'up':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
-                    break;
-                case 'sides':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
-                    break;
+            let r = tile.nodes.right,
+                l = tile.nodes.left,
+                u = tile.nodes.up,
+                d = tile.nodes.down;
+            switch (tile.nodes.parent) {
                 case 'right':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
-                    break;
-                case 'left-down':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
-                    break;
-                case 'left-up':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                    r = true;
                     break;
                 case 'left':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    l = true;
                     break;
-                case 'right-down':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                case 'up':
+                    u = true;
                     break;
-                case 'right-up':
-                    ctx.fillStyle = 'green';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                case 'down':
+                    d = true;
                     break;
-
                 default:
                     break;
+            }
+
+            ctx.fillStyle = 'green';
+            if (r) {
+                if (l && !u && !d) {
+                    ctx.fillStyle = 'yellow';
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                } else if (!l && u && !d) {
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                } else if (!l && !u && d) {
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                } else if (l && u && !d) {
+                    ctx.fillStyle = 'gray';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 50);
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                } else if (!l && u && d) {
+                    ctx.fillStyle = 'cyan';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                } else if (l && !u && d) {
+                    ctx.fillStyle = 'brown';
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                } else if (l && u && d) {
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                } else {
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                }
+            } else if (l) {
+                if (!u && d) {
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                } else if (u && !d) {
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
+                } else if (u && d) {
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                } else {
+                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                }
+            } else if (u) {
+                if (d) {
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                }
+                ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
+            } else if (d) {
+                ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
             }
         };
         return tile;
     }
 
-    createMap(name) {
-        const initPos = Vector.create(100, 100);
+    createMap(name, { x, y }) {
+        const initPos = Vector.create(x, y);
         const tileMap = [];
         const inc = this._tileSize;
         let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y, 'null')) - 1];
 
+        //1 right | 2 left | 3 up | 4 down
         const addTo = (move, dir) => {
             const { x, y } = currentTile.position;
             let newX = x,
                 newY = y;
-            let nextNode = '';
+            let nextNode = '',
+                parent = '';
             switch (dir) {
                 case 1:
                     newX += inc;
                     nextNode = 'right';
+                    parent = 'left';
                     break;
                 case 2:
                     newX -= inc;
                     nextNode = 'left';
+                    parent = 'right';
                     break;
                 case 3:
                     newY -= inc;
                     nextNode = 'up';
+                    parent = 'down';
                     break;
                 case 4:
                     newY += inc;
                     nextNode = 'down';
+                    parent = 'up';
                     break;
 
                 default:
@@ -146,6 +182,7 @@ class WorldObjects {
             const newTile = this.createTile(newX, newY, 'null');
             tileMap.push(newTile);
             currentTile.nodes[nextNode] = newTile;
+            newTile.nodes.parent = parent;
             if (move) {
                 currentTile = newTile;
             }
@@ -154,12 +191,9 @@ class WorldObjects {
         if (name === 'debug') {
             addTo(true, 1);
             addTo(true, 1);
-            addTo(false, 3);
             addTo(true, 1);
+            addTo(false, 3);
             addTo(true, 4);
-
-            addTo(false, 1);
-            addTo(false, 2);
             addTo(true, 4);
         }
 

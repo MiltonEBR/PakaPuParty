@@ -4,6 +4,7 @@ class WorldObjects {
             notInteractable: 0x0001,
             interactable: 0x0002,
         };
+        this._tileSize = 100;
     }
 
     get filterList() {
@@ -45,7 +46,9 @@ class WorldObjects {
     }
 
     createTile(x, y, dir) {
-        const tile = Bodies.rectangle(x, y, 50, 50, { isStatic: true });
+        const colSize = 50,
+            tileSize = 100;
+        const tile = Bodies.rectangle(x, y, colSize, colSize, { isStatic: true });
         tile.isSensor = true;
         tile.label = 'tile';
         tile.render.lineWidth = 2;
@@ -109,18 +112,55 @@ class WorldObjects {
     }
 
     createMap(name) {
-        const tilePos = Vector.create(100, 100);
+        const initPos = Vector.create(100, 100);
         const tileMap = [];
+        const inc = this._tileSize;
+        let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y, 'null')) - 1];
+
+        const addTo = (move, dir) => {
+            const { x, y } = currentTile.position;
+            let newX = x,
+                newY = y;
+            let nextNode = '';
+            switch (dir) {
+                case 1:
+                    newX += inc;
+                    nextNode = 'right';
+                    break;
+                case 2:
+                    newX -= inc;
+                    nextNode = 'left';
+                    break;
+                case 3:
+                    newY -= inc;
+                    nextNode = 'up';
+                    break;
+                case 4:
+                    newY += inc;
+                    nextNode = 'down';
+                    break;
+
+                default:
+                    break;
+            }
+            const newTile = this.createTile(newX, newY, 'null');
+            tileMap.push(newTile);
+            currentTile.nodes[nextNode] = newTile;
+            if (move) {
+                currentTile = newTile;
+            }
+        };
 
         if (name === 'debug') {
-            tileMap.push(this.createTile(tilePos.x, tilePos.y, 'right'));
-            tilePos.x += 100;
+            addTo(true, 1);
+            addTo(true, 1);
+            addTo(false, 3);
+            addTo(true, 1);
+            addTo(true, 4);
 
-            for (let i = 0; i < 3; i++) {
-                tileMap.push(this.createTile(tilePos.x, tilePos.y, 'sides'));
-                tileMap[tileMap.length - 2].nodes.right = tileMap[tileMap.length - 1];
-                tilePos.x += 100;
-            }
+            addTo(false, 1);
+            addTo(false, 2);
+            addTo(true, 4);
         }
 
         return tileMap;

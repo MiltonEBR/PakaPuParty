@@ -44,14 +44,22 @@ class WorldObjects {
         return player;
     }
 
-    createTile(x, y, towards) {
+    createTile(x, y, dir) {
         const tile = Bodies.rectangle(x, y, 50, 50, { isStatic: true });
         tile.isSensor = true;
         tile.label = 'tile';
         tile.render.lineWidth = 2;
         tile.render.strokeStyle = 'red';
+
+        tile.nodes = {
+            up: null,
+            down: null,
+            left: null,
+            right: null,
+        };
+
         tile.draw = (ctx) => {
-            switch (towards) {
+            switch (dir) {
                 case 'null':
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 50);
@@ -64,7 +72,7 @@ class WorldObjects {
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
                     break;
-                case 'left':
+                case 'right':
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
                     break;
@@ -78,7 +86,7 @@ class WorldObjects {
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
                     break;
-                case 'right':
+                case 'left':
                     ctx.fillStyle = 'green';
                     ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
                     break;
@@ -98,5 +106,23 @@ class WorldObjects {
             }
         };
         return tile;
+    }
+
+    createMap(name) {
+        const tilePos = Vector.create(100, 100);
+        const tileMap = [];
+
+        if (name === 'debug') {
+            tileMap.push(this.createTile(tilePos.x, tilePos.y, 'right'));
+            tilePos.x += 100;
+
+            for (let i = 0; i < 3; i++) {
+                tileMap.push(this.createTile(tilePos.x, tilePos.y, 'sides'));
+                tileMap[tileMap.length - 2].nodes.right = tileMap[tileMap.length - 1];
+                tilePos.x += 100;
+            }
+        }
+
+        return tileMap;
     }
 }

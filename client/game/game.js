@@ -17,23 +17,9 @@ function initGame() {
     });
     const objects = new WorldObjects();
 
-    const tiles = [
-        objects.createTile(400, 200, 'left'),
-        objects.createTile(500, 200, 'sides'),
-        objects.createTile(600, 200, 'sides'),
-        objects.createTile(700, 200, 'sides'),
-        objects.createTile(800, 200, 'right-down'),
-        objects.createTile(800, 300, 'right-up'),
-        objects.createTile(700, 300, 'sides'),
-        objects.createTile(600, 300, 'sides'),
-        objects.createTile(500, 300, 'left-down'),
-        objects.createTile(500, 400, 'up'),
-        objects.createTile(500, 500, 'left-up'),
-        objects.createTile(600, 500, 'sides'),
-        objects.createTile(700, 500, 'sides'),
-        objects.createTile(800, 500, 'right'),
-    ];
-    const player = objects.createPlayer(tiles[0]);
+    const gameBoard = objects.createMap('debug');
+    console.log(gameBoard);
+    const player = objects.createPlayer(gameBoard[0]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
@@ -42,7 +28,7 @@ function initGame() {
 
     document.body.addEventListener('keydown', (e) => {
         if (e.key === 'a') {
-            player.game.moveTo(tiles[1]);
+            //player.game.moveTo(tiles[1]);
         } else if (e.key === 's') {
             player.game.setSpeed(0, 2);
         }
@@ -56,7 +42,7 @@ function initGame() {
         }
     });
 
-    World.add(engine.world, [...tiles, player, mouseConstraint]);
+    World.add(engine.world, [...gameBoard, player, mouseConstraint]);
 
     renderer.run();
     engine.world.gravity.y = 0;

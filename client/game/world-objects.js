@@ -22,12 +22,20 @@ class WorldObjects {
         });
         player.game = {
             currentTile: spawnTile,
-            setSpeed(v, h) {
+            speed: 2,
+            setSpeed(num) {
+                this.speed = num;
+            },
+            moveTo(tile) {
                 player.frictionAir = 0.0;
-                Body.setVelocity(player, { x: v, y: h });
+                const { x, y } = tile.position;
+                const tileVector = Vector.create(x, y);
+                const playerVector = Vector.create(player.position.x, player.position.y);
+                const dirVector = Vector.normalise(Vector.sub(tileVector, playerVector));
+                Body.setVelocity(player, Vector.mult(dirVector, this.speed));
             },
             stop() {
-                player.frictionAir = 0.1;
+                player.frictionAir = 0.05;
             },
         };
         player.label = 'player';

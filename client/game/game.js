@@ -41,11 +41,17 @@ function initGame() {
     });
 
     document.body.addEventListener('keydown', (e) => {
-        player.game.setSpeed(1, 2);
+        if (e.key === 'a') {
+            player.game.moveTo(tiles[1]);
+        } else if (e.key === 's') {
+            player.game.setSpeed(0, 2);
+        }
     });
     Events.on(engine, 'collisionStart', (e) => {
-        console.log(e.pairs[0].bodyA);
-        if (e.pairs[0].bodyB.label === 'player' && e.pairs[0].bodyA.label === 'tile') {
+        const a = e.pairs[0].bodyA;
+        const b = e.pairs[0].bodyB;
+        console.log(b);
+        if (b.label === 'player' && a.label === 'tile') {
             player.game.stop();
         }
     });

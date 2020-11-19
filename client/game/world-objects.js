@@ -61,7 +61,10 @@ class WorldObjects {
             right: null,
         };
 
-        tile.draw = (ctx) => {}; //Placeholder for updateSprite to determine
+        tile.draw = (ctx) => {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 50);
+        }; //Default draw,meant for updateSprite to determine
 
         tile.updateSprite = () => {
             //Determines which sprite the tile should use based on siblings (Not final sprites or calculations)
@@ -162,6 +165,11 @@ class WorldObjects {
                     ctx.fillStyle = fill;
                     ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
                 };
+            } else {
+                tile.draw = (ctx) => {
+                    ctx.fillStyle = fill;
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 50);
+                };
             }
         };
 
@@ -239,12 +247,6 @@ class WorldObjects {
             addTile('right');
             addTile('right');
             updateTileSprites();
-            // addTo(true, 1);
-            // addTo(true, 1);
-            // addTo(true, 1);
-            // addTo(false, 3);
-            // addTo(true, 4);
-            // addTo(true, 4);
         }
 
         return tileMap;

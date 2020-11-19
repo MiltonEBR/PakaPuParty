@@ -11,6 +11,30 @@ class WorldObjects {
         return this._filterList;
     }
 
+    createDirectionArrows(x, y) {
+        const dirArrows = {
+            arrows: {
+                top: Bodies.rectangle(x, y + 50, 25, 50, { isStatic: true }),
+                bot: Bodies.rectangle(x, y - 50, 25, 50, { isStatic: true }),
+                left: Bodies.rectangle(x - 50, y, 50, 25, { isStatic: true }),
+                right: Bodies.rectangle(x + 50, y, 50, 25, { isStatic: true }),
+            },
+        };
+        dirArrows.list = Object.values(dirArrows.arrows);
+        dirArrows.changePos = ({ x, y }) => {
+            Body.setPosition(dirArrows.arrows.top, { x, y: y + 50 });
+            Body.setPosition(dirArrows.arrows.bot, { x, y: y - 50 });
+            Body.setPosition(dirArrows.arrows.left, { x: x - 50, y });
+            Body.setPosition(dirArrows.arrows.right, { x: x + 50, y });
+        };
+        for (let arr of dirArrows.list) {
+            arr.render.lineWidth = 4;
+            arr.render.strokeStyle = 'red';
+        }
+
+        return dirArrows;
+    }
+
     createPlayer(spawnTile) {
         const { x, y } = spawnTile.position;
         const player = Bodies.rectangle(x, y, 50, 50, {

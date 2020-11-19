@@ -19,6 +19,7 @@ function initGame() {
 
     const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
     let cont = 0;
+    const dirArrows = objects.createDirectionArrows(500, 300);
     const player = objects.createPlayer(gameBoard[cont]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
@@ -37,13 +38,18 @@ function initGame() {
     Events.on(engine, 'collisionStart', (e) => {
         const a = e.pairs[0].bodyA;
         const b = e.pairs[0].bodyB;
+        let playerColl;
+        if (a.label === 'player') playerColl = a;
+        if (b.label === 'player') playerColl = b;
+
         if (b.label === 'player' && a.label === 'tile') {
             player.game.currentTile = a;
             player.game.stop();
         }
     });
 
-    World.add(engine.world, [...gameBoard, player, mouseConstraint]);
+    World.add(engine.world, [...gameBoard, player, ...dirArrows.list]);
+    dirArrows.changePos({ x: 200, y: 500 });
 
     renderer.run();
     engine.world.gravity.y = 0;

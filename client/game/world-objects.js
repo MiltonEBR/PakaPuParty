@@ -61,6 +61,11 @@ class WorldObjects {
             right: null,
         };
 
+        tile.getNodes = () => {
+            const { nodes } = tile;
+            return [nodes.top, nodes.bot, nodes.left, nodes.right];
+        };
+
         tile.draw = (ctx) => {
             ctx.fillStyle = 'green';
             ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 50);
@@ -231,6 +236,44 @@ class WorldObjects {
             }
         };
 
+        const searchTile = ({ id, position }, tile) => {
+            let start = null;
+            if (tile) {
+                start = tile;
+            } else {
+                start = tileMap[0];
+            }
+
+            const visited = new Set();
+            const queue = [start];
+
+            while (queue.length > 0) {
+                const tile = queue.shift();
+                const nodes = tile.getNodes().filter((el) => el != null);
+
+                for (let node of nodes) {
+                    if (id) {
+                        if (node.id === id) {
+                            console.log('Found matching id ' + id);
+                            return node;
+                        }
+                    }
+                    if (position) {
+                        if (node.position.x === position.x && node.position.y === position.y) {
+                            console.log('yes');
+                            console.log('Found matching pos ' + position.x + ', ' + position.y);
+                            return node;
+                        }
+                    }
+
+                    if (!visited.has(node)) {
+                        visited.add(node);
+                        queue.push(node);
+                    }
+                }
+            }
+        };
+
         const moveToTile = (tile) => {
             //NEEDS TO BECOME DFS
             currentTile = tile;
@@ -242,7 +285,6 @@ class WorldObjects {
 
         if (name === 'debug') {
             addTile('right');
-            addTile('top', true);
             addTile('top', true);
             addTile('right');
             addTile('right');

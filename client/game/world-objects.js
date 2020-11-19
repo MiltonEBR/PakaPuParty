@@ -55,34 +55,19 @@ class WorldObjects {
         tile.render.strokeStyle = 'red';
 
         tile.nodes = {
-            up: null,
-            down: null,
+            top: null,
+            bot: null,
             left: null,
             right: null,
-            parent: null,
         };
+
+        tile.updateSprite = () => {};
 
         tile.draw = (ctx) => {
             let r = tile.nodes.right,
                 l = tile.nodes.left,
-                u = tile.nodes.up,
-                d = tile.nodes.down;
-            switch (tile.nodes.parent) {
-                case 'right':
-                    r = true;
-                    break;
-                case 'left':
-                    l = true;
-                    break;
-                case 'up':
-                    u = true;
-                    break;
-                case 'down':
-                    d = true;
-                    break;
-                default:
-                    break;
-            }
+                u = tile.nodes.top,
+                d = tile.nodes.bot;
 
             ctx.fillStyle = 'green';
             if (r) {
@@ -145,7 +130,46 @@ class WorldObjects {
         const initPos = Vector.create(x, y);
         const tileMap = [];
         const inc = this._tileSize;
-        let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y, 'null')) - 1];
+        let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y)) - 1];
+
+        const addTile = (dir, stay) => {
+            if (currentTile.nodes[dir]) {
+                console.log(`A tile on the ${dir} of tile ${currentTile.id} already exists`);
+                return;
+            }
+
+            let newX = currentTile.position.x,
+                newY = currentTile.position.y;
+            let newTileDir = '';
+            switch (dir) {
+                case 'right':
+                    newX += inc;
+                    newTileDir = 'left';
+                    break;
+                case 'left':
+                    newX -= inc;
+                    newTileDir = 'right';
+                    break;
+                case 'top':
+                    newY -= inc;
+                    newTileDir = 'bot';
+                    break;
+                case 'bot':
+                    newY += inc;
+                    newTileDir = 'top';
+                    break;
+                default:
+                    break;
+            }
+
+            const newTile = this.createTile(newX, newY);
+            newTile.nodes[newTileDir] = currentTile;
+            currentTile.nodes[dir] = newTile;
+            tileMap.push(newTile);
+            if (!stay) {
+                currentTile = newTile;
+            }
+        };
 
         //1 right | 2 left | 3 up | 4 down
         const addTo = (move, dir) => {
@@ -179,7 +203,7 @@ class WorldObjects {
                 default:
                     break;
             }
-            const newTile = this.createTile(newX, newY, 'null');
+            const newTile = this.createTile(newX, newY);
             tileMap.push(newTile);
             currentTile.nodes[nextNode] = newTile;
             newTile.nodes.parent = parent;
@@ -189,12 +213,17 @@ class WorldObjects {
         };
 
         if (name === 'debug') {
-            addTo(true, 1);
-            addTo(true, 1);
-            addTo(true, 1);
-            addTo(false, 3);
-            addTo(true, 4);
-            addTo(true, 4);
+            addTile('right');
+            addTile('top', true);
+            addTile('top', true);
+            addTile('right');
+            addTile('right');
+            // addTo(true, 1);
+            // addTo(true, 1);
+            // addTo(true, 1);
+            // addTo(false, 3);
+            // addTo(true, 4);
+            // addTo(true, 4);
         }
 
         return tileMap;

@@ -48,13 +48,34 @@ function initGame() {
         }
     });
 
-    World.add(engine.world, [...gameBoard, player, ...dirArrows.list]);
+    Events.on(mouseConstraint, 'mousedown', (e) => {
+        if (!mouseConstraint.body) {
+            return;
+        }
+        if (mouseConstraint.body.label === 'dirArrow') {
+            console.log(mouseConstraint.body);
+            if (mouseConstraint.body.enabled) {
+                console.log('canclick');
+            } else {
+                console.log('cantclick');
+            }
+        }
+    });
+    World.add(engine.world, [
+        ...gameBoard,
+        player,
+        ...Object.values(dirArrows.arrows),
+        mouseConstraint,
+    ]);
     dirArrows.changePos({ x: 200, y: 500 });
 
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);
+
+    //Debug
     console.log(gameBoard);
+    dirArrows.setEnabled('top', false);
 }
 
 initGame();

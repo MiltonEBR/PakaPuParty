@@ -61,82 +61,134 @@ class WorldObjects {
             right: null,
         };
 
-        tile.updateSprite = () => {};
+        tile.draw = (ctx) => {}; //Placeholder for updateSprite to determine
 
-        tile.draw = (ctx) => {
+        tile.updateSprite = () => {
+            //Determines which sprite the tile should use based on siblings (Not final sprites or calculations)
             let r = tile.nodes.right,
                 l = tile.nodes.left,
                 u = tile.nodes.top,
                 d = tile.nodes.bot;
 
-            ctx.fillStyle = 'green';
+            const fill = 'green';
             if (r) {
                 if (l && !u && !d) {
-                    ctx.fillStyle = 'yellow';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    };
                 } else if (!l && u && !d) {
-                    ctx.fillStyle = 'red';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                    };
                 } else if (!l && !u && d) {
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    };
                 } else if (l && u && !d) {
-                    ctx.fillStyle = 'gray';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 50);
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 50);
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    };
                 } else if (!l && u && d) {
-                    ctx.fillStyle = 'cyan';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    };
                 } else if (l && !u && d) {
-                    ctx.fillStyle = 'brown';
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                    };
                 } else if (l && u && d) {
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 25);
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 100, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y + 25, 50, 25);
+                    };
                 } else {
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 75, 50);
+                    };
                 }
             } else if (l) {
                 if (!u && d) {
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                    };
                 } else if (u && !d) {
-                    ctx.fillStyle = 'black';
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
+                    };
                 } else if (u && d) {
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                    };
                 } else {
-                    ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 50, tile.position.y - 25, 75, 50);
+                    };
                 }
             } else if (u) {
                 if (d) {
-                    ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 100);
+                    };
+                } else {
+                    tile.draw = (ctx) => {
+                        ctx.fillStyle = fill;
+                        ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
+                    };
                 }
-                ctx.fillRect(tile.position.x - 25, tile.position.y - 50, 50, 75);
             } else if (d) {
-                ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                tile.draw = (ctx) => {
+                    ctx.fillStyle = fill;
+                    ctx.fillRect(tile.position.x - 25, tile.position.y - 25, 50, 75);
+                };
             }
         };
+
         return tile;
     }
 
-    createMap(name, { x, y }) {
+    createBoard(name, { x, y }) {
+        //Returns an array of the map tiles for the engine to run depending on map name
         const initPos = Vector.create(x, y);
         const tileMap = [];
         const inc = this._tileSize;
         let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y)) - 1];
+        let markedTile = null;
+
+        const updateTileSprites = () => {
+            tileMap.forEach((tile) => {
+                tile.updateSprite();
+            });
+        };
 
         const addTile = (dir, stay) => {
+            //Adds a tile to the map
             if (currentTile.nodes[dir]) {
                 console.log(`A tile on the ${dir} of tile ${currentTile.id} already exists`);
                 return;
             }
+            //Missing checking for already existing nodes that are non-childs, in order to link instead of create (Should be fixed with DFS)
 
             let newX = currentTile.position.x,
                 newY = currentTile.position.y;
@@ -171,45 +223,13 @@ class WorldObjects {
             }
         };
 
-        //1 right | 2 left | 3 up | 4 down
-        const addTo = (move, dir) => {
-            const { x, y } = currentTile.position;
-            let newX = x,
-                newY = y;
-            let nextNode = '',
-                parent = '';
-            switch (dir) {
-                case 1:
-                    newX += inc;
-                    nextNode = 'right';
-                    parent = 'left';
-                    break;
-                case 2:
-                    newX -= inc;
-                    nextNode = 'left';
-                    parent = 'right';
-                    break;
-                case 3:
-                    newY -= inc;
-                    nextNode = 'up';
-                    parent = 'down';
-                    break;
-                case 4:
-                    newY += inc;
-                    nextNode = 'down';
-                    parent = 'up';
-                    break;
+        const moveToTile = (tile) => {
+            //NEEDS TO BECOME DFS
+            currentTile = tile;
+        };
 
-                default:
-                    break;
-            }
-            const newTile = this.createTile(newX, newY);
-            tileMap.push(newTile);
-            currentTile.nodes[nextNode] = newTile;
-            newTile.nodes.parent = parent;
-            if (move) {
-                currentTile = newTile;
-            }
+        const saveTile = (tile) => {
+            markedTile = tile;
         };
 
         if (name === 'debug') {
@@ -218,6 +238,7 @@ class WorldObjects {
             addTile('top', true);
             addTile('right');
             addTile('right');
+            updateTileSprites();
             // addTo(true, 1);
             // addTo(true, 1);
             // addTo(true, 1);

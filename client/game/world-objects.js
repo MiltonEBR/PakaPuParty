@@ -14,22 +14,59 @@ class WorldObjects {
     createDirectionArrows(x, y) {
         const dirArrows = {
             arrows: {
-                top: Bodies.rectangle(x, y + 50, 25, 50, { isStatic: true }),
-                bot: Bodies.rectangle(x, y - 50, 25, 50, { isStatic: true }),
-                left: Bodies.rectangle(x - 50, y, 50, 25, { isStatic: true }),
-                right: Bodies.rectangle(x + 50, y, 50, 25, { isStatic: true }),
+                top: Bodies.rectangle(x, y - 50, 25, 50, {
+                    isStatic: true,
+                    collisionFilter: {
+                        category: this._filterList.interactable,
+                    },
+                }),
+                bot: Bodies.rectangle(x, y + 50, 25, 50, {
+                    isStatic: true,
+                    collisionFilter: {
+                        category: this._filterList.interactable,
+                    },
+                }),
+                left: Bodies.rectangle(x - 50, y, 50, 25, {
+                    isStatic: true,
+                    collisionFilter: {
+                        category: this._filterList.interactable,
+                    },
+                }),
+                right: Bodies.rectangle(x + 50, y, 50, 25, {
+                    isStatic: true,
+                    collisionFilter: {
+                        category: this._filterList.interactable,
+                    },
+                }),
+            },
+            changePos({ x, y }) {
+                Body.setPosition(this.arrows.top, { x, y: y - 50 });
+                Body.setPosition(this.arrows.bot, { x, y: y + 50 });
+                Body.setPosition(this.arrows.left, { x: x - 50, y });
+                Body.setPosition(this.arrows.right, { x: x + 50, y });
+            },
+            setEnabled(dir, isEnabled) {
+                console.log(this.arrows[dir]);
+                if (isEnabled) {
+                    this.arrows[dir].enabled = true;
+                } else {
+                    this.arrows[dir].enabled = false;
+                }
             },
         };
-        dirArrows.list = Object.values(dirArrows.arrows);
-        dirArrows.changePos = ({ x, y }) => {
-            Body.setPosition(dirArrows.arrows.top, { x, y: y + 50 });
-            Body.setPosition(dirArrows.arrows.bot, { x, y: y - 50 });
-            Body.setPosition(dirArrows.arrows.left, { x: x - 50, y });
-            Body.setPosition(dirArrows.arrows.right, { x: x + 50, y });
-        };
-        for (let arr of dirArrows.list) {
+
+        for (let arr of Object.values(dirArrows.arrows)) {
+            arr.enabled = true;
             arr.render.lineWidth = 4;
             arr.render.strokeStyle = 'red';
+            arr.label = 'dirArrow';
+
+            arr.draw = function (ctx) {
+                if (this.enabled) {
+                    ctx.fillStyle = 'orange';
+                    ctx.fillRect(this.position.x - 10, this.position.y - 10, 25, 25);
+                }
+            };
         }
 
         return dirArrows;

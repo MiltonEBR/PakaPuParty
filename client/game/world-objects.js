@@ -187,7 +187,6 @@ class WorldObjects {
         const tileMap = [];
         const inc = this._tileSize;
         let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y)) - 1];
-        let markedTile = null;
 
         const updateTileSprites = () => {
             tileMap.forEach((tile) => {
@@ -201,7 +200,6 @@ class WorldObjects {
                 console.log(`A tile on the ${dir} of tile ${currentTile.id} already exists`);
                 return;
             }
-            //Missing checking for already existing nodes that are non-childs, in order to link instead of create (Should be fixed with DFS)
 
             let newX = currentTile.position.x,
                 newY = currentTile.position.y;
@@ -227,12 +225,21 @@ class WorldObjects {
                     break;
             }
 
-            const newTile = this.createTile(newX, newY);
-            newTile.nodes[newTileDir] = currentTile;
-            currentTile.nodes[dir] = newTile;
-            tileMap.push(newTile);
-            if (!stay) {
-                currentTile = newTile;
+            let existingTile = searchTile({ position: { x: newX, y: newY } });
+            if (existingTile) {
+                currentTile.nodes[dir] = existingTile;
+                existingTile.nodes[newTileDir] = currentTile;
+                if (!stay) {
+                    currentTile = existingTile;
+                }
+            } else {
+                const newTile = this.createTile(newX, newY);
+                newTile.nodes[newTileDir] = currentTile;
+                currentTile.nodes[dir] = newTile;
+                tileMap.push(newTile);
+                if (!stay) {
+                    currentTile = newTile;
+                }
             }
         };
 
@@ -254,14 +261,14 @@ class WorldObjects {
                 for (let node of nodes) {
                     if (id) {
                         if (node.id === id) {
-                            console.log('Found matching id ' + id);
+                            // console.log('Found matching id ' + id);
                             return node;
                         }
                     }
                     if (position) {
                         if (node.position.x === position.x && node.position.y === position.y) {
                             console.log('yes');
-                            console.log('Found matching pos ' + position.x + ', ' + position.y);
+                            // console.log('Found matching pos ' + position.x + ', ' + position.y);
                             return node;
                         }
                     }
@@ -272,15 +279,7 @@ class WorldObjects {
                     }
                 }
             }
-        };
-
-        const moveToTile = (tile) => {
-            //NEEDS TO BECOME DFS
-            currentTile = tile;
-        };
-
-        const saveTile = (tile) => {
-            markedTile = tile;
+            return null;
         };
 
         if (name === 'debug') {
@@ -288,6 +287,9 @@ class WorldObjects {
             addTile('top', true);
             addTile('right');
             addTile('right');
+            addTile('bot');
+            addTile('left');
+            addTile('top');
             updateTileSprites();
         }
 

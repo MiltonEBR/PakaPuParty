@@ -18,7 +18,8 @@ function initGame() {
     const objects = new WorldObjects();
 
     const gameBoard = objects.createMap('debug', { x: 100, y: 300 });
-    const player = objects.createPlayer(gameBoard[0]);
+    let cont = 0;
+    const player = objects.createPlayer(gameBoard[cont]);
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
@@ -27,7 +28,8 @@ function initGame() {
 
     document.body.addEventListener('keydown', (e) => {
         if (e.key === 'a') {
-            //player.game.moveTo(tiles[1]);
+            player.game.moveTo(gameBoard[cont]);
+            cont += 1;
         } else if (e.key === 's') {
             player.game.setSpeed(0, 2);
         }

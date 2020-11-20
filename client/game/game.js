@@ -20,7 +20,7 @@ function initGame() {
     const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
     let cont = 0;
     const player = objects.createPlayer(gameBoard[cont]);
-    const dirArrows = objects.createDirectionArrows(player.game.currentTile);
+    const dirArrows = objects.createArrowManager(player.game.currentTile);
 
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
@@ -39,26 +39,41 @@ function initGame() {
         const a = e.pairs[0].bodyA;
         const b = e.pairs[0].bodyB;
         let playerColl;
-        if (a.label === 'player') playerColl = a;
-        if (b.label === 'player') playerColl = b;
-
-        if (b.label === 'player' && a.label === 'tile') {
-            player.game.currentTile = a;
-            player.game.stop();
+        let tileColl;
+        if (a.label === 'player') {
+            playerColl = a;
+        } else if (b.label === 'player') {
+            playerColl = b;
+        }
+        if (b.label === 'tile') {
+            tileColl = b;
+        } else if (a.label === 'tile') {
+            tileColl = a;
+        }
+        // console.log(playerColl);
+        // console.log(tileColl);
+        if (playerColl && tileColl) {
+            if (playerColl.game.targetTile === tileColl) {
+                playerColl.game.stop();
+                dirArrows.setToTile(playerColl.game.currentTile);
+            }
+            //player.game.currentTile = a;
+            //player.game.stop();
         }
     });
 
     Events.on(mouseConstraint, 'mousedown', (e) => {
-        if (!mouseConstraint.body) {
+        const clicked = mouseConstraint.body;
+        if (!clicked) {
             return;
         }
-        if (mouseConstraint.body.label === 'dirArrow') {
-            console.log(mouseConstraint.body);
-            console.log(mouseConstraint.body);
+        if (clicked.label === 'dirArrow') {
+            if (clicked.target) {
+                player.game.moveTo(clicked.target);
+            }
         }
     });
     World.add(engine.world, [...gameBoard, player, ...dirArrows.getArrowList(), mouseConstraint]);
-    console.log(dirArrows.getArrowList());
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);

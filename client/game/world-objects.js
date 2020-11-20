@@ -3,6 +3,7 @@ class WorldObjects {
         this._filterList = {
             notInteractable: 0x0001,
             interactable: 0x0002,
+            world: 0x0004,
         };
         this._tileSize = 100;
     }
@@ -51,8 +52,9 @@ class WorldObjects {
         newArr.render.lineWidth = 4;
         newArr.render.strokeStyle = 'red';
         newArr.label = 'dirArrow';
+        newArr.target = null;
         newArr.draw = function (ctx) {
-            if (this.enabled) {
+            if (this.target) {
                 ctx.fillStyle = 'orange';
                 ctx.fillRect(this.position.x - 10, this.position.y - 10, 25, 25);
             }
@@ -61,14 +63,13 @@ class WorldObjects {
         return newArr;
     }
 
-    createDirectionArrows(tile) {
-        console.log(tile);
+    createArrowManager(tile) {
         const initPos = tile.position;
         const arrowManager = {
-            top: { arrow: this.createArrow(initPos, 'top'), target: null },
-            bot: { arrow: this.createArrow(initPos, 'bot'), target: null },
-            left: { arrow: this.createArrow(initPos, 'left'), target: null },
-            right: { arrow: this.createArrow(initPos, 'right'), target: null },
+            top: this.createArrow(initPos, 'top'),
+            bot: this.createArrow(initPos, 'bot'),
+            left: this.createArrow(initPos, 'left'),
+            right: this.createArrow(initPos, 'right'),
 
             setToTile(tile) {
                 const { x, y } = tile.position;
@@ -85,9 +86,11 @@ class WorldObjects {
                 Body.setPosition(arrowManager.right, { x: x + 50, y });
             },
             getArrowList() {
-                return [this.top.arrow, this.bot.arrow, this.left.arrow, this.right.arrow];
+                return [this.top, this.bot, this.left, this.right];
             },
         };
+
+        arrowManager.setToTile(tile);
 
         return arrowManager;
     }
@@ -100,16 +103,20 @@ class WorldObjects {
             // density: 1,
             collisionFilter: {
                 category: this._filterList.notInteractable,
+                mask: this._filterList.world,
             },
         });
         player.game = {
             currentTile: spawnTile,
+            targetTile: null,
             speed: 2,
             setSpeed(num) {
                 this.speed = num;
             },
             moveTo(tile) {
+                this.targetTile = tile;
                 player.frictionAir = 0.0;
+
                 const { x, y } = tile.position;
                 const tileVector = Vector.create(x, y);
                 const playerVector = Vector.create(player.position.x, player.position.y);
@@ -117,6 +124,9 @@ class WorldObjects {
                 Body.setVelocity(player, Vector.mult(dirVector, this.speed));
             },
             stop() {
+                this.currentTile = this.targetTile;
+                this.targetTile = null;
+
                 player.frictionAir = 0.05;
             },
         };
@@ -129,7 +139,10 @@ class WorldObjects {
     createTile(x, y) {
         const colSize = 50,
             tileSize = 100;
-        const tile = Bodies.rectangle(x, y, colSize, colSize, { isStatic: true });
+        const tile = Bodies.rectangle(x, y, colSize, colSize, {
+            isStatic: true,
+            collisionFilter: { category: this._filterList.world },
+        });
         tile.isSensor = true;
         tile.label = 'tile';
         tile.render.lineWidth = 2;

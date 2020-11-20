@@ -50,15 +50,11 @@ function initGame() {
         } else if (a.label === 'tile') {
             tileColl = a;
         }
-        // console.log(playerColl);
-        // console.log(tileColl);
         if (playerColl && tileColl) {
             if (playerColl.game.targetTile === tileColl) {
                 playerColl.game.stop();
                 dirArrows.setToTile(playerColl.game.currentTile);
             }
-            //player.game.currentTile = a;
-            //player.game.stop();
         }
     });
 

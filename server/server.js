@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const socketio = require('socket.io');
-
+const Matter = require('matter-js');
 const app = express();
+
 app.use('/public', express.static(`${__dirname}/../client`));
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,7 +33,8 @@ const server = app.listen(3000, () => {
 });
 
 const io = socketio(server);
-
-io.on('connection', (sock) => {
+const player = { a: 'b' };
+io.on('connection', (client) => {
+    client.emit('init', player);
     console.log('someone conected');
 });

@@ -1,5 +1,3 @@
-//const sock=io();
-
 const Engine = Matter.Engine,
     Vector = Matter.Vector,
     Mouse = Matter.Mouse,
@@ -9,12 +7,16 @@ const Engine = Matter.Engine,
     Events = Matter.Events,
     Body = Matter.Body;
 
+function handleInit(msg) {
+    console.log(msg);
+}
+
 function initGame() {
+    const sock = io();
+    sock.on('init', handleInit);
     const gameCanvas = document.querySelector('canvas');
     const engine = Engine.create();
-    const renderer = new Renderer(engine.world, gameCanvas, {
-        wireframes: true,
-    });
+
     const objects = new WorldObjects();
 
     const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
@@ -70,6 +72,9 @@ function initGame() {
         }
     });
     World.add(engine.world, [...gameBoard, player, ...dirArrows.getArrowList(), mouseConstraint]);
+    const renderer = new Renderer(engine.world, gameCanvas, {
+        wireframes: true,
+    });
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);

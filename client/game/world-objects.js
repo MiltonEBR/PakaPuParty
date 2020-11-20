@@ -88,6 +88,12 @@ class WorldObjects {
             getArrowList() {
                 return [this.top, this.bot, this.left, this.right];
             },
+
+            deactivate() {
+                for (let arr of this.getArrowList()) {
+                    arr.target = null;
+                }
+            },
         };
 
         arrowManager.setToTile(tile);

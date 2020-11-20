@@ -21,7 +21,6 @@ function initGame() {
     let cont = 0;
     const player = objects.createPlayer(gameBoard[cont]);
     const dirArrows = objects.createArrowManager(player.game.currentTile);
-
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
@@ -66,6 +65,7 @@ function initGame() {
         if (clicked.label === 'dirArrow') {
             if (clicked.target) {
                 player.game.moveTo(clicked.target);
+                dirArrows.deactivate();
             }
         }
     });

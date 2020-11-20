@@ -19,14 +19,14 @@ function initGame() {
 
     const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
     let cont = 0;
-    const dirArrows = objects.createDirectionArrows(500, 300);
     const player = objects.createPlayer(gameBoard[cont]);
+    const dirArrows = objects.createDirectionArrows(player.game.currentTile);
+
     const mouse = Mouse.create(gameCanvas);
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse,
         collisionFilter: { mask: objects.filterList.interactable },
     });
-
     document.body.addEventListener('keydown', (e) => {
         if (e.key === 'a') {
             player.game.moveTo(gameBoard[cont]);
@@ -54,28 +54,14 @@ function initGame() {
         }
         if (mouseConstraint.body.label === 'dirArrow') {
             console.log(mouseConstraint.body);
-            if (mouseConstraint.body.enabled) {
-                console.log('canclick');
-            } else {
-                console.log('cantclick');
-            }
+            console.log(mouseConstraint.body);
         }
     });
-    World.add(engine.world, [
-        ...gameBoard,
-        player,
-        ...Object.values(dirArrows.arrows),
-        mouseConstraint,
-    ]);
-    dirArrows.changePos({ x: 200, y: 500 });
-
+    World.add(engine.world, [...gameBoard, player, ...dirArrows.getArrowList(), mouseConstraint]);
+    console.log(dirArrows.getArrowList());
     renderer.run();
     engine.world.gravity.y = 0;
     Engine.run(engine);
-
-    //Debug
-    console.log(gameBoard);
-    dirArrows.setEnabled('top', false);
 }
 
 initGame();

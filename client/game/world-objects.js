@@ -11,65 +11,85 @@ class WorldObjects {
         return this._filterList;
     }
 
-    createDirectionArrows(x, y) {
-        const dirArrows = {
-            arrows: {
-                top: Bodies.rectangle(x, y - 50, 25, 50, {
-                    isStatic: true,
-                    collisionFilter: {
-                        category: this._filterList.interactable,
-                    },
-                }),
-                bot: Bodies.rectangle(x, y + 50, 25, 50, {
-                    isStatic: true,
-                    collisionFilter: {
-                        category: this._filterList.interactable,
-                    },
-                }),
-                left: Bodies.rectangle(x - 50, y, 50, 25, {
-                    isStatic: true,
-                    collisionFilter: {
-                        category: this._filterList.interactable,
-                    },
-                }),
-                right: Bodies.rectangle(x + 50, y, 50, 25, {
-                    isStatic: true,
-                    collisionFilter: {
-                        category: this._filterList.interactable,
-                    },
-                }),
+    createArrow({ x, y }, dir) {
+        let newX = x,
+            newY = y,
+            siseX = 0,
+            siseY = 0;
+
+        switch (dir) {
+            case 'top':
+                newY -= 50;
+                siseX = 25;
+                siseY = 50;
+                break;
+            case 'bot':
+                newY += 50;
+                siseX = 25;
+                siseY = 50;
+                break;
+            case 'left':
+                newX -= 50;
+                siseX = 50;
+                siseY = 25;
+                break;
+            case 'right':
+                newX += 50;
+                siseX = 50;
+                siseY = 25;
+                break;
+
+            default:
+                break;
+        }
+        const newArr = Bodies.rectangle(newX, newY, siseX, siseY, {
+            isStatic: true,
+            collisionFilter: {
+                category: this._filterList.interactable,
             },
-            changePos({ x, y }) {
-                Body.setPosition(this.arrows.top, { x, y: y - 50 });
-                Body.setPosition(this.arrows.bot, { x, y: y + 50 });
-                Body.setPosition(this.arrows.left, { x: x - 50, y });
-                Body.setPosition(this.arrows.right, { x: x + 50, y });
-            },
-            setEnabled(dir, isEnabled) {
-                console.log(this.arrows[dir]);
-                if (isEnabled) {
-                    this.arrows[dir].enabled = true;
-                } else {
-                    this.arrows[dir].enabled = false;
+        });
+        newArr.render.lineWidth = 4;
+        newArr.render.strokeStyle = 'red';
+        newArr.label = 'dirArrow';
+        newArr.draw = function (ctx) {
+            if (this.enabled) {
+                ctx.fillStyle = 'orange';
+                ctx.fillRect(this.position.x - 10, this.position.y - 10, 25, 25);
+            }
+        };
+
+        return newArr;
+    }
+
+    createDirectionArrows(tile) {
+        console.log(tile);
+        const initPos = tile.position;
+        const arrowManager = {
+            top: { arrow: this.createArrow(initPos, 'top'), target: null },
+            bot: { arrow: this.createArrow(initPos, 'bot'), target: null },
+            left: { arrow: this.createArrow(initPos, 'left'), target: null },
+            right: { arrow: this.createArrow(initPos, 'right'), target: null },
+
+            setToTile(tile) {
+                const { x, y } = tile.position;
+                for (let node in tile.nodes) {
+                    if (tile.nodes[node]) {
+                        arrowManager[node].target = tile.nodes[node];
+                    } else {
+                        arrowManager[node].target = null;
+                    }
                 }
+                Body.setPosition(arrowManager.top, { x, y: y - 50 });
+                Body.setPosition(arrowManager.bot, { x, y: y + 50 });
+                Body.setPosition(arrowManager.left, { x: x - 50, y });
+                Body.setPosition(arrowManager.right, { x: x + 50, y });
+            },
+            getArrowList() {
+                return [this.top.arrow, this.bot.arrow, this.left.arrow, this.right.arrow];
             },
         };
 
-        for (let arr of Object.values(dirArrows.arrows)) {
-            arr.enabled = true;
-            arr.render.lineWidth = 4;
-            arr.render.strokeStyle = 'red';
-            arr.label = 'dirArrow';
-
-            arr.draw = function (ctx) {
-                if (this.enabled) {
-                    ctx.fillStyle = 'orange';
-                    ctx.fillRect(this.position.x - 10, this.position.y - 10, 25, 25);
-                }
-            };
-        }
-
-        return dirArrows;
+        return arrowManager;
     }
 
     createPlayer(spawnTile) {
@@ -328,7 +348,6 @@ class WorldObjects {
                     }
                     if (position) {
                         if (node.position.x === position.x && node.position.y === position.y) {
-                            console.log('yes');
                             // console.log('Found matching pos ' + position.x + ', ' + position.y);
                             return node;
                         }

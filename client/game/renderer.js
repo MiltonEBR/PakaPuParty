@@ -16,8 +16,8 @@ class Renderer {
         const options = this.options;
 
         this.bodies.forEach((body) => {
-            if (body.draw) {
-                body.draw(ctx);
+            if (body.render.draw) {
+                body.render.draw(ctx);
             }
 
             let optionsWireframe =

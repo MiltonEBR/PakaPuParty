@@ -2,13 +2,11 @@ const engine = { bodies: [] };
 const entities = new Entities();
 
 function handleInit({ player }) {
-    console.log(player);
     const playerObj = entities.createPlayer(player, {
         wireframe: true,
         strokeStyle: 'red',
         lineWidth: 4,
     });
-    //console.log(playerObj.position);
     engine.bodies.push(playerObj);
 }
 

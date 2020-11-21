@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
 app.get('/play', (req, res) => {
     console.log(req.query);
-    res.sendFile('lobby.html', { root: `../client` });
+    res.sendFile('game.html', { root: `../client` });
 });
 
 app.post('/play', (req, res) => {
@@ -33,8 +33,28 @@ const server = app.listen(3000, () => {
 });
 
 const io = socketio(server);
-const player = { a: 'b' };
+const player = Matter.Bodies.rectangle(100, 100, 50, 50);
+
+function serialize(player) {
+    const vertices = player.map((data) => {
+        return { x: data.x, y: data.y };
+    });
+
+    return vertices;
+}
+let data = serialize(player.vertices);
+console.log(data);
+
 io.on('connection', (client) => {
-    client.emit('init', player);
+    client.emit('init', { player: { id: 0, position: player.position, vertices: data } });
     console.log('someone conected');
+
+    setInterval(function () {
+        data = serialize(player.vertices);
+        let message = {
+            player: { id: 0, position: player.position, vertices: data },
+        };
+        Matter.Body.translate(player, { x: 5, y: 0 });
+        client.emit('update', message);
+    }, 1000);
 });

@@ -1,83 +1,107 @@
-const Engine = Matter.Engine,
-    Vector = Matter.Vector,
-    Mouse = Matter.Mouse,
-    MouseConstraint = Matter.MouseConstraint,
-    World = Matter.World,
-    Bodies = Matter.Bodies,
-    Events = Matter.Events,
-    Body = Matter.Body;
+const engine = { bodies: [] };
+const entities = new Entities();
 
-function handleInit(msg) {
-    console.log(msg);
+function handleInit({ player }) {
+    console.log(player);
+    const playerObj = entities.createPlayer(player, {
+        wireframe: true,
+        strokeStyle: 'red',
+        lineWidth: 4,
+    });
+    //console.log(playerObj.position);
+    engine.bodies.push(playerObj);
+}
+
+function update(data) {
+    const player = data.player;
+    for (let body of engine.bodies) {
+        if (player.id === body.id) {
+            body.vertices = player.vertices;
+            body.position = player.position;
+        }
+    }
 }
 
 function initGame() {
     const sock = io();
+
     sock.on('init', handleInit);
+
+    sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');
-    const engine = Engine.create();
-
-    const objects = new WorldObjects();
-
-    const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
-    let cont = 0;
-    const player = objects.createPlayer(gameBoard[cont]);
-    const dirArrows = objects.createArrowManager(player.game.currentTile);
-    const mouse = Mouse.create(gameCanvas);
-    const mouseConstraint = MouseConstraint.create(engine, {
-        mouse: mouse,
-        collisionFilter: { mask: objects.filterList.interactable },
-    });
-    document.body.addEventListener('keydown', (e) => {
-        if (e.key === 'a') {
-            player.game.moveTo(gameBoard[cont]);
-            cont += 1;
-        } else if (e.key === 's') {
-            player.game.setSpeed(0, 2);
-        }
-    });
-    Events.on(engine, 'collisionStart', (e) => {
-        const a = e.pairs[0].bodyA;
-        const b = e.pairs[0].bodyB;
-        let playerColl;
-        let tileColl;
-        if (a.label === 'player') {
-            playerColl = a;
-        } else if (b.label === 'player') {
-            playerColl = b;
-        }
-        if (b.label === 'tile') {
-            tileColl = b;
-        } else if (a.label === 'tile') {
-            tileColl = a;
-        }
-        if (playerColl && tileColl) {
-            if (playerColl.game.targetTile === tileColl) {
-                playerColl.game.stop();
-                dirArrows.setToTile(playerColl.game.currentTile);
-            }
-        }
-    });
-
-    Events.on(mouseConstraint, 'mousedown', (e) => {
-        const clicked = mouseConstraint.body;
-        if (!clicked) {
-            return;
-        }
-        if (clicked.label === 'dirArrow') {
-            if (clicked.target) {
-                player.game.moveTo(clicked.target);
-                dirArrows.deactivate();
-            }
-        }
-    });
-    World.add(engine.world, [...gameBoard, player, ...dirArrows.getArrowList(), mouseConstraint]);
-    const renderer = new Renderer(engine.world, gameCanvas, {
+    const renderer = new Renderer(engine, gameCanvas, {
         wireframes: true,
     });
     renderer.run();
-    engine.world.gravity.y = 0;
-    Engine.run(engine);
 }
+
+// function initGame() {
+//     const sock = io();
+//     sock.on('init', handleInit);
+//     const gameCanvas = document.querySelector('canvas');
+//     const engine = Engine.create();
+
+//     const objects = new WorldObjects();
+
+//     const gameBoard = objects.createBoard('debug', { x: 100, y: 300 });
+//     let cont = 0;
+//     const player = objects.createPlayer(gameBoard[cont]);
+//     const dirArrows = objects.createArrowManager(player.game.currentTile);
+//     const mouse = Mouse.create(gameCanvas);
+//     const mouseConstraint = MouseConstraint.create(engine, {
+//         mouse: mouse,
+//         collisionFilter: { mask: objects.filterList.interactable },
+//     });
+//     document.body.addEventListener('keydown', (e) => {
+//         if (e.key === 'a') {
+//             player.game.moveTo(gameBoard[cont]);
+//             cont += 1;
+//         } else if (e.key === 's') {
+//             player.game.setSpeed(0, 2);
+//         }
+//     });
+//     Events.on(engine, 'collisionStart', (e) => {
+//         const a = e.pairs[0].bodyA;
+//         const b = e.pairs[0].bodyB;
+//         let playerColl;
+//         let tileColl;
+//         if (a.label === 'player') {
+//             playerColl = a;
+//         } else if (b.label === 'player') {
+//             playerColl = b;
+//         }
+//         if (b.label === 'tile') {
+//             tileColl = b;
+//         } else if (a.label === 'tile') {
+//             tileColl = a;
+//         }
+//         if (playerColl && tileColl) {
+//             if (playerColl.game.targetTile === tileColl) {
+//                 playerColl.game.stop();
+//                 dirArrows.setToTile(playerColl.game.currentTile);
+//             }
+//         }
+//     });
+
+//     Events.on(mouseConstraint, 'mousedown', (e) => {
+//         const clicked = mouseConstraint.body;
+//         if (!clicked) {
+//             return;
+//         }
+//         if (clicked.label === 'dirArrow') {
+//             if (clicked.target) {
+//                 player.game.moveTo(clicked.target);
+//                 dirArrows.deactivate();
+//             }
+//         }
+//     });
+//     World.add(engine.world, [...gameBoard, player, ...dirArrows.getArrowList(), mouseConstraint]);
+//     const renderer = new Renderer(engine.world, gameCanvas, {
+//         wireframes: true,
+//     });
+//     renderer.run();
+//     engine.world.gravity.y = 0;
+//     Engine.run(engine);
+// }
 
 initGame();

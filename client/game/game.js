@@ -2,6 +2,7 @@ const world = new World();
 
 function handleInit(dataObj) {
     const tileList = dataObj.tiles;
+    const playerList = dataObj.player;
     for (let tile of tileList) {
         if (world.verifyData(tile)) {
             world.createEntity(tile, {
@@ -9,6 +10,18 @@ function handleInit(dataObj) {
                 strokeStyle: 'red',
                 lineWidth: 4,
                 index: tile.index,
+            });
+        }
+
+        //Else throw an error?
+    }
+    for (let player of playerList) {
+        if (world.verifyData(player)) {
+            world.createEntity(player, {
+                wireframe: true,
+                strokeStyle: 'blue',
+                lineWidth: 4,
+                index: player.index,
             });
         }
 

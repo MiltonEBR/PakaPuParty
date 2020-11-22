@@ -59,7 +59,6 @@ class Game {
                 u = tile.nodes.top,
                 d = tile.nodes.bot;
 
-            const fill = 'green';
             if (r) {
                 if (l && !u && !d) {
                     tile.orientation = 'right-left';
@@ -219,6 +218,13 @@ class Game {
         World.add(this.world, tileMap);
     }
 
+    createBox({ x, y }) {
+        //Test purposes
+        const test = Bodies.rectangle(x, y, 50, 50);
+        World.add(this.world, test);
+        this.playerList.push(test);
+    }
+
     serialize() {
         // console.log(this.gameBoardTiles);
         const serializeVertices = (vertexArray) => {
@@ -237,8 +243,16 @@ class Game {
             };
         });
 
+        const player = this.playerList.map((player) => {
+            return {
+                id: player.id,
+                position: player.position,
+                vertices: serializeVertices(player.vertices),
+            };
+        });
+
         //console.log(serializedTiles);
-        return { tiles: serializedTiles };
+        return { tiles: serializedTiles, player };
     }
 }
 module.exports = Game;

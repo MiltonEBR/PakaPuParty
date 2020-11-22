@@ -35,16 +35,14 @@ const server = app.listen(3000, () => {
 const io = socketio(server);
 const game = new Game();
 game.createBoard('debug', { x: 100, y: 300 });
-
+game.createBox({ x: 245, y: 160 });
 io.on('connection', (client) => {
     const serializedData = game.serialize();
     client.emit('init', serializedData);
     console.log('someone conected');
 
-    // setInterval(function () {
-    //     data = serialize(player.vertices);
-    //     let message = [{ id: 0, position: player.position, vertices: data }];
-    //     Matter.Body.translate(player, { x: 5, y: 0 });
-    //     client.emit('update', message);
-    // }, 1000);
+    setInterval(function () {
+        let message = [...game.serialize().player];
+        client.emit('update', message);
+    }, 20);
 });

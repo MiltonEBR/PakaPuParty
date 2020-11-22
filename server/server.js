@@ -43,17 +43,13 @@ function serialize(player) {
     return vertices;
 }
 let data = serialize(player.vertices);
-console.log(data);
-
 io.on('connection', (client) => {
-    client.emit('init', { player: { id: 0, position: player.position, vertices: data } });
+    client.emit('init', [{ id: player.id, position: player.position, vertices: data }]);
     console.log('someone conected');
 
     setInterval(function () {
         data = serialize(player.vertices);
-        let message = {
-            player: { id: 0, position: player.position, vertices: data },
-        };
+        let message = [{ id: 0, position: player.position, vertices: data }];
         Matter.Body.translate(player, { x: 5, y: 0 });
         client.emit('update', message);
     }, 1000);

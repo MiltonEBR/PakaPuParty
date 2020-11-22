@@ -1,6 +1,6 @@
 class Renderer {
-    constructor({ entityList }, canvas, options) {
-        this.entityList = entityList;
+    constructor(entities, canvas, options) {
+        this.entities = entities;
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
@@ -13,8 +13,8 @@ class Renderer {
 
     entitiesByIndex() {
         const entitiesByIndex = {};
-        for (let entity in this.entityList) {
-            const ent = this.entityList[entity];
+        for (let id in this.entities) {
+            const ent = this.entities[id];
             if (!ent.render.index) {
                 if (!entitiesByIndex[0]) entitiesByIndex[0] = [];
                 entitiesByIndex[0].push(ent);
@@ -33,33 +33,32 @@ class Renderer {
 
         //console.log(this.entitiesByIndex());
 
-        for (let entity in this.entityList) {
-            const body = this.entityList[entity];
-            if (body.render.draw) {
-                body.render.draw(ctx);
+        for (let id in this.entities) {
+            const ent = this.entities[id];
+            if (ent.render.draw) {
+                ent.render.draw(ctx);
             }
 
             let optionsWireframe =
-                options.wireframes &&
-                (body.render.wireframe || body.render.wireframe === undefined);
+                options.wireframes && (ent.render.wireframe || ent.render.wireframe === undefined);
 
-            if (optionsWireframe || body.render.wireframe) {
+            if (optionsWireframe || ent.render.wireframe) {
                 ctx.beginPath();
-                ctx.moveTo(body.vertices[0].x, body.vertices[0].y);
+                ctx.moveTo(ent.vertices[0].x, ent.vertices[0].y);
 
-                for (var j = 1; j < body.vertices.length; j += 1) {
-                    ctx.lineTo(body.vertices[j].x, body.vertices[j].y);
+                for (var j = 1; j < ent.vertices.length; j += 1) {
+                    ctx.lineTo(ent.vertices[j].x, ent.vertices[j].y);
                 }
                 ctx.closePath();
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = 'black';
-                if (body.render) {
-                    if (body.render.lineWidth) {
-                        ctx.lineWidth = body.render.lineWidth;
+                if (ent.render) {
+                    if (ent.render.lineWidth) {
+                        ctx.lineWidth = ent.render.lineWidth;
                     }
 
-                    if (body.render.strokeStyle) {
-                        ctx.strokeStyle = body.render.strokeStyle;
+                    if (ent.render.strokeStyle) {
+                        ctx.strokeStyle = ent.render.strokeStyle;
                     }
                 }
                 //Fill wireframes, but kind of useless so it's commented out for now

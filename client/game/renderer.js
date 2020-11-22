@@ -11,9 +11,28 @@ class Renderer {
         }
     }
 
+    entitiesByIndex() {
+        const entitiesByIndex = {};
+        for (let entity in this.entityList) {
+            const ent = this.entityList[entity];
+            if (!ent.render.index) {
+                if (!entitiesByIndex[0]) entitiesByIndex[0] = [];
+                entitiesByIndex[0].push(ent);
+            } else {
+                if (!entitiesByIndex[ent.render.index]) entitiesByIndex[ent.render.index] = [];
+                entitiesByIndex[ent.render.index].push(ent);
+            }
+        }
+
+        return entitiesByIndex;
+    }
+
     draw() {
         const ctx = this.ctx;
         const options = this.options;
+
+        //console.log(this.entitiesByIndex());
+
         for (let entity in this.entityList) {
             const body = this.entityList[entity];
             if (body.render.draw) {

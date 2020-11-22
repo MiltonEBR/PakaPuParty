@@ -1,32 +1,62 @@
 class Entities {
     constructor() {
-        this.playersId = new Set();
+        this._entityList = {};
     }
 
-    createPlayer({ position, vertices, id }, options) {
-        if (this.playersId.has(id)) {
-            return;
-        } else {
-            this.playersId.add(id);
+    verifyData(data) {
+        //Verifies if the data can be transformed into an entiry
+        if (!data.position || !data.vertices || data.id === null || data.id === undefined) {
+            return false;
         }
-        const newPlayer = {
-            id, //Id of the player
-            vertices, //List of vectors that represent vertices
-            position,
-            render: {}, //Position of entity
-        };
+        return true;
+    }
 
-        const { wireframe, lineWidth, strokeStyle } = options;
+    createEntity(initialData, options) {
+        const { position, vertices, id } = initialData;
+        if (this._entityList[id]) {
+            return;
+        }
+
+        const newEntity = { position, vertices, render: {} };
+
+        const { wireframe, lineWidth, strokeStyle, index } = options;
+
+        const render = newEntity.render;
         if (wireframe) {
-            newPlayer.render.wireframe = wireframe;
+            render.wireframe = wireframe;
         }
         if (lineWidth) {
-            newPlayer.render.lineWidth = lineWidth;
+            render.lineWidth = lineWidth;
         }
         if (strokeStyle) {
-            newPlayer.render.strokeStyle = strokeStyle;
+            render.strokeStyle = strokeStyle;
+        }
+        if (index) {
+            render.index = index;
+        } else {
+            render.index = 0;
         }
 
-        return newPlayer;
+        this._entityList[id] = newEntity;
+        return newEntity;
+    }
+
+    updateEntity(id, data) {
+        if (!this._entityList[id]) {
+            return;
+        }
+
+        const entity = this._entityList[id];
+        for (let value in data) {
+            if (entity[value]) {
+                entity[value] = data[value];
+            }
+        }
+
+        return entity;
+    }
+
+    get entityList() {
+        return this._entityList;
     }
 }

@@ -1,33 +1,33 @@
-const engine = { bodies: [] };
 const entities = new Entities();
 
-function handleInit({ player }) {
-    const playerObj = entities.createPlayer(player, {
-        wireframe: true,
-        strokeStyle: 'red',
-        lineWidth: 4,
-    });
-    engine.bodies.push(playerObj);
+function handleInit(dataList) {
+    const entityList = dataList;
+    for (let entity of entityList) {
+        if (entities.verifyData(entity)) {
+            entities.createEntity(entity, {
+                wireframe: true,
+                strokeStyle: 'red',
+                lineWidth: 4,
+            });
+        }
+
+        //Else throw an error?
+    }
 }
 
-function update(data) {
-    const player = data.player;
-    for (let body of engine.bodies) {
-        if (player.id === body.id) {
-            body.vertices = player.vertices;
-            body.position = player.position;
-        }
+function update(dataList) {
+    for (let data of dataList) {
+        const { id, position, vertices } = data;
+        entities.updateEntity(id, { position, vertices });
     }
 }
 
 function initGame() {
     const sock = io();
-
     sock.on('init', handleInit);
-
     sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');
-    const renderer = new Renderer(engine, gameCanvas, {
+    const renderer = new Renderer(entities, gameCanvas, {
         wireframes: true,
     });
     renderer.run();

@@ -1,13 +1,14 @@
 const entities = new Entities();
 
 function handleInit(dataList) {
-    const entityList = dataList;
-    for (let entity of entityList) {
-        if (entities.verifyData(entity)) {
-            entities.createEntity(entity, {
+    const tileList = dataList.tiles;
+    for (let tile of tileList) {
+        if (entities.verifyData(tile)) {
+            entities.createEntity(tile, {
                 wireframe: true,
                 strokeStyle: 'red',
                 lineWidth: 4,
+                index: tile.index,
             });
         }
 

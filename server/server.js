@@ -34,6 +34,7 @@ const server = app.listen(3000, () => {
 
 const io = socketio(server);
 const player = Matter.Bodies.rectangle(100, 100, 50, 50);
+const square2 = Matter.Bodies.rectangle(100, 300, 50, 50);
 
 function serialize(player) {
     const vertices = player.map((data) => {
@@ -44,7 +45,10 @@ function serialize(player) {
 }
 let data = serialize(player.vertices);
 io.on('connection', (client) => {
-    client.emit('init', [{ id: player.id, position: player.position, vertices: data }]);
+    client.emit('init', [
+        { id: player.id, position: player.position, vertices: data },
+        { id: square2.id, position: square2.position, vertices: serialize(square2.vertices) },
+    ]);
     console.log('someone conected');
 
     setInterval(function () {

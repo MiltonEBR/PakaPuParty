@@ -1,6 +1,6 @@
-class Entities {
+class World {
     constructor() {
-        this._entityList = {};
+        this._entities = {};
     }
 
     verifyData(data) {
@@ -13,7 +13,7 @@ class Entities {
 
     createEntity(initialData, options) {
         const { position, vertices, id } = initialData;
-        if (this._entityList[id]) {
+        if (this._entities[id]) {
             return;
         }
 
@@ -37,16 +37,16 @@ class Entities {
             render.index = 0;
         }
 
-        this._entityList[id] = newEntity;
+        this._entities[id] = newEntity;
         return newEntity;
     }
 
     updateEntity(id, data) {
-        if (!this._entityList[id]) {
+        if (!this._entities[id]) {
             return;
         }
 
-        const entity = this._entityList[id];
+        const entity = this._entities[id];
         for (let value in data) {
             if (entity[value]) {
                 entity[value] = data[value];
@@ -56,7 +56,7 @@ class Entities {
         return entity;
     }
 
-    get entityList() {
-        return this._entityList;
+    get entities() {
+        return this._entities;
     }
 }

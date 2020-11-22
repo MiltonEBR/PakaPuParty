@@ -1,10 +1,10 @@
-const entities = new Entities();
+const world = new World();
 
-function handleInit(dataList) {
-    const tileList = dataList.tiles;
+function handleInit(dataObj) {
+    const tileList = dataObj.tiles;
     for (let tile of tileList) {
-        if (entities.verifyData(tile)) {
-            entities.createEntity(tile, {
+        if (world.verifyData(tile)) {
+            world.createEntity(tile, {
                 wireframe: true,
                 strokeStyle: 'red',
                 lineWidth: 4,
@@ -19,7 +19,7 @@ function handleInit(dataList) {
 function update(dataList) {
     for (let data of dataList) {
         const { id, position, vertices } = data;
-        entities.updateEntity(id, { position, vertices });
+        world.updateEntity(id, { position, vertices });
     }
 }
 
@@ -28,7 +28,7 @@ function initGame() {
     sock.on('init', handleInit);
     sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');
-    const renderer = new Renderer(entities, gameCanvas, {
+    const renderer = new Renderer(world.entities, gameCanvas, {
         wireframes: true,
     });
     renderer.run();

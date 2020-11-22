@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const socketio = require('socket.io');
-const Matter = require('matter-js');
+const Game = require('./game/game');
 const app = express();
 
 app.use('/public', express.static(`${__dirname}/../client`));
@@ -33,28 +33,18 @@ const server = app.listen(3000, () => {
 });
 
 const io = socketio(server);
-const player = Matter.Bodies.rectangle(100, 100, 50, 50);
-const square2 = Matter.Bodies.rectangle(100, 300, 50, 50);
+const game = new Game();
+game.createBoard('debug', { x: 100, y: 300 });
 
-function serialize(player) {
-    const vertices = player.map((data) => {
-        return { x: data.x, y: data.y };
-    });
-
-    return vertices;
-}
-let data = serialize(player.vertices);
 io.on('connection', (client) => {
-    client.emit('init', [
-        { id: player.id, position: player.position, vertices: data },
-        { id: square2.id, position: square2.position, vertices: serialize(square2.vertices) },
-    ]);
+    const serializedData = game.serialize();
+    client.emit('init', serializedData);
     console.log('someone conected');
 
-    setInterval(function () {
-        data = serialize(player.vertices);
-        let message = [{ id: 0, position: player.position, vertices: data }];
-        Matter.Body.translate(player, { x: 5, y: 0 });
-        client.emit('update', message);
-    }, 1000);
+    // setInterval(function () {
+    //     data = serialize(player.vertices);
+    //     let message = [{ id: 0, position: player.position, vertices: data }];
+    //     Matter.Body.translate(player, { x: 5, y: 0 });
+    //     client.emit('update', message);
+    // }, 1000);
 });

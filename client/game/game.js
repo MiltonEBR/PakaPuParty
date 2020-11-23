@@ -2,7 +2,7 @@ const world = new World();
 
 function handleInit(dataObj) {
     const tiles = dataObj.tiles;
-    const players = dataObj.player;
+    const players = dataObj.players;
     for (let tile of tiles) {
         if (world.verifyData(tile)) {
             world.createEntity(tile, {
@@ -11,7 +11,6 @@ function handleInit(dataObj) {
                 lineWidth: 4,
                 index: tile.index,
             });
-            console.log(tile.orientation);
         }
 
         //Else throw an error?

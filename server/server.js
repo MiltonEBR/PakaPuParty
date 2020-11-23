@@ -34,11 +34,11 @@ const server = app.listen(3000, () => {
 
 const io = socketio(server);
 const game = new Game();
-game.createBoard('debug', { x: 100, y: 300 });
-game.createBox({ x: 245, y: 160 });
+const map = game.testBoard();
+// game.createBox({ x: 245, y: 160 });
 io.on('connection', (client) => {
     const serializedData = game.serialize();
-    client.emit('init', serializedData);
+    client.emit('init', { tiles: map });
     console.log('someone conected');
 
     setInterval(function () {

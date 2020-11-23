@@ -1,19 +1,9 @@
 class GameBoard {
-    constructor(game, tileSpecs) {
+    constructor(game) {
         this._game = game;
 
         this._tileWidth = 50;
         this._spacing = 100;
-
-        if (tileSpecs) {
-            if (tileSpecs.width) {
-                this._tileWidth = tileSpecs.width;
-            }
-
-            if (tileSpecs.spacing) {
-                this._spacing = tileSpecs.spacing;
-            }
-        }
 
         this._board = [];
     }

@@ -34,7 +34,6 @@ const server = app.listen(3000, () => {
 
 const io = socketio(server);
 const game = new Game();
-game.init();
 // game.createBox({ x: 245, y: 160 });
 io.on('connection', (client) => {
     const serializedData = game.serialize();

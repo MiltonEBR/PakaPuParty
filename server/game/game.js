@@ -26,20 +26,17 @@ class Game {
             interactable: 0x0002,
             world: 0x0004,
         };
+
+        this.createBoard();
     }
 
     get filterList() {
         return this._filterList;
     }
 
-    init() {
-        this.createBoard();
-    }
-
     createBoard() {
-        const board = new GameBoard(this);
-        board.createBoard('debug', { x: 100, y: 200 });
-        this._gameBoard = board;
+        this._gameBoard = new GameBoard(this);
+        this._gameBoard.createBoard('debug', { x: 100, y: 200 });
     }
 
     createInstance(x, y, sX, sY, options) {

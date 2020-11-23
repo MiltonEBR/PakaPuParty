@@ -1,9 +1,9 @@
 const world = new World();
 
 function handleInit(dataObj) {
-    const tileList = dataObj.tiles;
-    const playerList = dataObj.player;
-    for (let tile of tileList) {
+    const tiles = dataObj.tiles;
+    const players = dataObj.player;
+    for (let tile of tiles) {
         if (world.verifyData(tile)) {
             world.createEntity(tile, {
                 wireframe: true,
@@ -15,7 +15,7 @@ function handleInit(dataObj) {
 
         //Else throw an error?
     }
-    for (let player of playerList) {
+    for (let player of players) {
         if (world.verifyData(player)) {
             world.createEntity(player, {
                 wireframe: true,
@@ -46,6 +46,8 @@ function initGame() {
     });
     renderer.run();
 }
+
+initGame();
 
 // function initGame() {
 //     const sock = io();
@@ -115,5 +117,3 @@ function initGame() {
 //     engine.world.gravity.y = 0;
 //     Engine.run(engine);
 // }
-
-initGame();

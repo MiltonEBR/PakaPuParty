@@ -1,5 +1,6 @@
 const Matter = require('matter-js');
 const GameBoard = require('./gameBoard');
+const Player = require('./player');
 
 const Engine = Matter.Engine,
     World = Matter.World,
@@ -39,6 +40,11 @@ class Game {
         this._gameBoard.createBoard('debug', { x: 100, y: 200 });
     }
 
+    createPlayer() {
+        this._playerList.push(new Player(this._gameBoard.tiles[0], this));
+        this._playerList[0].move();
+    }
+
     createInstance(x, y, sX, sY, options) {
         const newInstance = Bodies.rectangle(x, y, sX, sY, options);
         World.add(this.world, newInstance);
@@ -52,7 +58,7 @@ class Game {
     //     this._playerList.push(test);
     // }
 
-    serialize() {
+    serializeAll() {
         const serializeVertices = (vertexArray) => {
             const serializedList = vertexArray.map((vertex) => {
                 return { x: vertex.x, y: vertex.y };
@@ -61,14 +67,14 @@ class Game {
             return serializedList;
         };
 
-        const player = this._playerList.map((player) => {
+        const players = this._playerList.map((player) => {
             return {
-                id: player.id,
-                position: player.position,
-                vertices: serializeVertices(player.vertices),
+                id: player.instance.id,
+                position: player.instance.position,
+                vertices: serializeVertices(player.instance.vertices),
             };
         });
-        return { player, tiles: this._gameBoard.serialize() };
+        return { players, tiles: this._gameBoard.serialize() };
     }
 }
 

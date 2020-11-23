@@ -23,9 +23,7 @@ class Game {
         }, 20);
 
         this._filterList = {
-            notInteractable: 0x0001,
-            interactable: 0x0002,
-            world: 0x0004,
+            world: 0x0001,
         };
 
         this.createBoard();

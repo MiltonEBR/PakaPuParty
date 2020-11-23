@@ -36,7 +36,7 @@ class Player {
             // restitution: 0.0,
             // density: 1,
             collisionFilter: {
-                category: this._game.filterList.notInteractable,
+                category: this._game.filterList.world,
                 mask: this._game.filterList.world,
             },
         });

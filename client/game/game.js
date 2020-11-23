@@ -11,6 +11,7 @@ function handleInit(dataObj) {
                 lineWidth: 4,
                 index: tile.index,
             });
+            console.log(tile.orientation);
         }
 
         //Else throw an error?

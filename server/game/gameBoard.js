@@ -40,17 +40,71 @@ class GameBoard {
                     return el !== null;
                 });
             };
+
+            tile.orientation = 0;
+
+            tile.updateOrientation = () => {
+                const r = tile.right.tile ? true : false,
+                    l = tile.left.tile ? true : false,
+                    t = tile.top.tile ? true : false,
+                    b = tile.bot.tile ? true : false;
+
+                if (l) {
+                    if (!r && !t && !b) {
+                        tile.orientation = 1; //Left
+                    } else if (!r && t && !b) {
+                        tile.orientation = 2; //Left-top
+                    } else if (r && !t && !b) {
+                        tile.orientation = 3; //Left-right
+                    } else if (!r && !t && b) {
+                        tile.orientation = 4; //Left-bot
+                    } else if (r && t && !b) {
+                        tile.orientation = 5;
+                        //Left-top-right
+                    } else if (!r && t && b) {
+                        tile.orientation = 6;
+                        //Left-top-bot
+                    } else if (r && !t && b) {
+                        tile.orientation = 7;
+                        //Left-top-bot-right
+                    } else if (r && t && b) {
+                        tile.orientation = 8;
+                        //Left-top-bot-right
+                    }
+                } else if (t) {
+                    if (!r && !b) {
+                        tile.orientation = 9; //Top
+                    } else if (r && !b) {
+                        tile.orientation = 10; //Top-right
+                    } else if (!r && b) {
+                        tile.orientation = 11; //Top-bot
+                    } else if (r && b) {
+                        tile.orientation = 12; //Top-bot-right
+                    }
+                } else if (r) {
+                    if (!b) {
+                        tile.orientation = 13; //Right
+                    } else if (b) {
+                        tile.orientation = 14; //Right-bot
+                    }
+                } else if (b) {
+                    tile.orientation = 15; //Bot
+                } else {
+                    tile.orientation = 0;
+                }
+            };
+
             return tile;
         };
 
         let currentTile = createTile(x, y);
         this._board.push(currentTile);
 
-        // const updateTileSprites = () => {
-        //     tileMap.forEach((tile) => {
-        //         tile.updateSprite();
-        //     });
-        // };
+        const updateTileOrientation = () => {
+            this._board.forEach((tile) => {
+                tile.updateOrientation();
+            });
+        };
 
         const searchTile = (filter) => {
             let start = this._board[0];
@@ -151,7 +205,7 @@ class GameBoard {
             addTile('left');
             addTile('top');
             addTile('top');
-            // updateTileSprites();
+            updateTileOrientation();
         }
     }
 
@@ -167,6 +221,7 @@ class GameBoard {
                 vertices: tile.vertices.map((vertex) => {
                     return { x: vertex.x, y: vertex.y };
                 }),
+                orientation: tile.orientation,
             };
         });
 

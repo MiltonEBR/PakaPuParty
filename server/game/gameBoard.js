@@ -2,17 +2,15 @@ class GameBoard {
     constructor(game) {
         this._game = game;
 
-        this._tileWidth = 50;
-        this._spacing = 100;
-
         this._board = [];
     }
 
     createBoard(name, { x, y }) {
         //Returns an array of the map tiles for the engine to run depending on map name
-
+        const tileWidth = 50;
+        const spacing = tileWidth * 2;
         const createTile = (x, y) => {
-            const tile = this._game.createInstance(x, y, this._tileWidth, this._tileWidth, {
+            const tile = this._game.createInstance(x, y, tileWidth, tileWidth, {
                 isStatic: true,
                 collisionFilter: { category: this._game.filterList.world },
             });
@@ -144,19 +142,19 @@ class GameBoard {
             let newTileDir = '';
             switch (dir) {
                 case 'right':
-                    newX += this._spacing;
+                    newX += spacing;
                     newTileDir = 'left';
                     break;
                 case 'left':
-                    newX -= this._spacing;
+                    newX -= spacing;
                     newTileDir = 'right';
                     break;
                 case 'top':
-                    newY -= this._spacing;
+                    newY -= spacing;
                     newTileDir = 'bot';
                     break;
                 case 'bot':
-                    newY += this._spacing;
+                    newY += spacing;
                     newTileDir = 'top';
                     break;
                 default:

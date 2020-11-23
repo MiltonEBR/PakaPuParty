@@ -27,195 +27,21 @@ class Game {
         };
     }
 
-    createTile(x, y) {
-        const colSize = 50;
-        const tile = Bodies.rectangle(x, y, colSize, colSize, {
-            isStatic: true,
-            collisionFilter: { category: this._filterList.world },
-        });
-        tile.isSensor = true;
-        tile.label = 'tile';
-        tile.render.lineWidth = 2;
-        tile.render.strokeStyle = 'red';
-
-        tile.nodes = {
-            top: null,
-            bot: null,
-            left: null,
-            right: null,
-        };
-
-        tile.getNodes = () => {
-            const { nodes } = tile;
-            return [nodes.top, nodes.bot, nodes.left, nodes.right];
-        };
-
-        tile.orientation = 'none'; //Default draw,meant for updateSprite to determine
-
-        tile.updateSprite = () => {
-            //Determines which sprite the tile should use based on siblings (Not final sprites or calculations)
-            let r = tile.nodes.right,
-                l = tile.nodes.left,
-                u = tile.nodes.top,
-                d = tile.nodes.bot;
-
-            if (r) {
-                if (l && !u && !d) {
-                    tile.orientation = 'right-left';
-                } else if (!l && u && !d) {
-                    tile.orientation = 'right-up';
-                } else if (!l && !u && d) {
-                    tile.orientation = 'right-down';
-                } else if (l && u && !d) {
-                    tile.orientation = 'right-left-up';
-                } else if (!l && u && d) {
-                    tile.orientation = 'right-up-down';
-                } else if (l && !u && d) {
-                    tile.orientation = 'right-left-down';
-                } else if (l && u && d) {
-                    tile.orientation = 'right-left-up-down';
-                } else {
-                    tile.orientation = 'right';
-                }
-            } else if (l) {
-                if (!u && d) {
-                    tile.orientation = 'left-down';
-                } else if (u && !d) {
-                    tile.orientation = 'left-up';
-                } else if (u && d) {
-                    tile.orientation = 'left-up-down';
-                } else {
-                    tile.orientation = 'left';
-                }
-            } else if (u) {
-                if (d) {
-                    tile.orientation = 'up-down';
-                } else {
-                    tile.orientation = 'up';
-                }
-            } else if (d) {
-                tile.orientation = 'down';
-            } else {
-                tile.orientation = 'null';
-            }
-        };
-
-        return tile;
+    get filterList() {
+        return this._filterList;
     }
 
-    createBoard(name, { x, y }) {
-        //Returns an array of the map tiles for the engine to run depending on map name
-        const initPos = Vector.create(x, y);
-        const tileMap = [];
-        const inc = 100;
-        let currentTile = tileMap[tileMap.push(this.createTile(initPos.x, initPos.y)) - 1];
+    testBoard() {
+        const board = new GameBoard(this);
+        board.createBoard('debug', { x: 100, y: 200 });
+        World.add(this.world, board.tiles);
+        return board.serialize();
+    }
 
-        const updateTileSprites = () => {
-            tileMap.forEach((tile) => {
-                tile.updateSprite();
-            });
-        };
+    createInstance(x, y, sX, sY, options) {
+        const newInstance = Bodies.rectangle(x, y, sX, sY, options);
 
-        const addTile = (dir, stay) => {
-            //Adds a tile to the map
-            if (currentTile.nodes[dir]) {
-                console.log(`A tile on the ${dir} of tile ${currentTile.id} already exists`);
-                return;
-            }
-
-            let newX = currentTile.position.x,
-                newY = currentTile.position.y;
-            let newTileDir = '';
-            switch (dir) {
-                case 'right':
-                    newX += inc;
-                    newTileDir = 'left';
-                    break;
-                case 'left':
-                    newX -= inc;
-                    newTileDir = 'right';
-                    break;
-                case 'top':
-                    newY -= inc;
-                    newTileDir = 'bot';
-                    break;
-                case 'bot':
-                    newY += inc;
-                    newTileDir = 'top';
-                    break;
-                default:
-                    break;
-            }
-
-            let existingTile = searchTile({ position: { x: newX, y: newY } });
-            if (existingTile) {
-                currentTile.nodes[dir] = existingTile;
-                existingTile.nodes[newTileDir] = currentTile;
-                if (!stay) {
-                    currentTile = existingTile;
-                }
-            } else {
-                const newTile = this.createTile(newX, newY);
-                newTile.nodes[newTileDir] = currentTile;
-                currentTile.nodes[dir] = newTile;
-                tileMap.push(newTile);
-                if (!stay) {
-                    currentTile = newTile;
-                }
-            }
-        };
-
-        const searchTile = ({ id, position }, tile) => {
-            let start = null;
-            if (tile) {
-                start = tile;
-            } else {
-                start = tileMap[0];
-            }
-
-            const visited = new Set();
-            const queue = [start];
-
-            while (queue.length > 0) {
-                const tile = queue.shift();
-                const nodes = tile.getNodes().filter((el) => el != null);
-
-                for (let node of nodes) {
-                    if (id) {
-                        if (node.id === id) {
-                            // console.log('Found matching id ' + id);
-                            return node;
-                        }
-                    }
-                    if (position) {
-                        if (node.position.x === position.x && node.position.y === position.y) {
-                            // console.log('Found matching pos ' + position.x + ', ' + position.y);
-                            return node;
-                        }
-                    }
-
-                    if (!visited.has(node)) {
-                        visited.add(node);
-                        queue.push(node);
-                    }
-                }
-            }
-            return null;
-        };
-
-        if (name === 'debug') {
-            addTile('right');
-            addTile('top', true);
-            addTile('right');
-            addTile('right');
-            addTile('bot');
-            addTile('left');
-            addTile('top');
-            updateTileSprites();
-        }
-
-        this.gameBoardTiles.push(...tileMap);
-        World.add(this.world, tileMap);
+        return newInstance;
     }
 
     createBox({ x, y }) {
@@ -235,14 +61,6 @@ class Game {
             return serializedList;
         };
 
-        const serializedTiles = this.gameBoardTiles.map((tile) => {
-            return {
-                id: tile.id,
-                position: tile.position,
-                vertices: serializeVertices(tile.vertices),
-            };
-        });
-
         const player = this.playerList.map((player) => {
             return {
                 id: player.id,
@@ -252,7 +70,184 @@ class Game {
         });
 
         //console.log(serializedTiles);
-        return { tiles: serializedTiles, player };
+        return player;
     }
 }
+
+class GameBoard {
+    constructor(game, tileSpecs) {
+        this._game = game;
+
+        this._tileWidth = 50;
+        this._spacing = 100;
+
+        if (tileSpecs) {
+            if (tileSpecs.width) {
+                this._tileWidth = tileSpecs.width;
+            }
+
+            if (tileSpecs.spacing) {
+                this._spacing = tileSpecs.spacing;
+            }
+        }
+
+        this._board = [];
+    }
+
+    createBoard(name, { x, y }) {
+        //Returns an array of the map tiles for the engine to run depending on map name
+
+        const createTile = (x, y) => {
+            const tile = this._game.createInstance(x, y, this._tileWidth, this._tileWidth, {
+                isStatic: true,
+                collisionFilter: { category: this._game.filterList.world },
+            });
+            tile.isSensor = true;
+            tile.label = 'tile';
+
+            tile.top = { tile: null, canMove: true };
+            tile.bot = { tile: null, canMove: true };
+            tile.left = { tile: null, canMove: true };
+            tile.right = { tile: null, canMove: true };
+
+            tile.getSiblings = () => {
+                const siblingList = [tile.top.tile, tile.bot.tile, tile.left.tile, tile.right.tile];
+                return siblingList.filter((el) => {
+                    return el !== null;
+                });
+            };
+            return tile;
+        };
+
+        let currentTile = createTile(x, y);
+        this._board.push(currentTile);
+
+        // const updateTileSprites = () => {
+        //     tileMap.forEach((tile) => {
+        //         tile.updateSprite();
+        //     });
+        // };
+
+        const searchTile = (filter) => {
+            let start = this._board[0];
+
+            const visited = new Set();
+            const queue = [start];
+
+            while (queue.length > 0) {
+                const tile = queue.shift();
+                const siblings = tile.getSiblings();
+
+                for (let node of siblings) {
+                    if (filter.id) {
+                        if (node.id === filter.id) {
+                            // console.log('Found matching id ' + id);
+                            return node;
+                        }
+                    }
+                    if (filter.position) {
+                        if (
+                            node.position.x === filter.position.x &&
+                            node.position.y === filter.position.y
+                        ) {
+                            // console.log('Found matching pos ' + position.x + ', ' + position.y);
+                            return node;
+                        }
+                    }
+
+                    if (!visited.has(node)) {
+                        visited.add(node);
+                        queue.push(node);
+                    }
+                }
+            }
+            return null;
+        };
+
+        const addTile = (dir, stay) => {
+            //Adds a tile to the map
+            if (currentTile[dir].tile) {
+                console.log(`A tile on the ${dir} of tile ${currentTile.id} already exists`);
+                return;
+            }
+
+            let newX = currentTile.position.x,
+                newY = currentTile.position.y;
+            let newTileDir = '';
+            switch (dir) {
+                case 'right':
+                    newX += this._spacing;
+                    newTileDir = 'left';
+                    break;
+                case 'left':
+                    newX -= this._spacing;
+                    newTileDir = 'right';
+                    break;
+                case 'top':
+                    newY -= this._spacing;
+                    newTileDir = 'bot';
+                    break;
+                case 'bot':
+                    newY += this._spacing;
+                    newTileDir = 'top';
+                    break;
+                default:
+                    break;
+            }
+
+            let existingTile = searchTile({ position: { x: newX, y: newY } });
+            if (existingTile) {
+                currentTile[dir].tile = existingTile;
+                existingTile[newTileDir].tile = currentTile;
+                if (!stay) {
+                    currentTile = existingTile;
+                }
+            } else {
+                const newTile = createTile(newX, newY);
+                newTile[newTileDir].tile = currentTile;
+                currentTile[dir].tile = newTile;
+                this._board.push(newTile);
+                if (!stay) {
+                    currentTile = newTile;
+                }
+            }
+        };
+
+        const canMove = (dir, can) => {
+            currentTile[dir].canMove = can;
+        };
+
+        if (name === 'debug') {
+            addTile('right');
+            canMove('left', false);
+            addTile('top', true);
+            addTile('right');
+            addTile('right');
+            addTile('bot');
+            addTile('left');
+            addTile('top');
+            addTile('top');
+            // updateTileSprites();
+        }
+    }
+
+    get tiles() {
+        return this._board;
+    }
+
+    serialize() {
+        const serializedTiles = this._board.map((tile) => {
+            return {
+                id: tile.id,
+                position: tile.position,
+                vertices: tile.vertices.map((vertex) => {
+                    return { x: vertex.x, y: vertex.y };
+                }),
+            };
+        });
+
+        return serializedTiles;
+    }
+}
+
 module.exports = Game;

@@ -1,31 +1,17 @@
 const world = new World();
 
 function handleInit(dataObj) {
-    const tiles = dataObj.tiles;
-    const players = dataObj.players;
+    const tiles = dataObj.tiles,
+        players = dataObj.players;
     for (let tile of tiles) {
         if (world.verifyData(tile)) {
-            world.createEntity(tile, {
-                wireframe: true,
-                strokeStyle: 'red',
-                lineWidth: 4,
-                index: tile.index,
-            });
-        }
-
-        //Else throw an error?
+            world.createTile(tile);
+        } //Else throw an error?
     }
     for (let player of players) {
         if (world.verifyData(player)) {
-            world.createEntity(player, {
-                wireframe: true,
-                strokeStyle: 'blue',
-                lineWidth: 4,
-                index: player.index,
-            });
-        }
-
-        //Else throw an error?
+            world.createPlayer(player);
+        } //Else throw an error?
     }
 }
 

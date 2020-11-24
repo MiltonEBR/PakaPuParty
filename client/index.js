@@ -23,23 +23,23 @@ function hideElement(target) {
 }
 
 //Sets the form's back button (Clears user input)
-function setBackBtn({ backBtn, form, roomInput, passInput, playerOptions }) {
+function setBackBtn({ backBtn, form, roomInput, nameInput, privCheck }) {
     backBtn.addEventListener('click', (e) => {
         hideElement(form);
         if (roomInput) roomInput.value = '';
-        if (playerOptions) playerOptions[0].selected = 'selected';
-        passInput.value = '';
+        if (privCheck) privCheck.checked = false;
+        nameInput.value = '';
     });
 }
 
 //Sets the form's accept button (Sends request to join/create)
-function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
-    if (playerSelect) {
+function setAcceptBtn({ acceptBtn, nameInput, roomInput, privCheck }) {
+    if (privCheck) {
         acceptBtn.addEventListener('click', (e) => {
             e.preventDefault();
 
-            const password = passInput.value;
-            const players = playerSelect.value;
+            const username = nameInput.value;
+            const private = privCheck.checked;
 
             fetch('/play', {
                 method: 'POST',
@@ -47,7 +47,7 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ players, password }),
+                body: JSON.stringify({ username, private }),
             })
                 .then((res) => {
                     if (res.ok) {
@@ -65,7 +65,7 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
             e.preventDefault();
             e.preventDefault();
 
-            const password = passInput.value;
+            const username = nameInput.value;
             const room = roomInput.value;
 
             fetch('/play', {
@@ -74,7 +74,7 @@ function setAcceptBtn({ acceptBtn, passInput, roomInput, playerSelect }) {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ room, password }),
+                body: JSON.stringify({ username, room }),
             })
                 .then((res) => {
                     if (res.ok) {
@@ -96,16 +96,17 @@ function initLobby() {
         backBtn: document.querySelector('#back-join'),
         acceptBtn: document.querySelector('#accept-join'),
         roomInput: document.querySelector('#room'),
-        passInput: document.querySelector('#password-join'),
+        nameInput: document.querySelector('#username-join'),
     };
 
     const createElements = {
         form: document.querySelector('#lobby-form-create'),
         backBtn: document.querySelector('#back-create'),
         acceptBtn: document.querySelector('#accept-create'),
-        passInput: document.querySelector('#password-create'),
-        playerSelect: document.querySelector('#player-select'),
-        playerOptions: document.getElementsByTagName('option'),
+        nameInput: document.querySelector('#username-create'),
+        privCheck: document.querySelector('#priv-check'),
+        // playerSelect: document.querySelector('#player-select'),
+        // playerOptions: document.getElementsByTagName('option'),
     };
 
     const joinBtn = document.querySelector('#join');

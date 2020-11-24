@@ -32,10 +32,10 @@
 
                     <input
                         type="text"
-                        name="room"
-                        id="password-join"
-                        class="password lobby-input"
-                        placeholder="Password (Optional)"
+                        name="username"
+                        id="username-join"
+                        class="username lobby-input"
+                        placeholder="Your name"
                     />
 
                     <button type="submit" class="accept lobby-btn" id="accept-join">Join</button>
@@ -43,7 +43,7 @@
                 </form>
 
                 <form id="lobby-form-create" class="form disabled" method="POST">
-                    <div class="lobby-input" id="players">
+                    <!-- <div class="lobby-input" id="players">
                         Players:
                         <select name="players" id="player-select">
                             <option value="3">3</option>
@@ -55,14 +55,18 @@
                         </select>
 
                         <i class="fas fa-caret-down arrow"></i>
+                    </div> -->
+                    <div class="lobby-input" id="priv-box">
+                        Private:
+                        <input type="checkbox" name="priv" id="priv-check" />
                     </div>
 
                     <input
                         type="text"
-                        name="room"
-                        id="password-create"
-                        class="password lobby-input"
-                        placeholder="Password (Optional)"
+                        name="username"
+                        id="username-create"
+                        class="username lobby-input"
+                        placeholder="Your name"
                     />
 
                     <button type="submit" class="accept lobby-btn" id="accept-create">

@@ -115,15 +115,18 @@
 }
 
 #room,
-#players {
+#priv-box {
     border-radius: 20px 20px 0px 0px;
 }
 
-#players {
+#priv-box {
     font-weight: 700;
 }
 
-.password {
+#priv-check {
+}
+
+.username {
     margin-top: -4px;
     border-radius: 0;
 }
@@ -166,7 +169,7 @@
     outline: none;
 }
 
-.password:invalid,
+.username:invalid,
 #room:invalid {
     box-shadow: none;
     /*border-color: rgb(255, 168, 168);*/

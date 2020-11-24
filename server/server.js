@@ -22,7 +22,7 @@ app.post('/play', (req, res) => {
     let room;
     if (req.body.room) {
         room = 'join';
-    } else if (req.body.players) {
+    } else if (req.body.private) {
         room = 'create';
     }
     res.send(room);

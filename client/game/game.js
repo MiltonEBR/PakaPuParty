@@ -22,11 +22,22 @@ function update(dataList) {
     }
 }
 
+// function getCursorPosition(canvas, event) {
+//     const rect = canvas.getBoundingClientRect();
+//     const x = event.clientX - rect.left;
+//     const y = event.clientY - rect.top;
+//     return { x, y };
+// }
+
 function initGame() {
     const sock = io();
     sock.on('init', handleInit);
     sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');
+    // gameCanvas.addEventListener('mousedown', function (e) {
+    //     console.log(getCursorPosition(this, e));
+    // });
+
     const renderer = new Renderer(world.entities, gameCanvas, {
         wireframes: true,
     });

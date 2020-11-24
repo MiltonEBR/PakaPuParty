@@ -43,7 +43,7 @@ class World {
         return newPlayer;
     }
 
-    createEntity(initialData, options) {
+    createEntity(initialData, renderSettings) {
         const { position, vertices, id } = initialData;
         if (this._entities[id]) {
             return;
@@ -51,7 +51,7 @@ class World {
 
         const newEntity = { position, vertices, render: {} };
 
-        const { wireframe, lineWidth, strokeStyle, index } = options;
+        const { wireframe, lineWidth, strokeStyle, index } = renderSettings;
 
         const render = newEntity.render;
         if (wireframe) {

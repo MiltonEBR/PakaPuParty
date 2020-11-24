@@ -4,11 +4,43 @@ class World {
     }
 
     verifyData(data) {
-        //Verifies if the data can be transformed into an entiry
+        //Verifies if the data can be transformed into an entity
         if (!data.position || !data.vertices || data.id === null || data.id === undefined) {
             return false;
         }
         return true;
+    }
+
+    createTile(initialData) {
+        const newTile = this.createEntity(initialData, {
+            wireframe: true,
+            strokeStyle: 'green',
+            lineWidth: 2,
+            index: 0,
+        });
+
+        newTile.orientation = initialData.orientation;
+        return newTile;
+    }
+
+    createPlayer(initialData) {
+        const getRandomColor = () => {
+            //PROVISIONAL TO DIFERENTIATE PLAYERS
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        };
+
+        const newPlayer = this.createEntity(initialData, {
+            wireframe: true,
+            strokeStyle: getRandomColor(),
+            lineWidth: 4,
+            index: 1,
+        });
+        return newPlayer;
     }
 
     createEntity(initialData, options) {

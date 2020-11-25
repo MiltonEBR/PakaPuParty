@@ -3,82 +3,101 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PakaPu Party</title>
         <link
             href="https://fonts.googleapis.com/css2?family=Dosis:wght@700&family=Nunito:wght@400;700&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="./public/styles/style.css" />
         <link rel="stylesheet" href="./public/styles/index.css" />
-        <script src="https://kit.fontawesome.com/d9fef58c4b.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="./public/styles/game.css" />
+        <title>PakaPu Party</title>
     </head>
     <body>
-        <div class="lobby">
-            <div class="background-img"></div>
+        <section id="lobby">
+            <span class="lobby-bg"></span>
             <div id="title-holder">
                 <h1 class="title" id="pakapu">PakaPu</h1>
                 <h1 class="title" id="party">Party</h1>
             </div>
+            <form method="POST" id="lobby-form">
+                <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    placeholder="Your name"
+                    class="lobby-input"
+                />
+                <button id="create" class="lobby-btn">Create Game</button>
+                <button id="join" class="lobby-btn">Join Game</button>
+                <input
+                    type="text"
+                    name="room"
+                    id="room"
+                    placeholder="Room number"
+                    class="lobby-input"
+                />
+            </form>
+        </section>
 
-            <div id="button-holder">
-                <form id="lobby-form-join" class="form disabled" method="GET">
-                    <input
-                        type="text"
-                        name="room"
-                        id="room"
-                        class="lobby-input"
-                        placeholder="Room number"
-                    />
-
-                    <input
-                        type="text"
-                        name="username"
-                        id="username-join"
-                        class="username lobby-input"
-                        placeholder="Your name"
-                    />
-
-                    <button type="submit" class="accept lobby-btn" id="accept-join">Join</button>
-                    <button type="button" class="back lobby-btn" id="back-join">Back</button>
-                </form>
-
-                <form id="lobby-form-create" class="form disabled" method="POST">
-                    <!-- <div class="lobby-input" id="players">
-                        Players:
-                        <select name="players" id="player-select">
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                        </select>
-
-                        <i class="fas fa-caret-down arrow"></i>
-                    </div> -->
-                    <div class="lobby-input" id="priv-box">
-                        Private:
-                        <input type="checkbox" name="priv" id="priv-check" />
+        <div class="game-holder">
+            <div id="menu">
+                <div class="info-holder">
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Mr. Big Name Long</div>
                     </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player2</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player3</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player4</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player5</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player6</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player7</div>
+                    </div>
+                    <div class="player-holder">
+                        <div class="player-icon"></div>
+                        <div class="player-txt">Player8</div>
+                    </div>
+                </div>
 
-                    <input
-                        type="text"
-                        name="username"
-                        id="username-create"
-                        class="username lobby-input"
-                        placeholder="Your name"
-                    />
-
-                    <button type="submit" class="accept lobby-btn" id="accept-create">
-                        Create
-                    </button>
-                    <button type="button" class="back lobby-btn" id="back-create">Back</button>
-                </form>
-
-                <button id="join" class="lobby-btn">Join game</button>
-                <button id="create" class="lobby-btn">Create game</button>
+                <div id="items-holder" class="info-holder">
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                    <div class="item-ico"></div>
+                </div>
             </div>
+            <canvas width="1470" height="750" id="game"></canvas>
         </div>
-        <script src="./public/index.js"></script>
     </body>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.14.2/matter.min.js"
+        integrity="sha512-pi0tSRZdlNRZeANPwdAIHRAYg6gZZV6QlAiyHXn5TYqLzBKE9jlttO/QgYLMhISD6oNv2kPsVelx+n5nw0FqKA=="
+        crossorigin="anonymous"
+    ></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./public/game/renderer.js"></script>
+    <script src="./public/game/world.js"></script>
+    <script src="./public/game/game.js"></script>
 </html>

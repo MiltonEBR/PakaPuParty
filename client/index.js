@@ -5,7 +5,8 @@ function initLobby() {
         room = document.querySelector('#room'),
         createBtn = document.querySelector('#create'),
         joinBtn = document.querySelector('#join'),
-        lobby = document.querySelector('#lobby');
+        lobby = document.querySelector('#lobby'),
+        gameHolder = document.querySelector('.game-holder');
 
     username.value = '';
     room.value = '';
@@ -30,6 +31,11 @@ function initLobby() {
             lobby.innerHTML = '';
             lobby.style.display = 'none';
         }, 250);
+        // const canvas = document.createElement('canvas');
+        // canvas.width = 1470;
+        // canvas.height = 750;
+        // canvas.id = 'game';
+        // gameHolder.appendChild(canvas);
     });
 }
 

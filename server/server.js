@@ -33,6 +33,15 @@ const io = socketio(server);
 // const game = new Game();
 // game.createBox({ x: 245, y: 160 });
 io.on('connection', (client) => {
+    console.log('s1 conected');
+    client.on('joinGame', (msg) => {
+        console.log(msg);
+        client.emit('startGame');
+    });
+
+    client.on('createGame', (msg) => {
+        console.log(msg);
+    });
     // game.createPlayer();
     // const serializedData = game.serializeAll();
     // client.emit('init', serializedData);

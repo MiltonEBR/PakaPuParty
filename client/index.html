@@ -19,7 +19,7 @@
                 <h1 class="title" id="pakapu">PakaPu</h1>
                 <h1 class="title" id="party">Party</h1>
             </div>
-            <form method="POST" id="lobby-form">
+            <form method="dialog" id="lobby-form">
                 <input
                     type="text"
                     name="username"
@@ -27,8 +27,8 @@
                     placeholder="Your name"
                     class="lobby-input"
                 />
-                <button id="create" class="lobby-btn">Create Game</button>
-                <button id="join" class="lobby-btn">Join Game</button>
+                <button id="create" type="button" class="lobby-btn">Create Game</button>
+                <button id="join" type="button" class="lobby-btn">Join Game</button>
                 <input
                     type="text"
                     name="room"
@@ -97,6 +97,7 @@
         crossorigin="anonymous"
     ></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="./public/index.js"></script>
     <script src="./public/game/renderer.js"></script>
     <script src="./public/game/world.js"></script>
     <script src="./public/game/game.js"></script>

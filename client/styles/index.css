@@ -31,6 +31,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    transition: opacity 250ms;
 }
 
 .lobby-bg {
@@ -90,6 +92,10 @@
     width: 250px;
     border-radius: 20px 0px 0px 20px;
 }
+#create:disabled,
+#join:disabled {
+    background-color: rgb(175, 175, 175);
+}
 
 #create {
     margin: 50px 0px 30px 0px;
@@ -122,10 +128,14 @@
 .lobby-input::placeholder {
     opacity: 0.5;
 }
-#join:active {
+#join:enabled:active {
     background-color: rgb(122, 245, 143);
 }
 
-#create:active {
+#create:enabled:active {
     background-color: rgb(99, 194, 102);
+}
+
+.fade-out {
+    opacity: 0;
 }

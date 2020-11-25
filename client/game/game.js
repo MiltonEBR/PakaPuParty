@@ -30,7 +30,6 @@ function update(dataList) {
 // }
 
 function initGame() {
-    const sock = io();
     sock.on('init', handleInit);
     sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');

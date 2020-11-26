@@ -1,11 +1,41 @@
 const world = new World();
 let playerNumber;
+const sock = io();
+
+const username = document.querySelector('#username'),
+    room = document.querySelector('#room'),
+    createBtn = document.querySelector('#create'),
+    joinBtn = document.querySelector('#join'),
+    lobby = document.querySelector('#lobby'),
+    gameHolder = document.querySelector('.game-holder'),
+    codeDisplay = document.querySelector('#room-name'),
+    errMsg = document.querySelector('#err-msg');
+
+function setRoomNumber(code) {
+    codeDisplay.innerHTML = 'Room name: ' + code;
+}
+
+function disableMainMenu() {
+    username.disabled = true;
+    room.disabled = true;
+    joinBtn.disabled = true;
+    createBtn.disabled = true;
+    lobby.classList.add('fade-out');
+    setTimeout(() => {
+        lobby.innerHTML = '';
+        lobby.style.display = 'none';
+    }, 250);
+}
+
+function displayError(err) {
+    errMsg.innerHTML = err;
+    errMsg.style.display = 'inline';
+}
 
 function handleInit(dataObj) {
     const tiles = dataObj.tiles,
         players = dataObj.players,
         number = dataObj.playerNumber;
-    console.log(players);
     for (let tile of tiles) {
         if (world.verifyData(tile)) {
             world.createTile(tile);
@@ -30,15 +60,35 @@ function update(dataList) {
     }
 }
 
-// function getCursorPosition(canvas, event) {
-//     const rect = canvas.getBoundingClientRect();
-//     const x = event.clientX - rect.left;
-//     const y = event.clientY - rect.top;
-//     return { x, y };
-// }
+function initMainMenu() {
+    username.value = '';
+    room.value = '';
+
+    createBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sock.emit('createGame', username.value);
+    });
+    joinBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sock.emit('joinGame', { username: username.value, room: room.value });
+    });
+
+    sock.on('gameCode', setRoomNumber);
+
+    sock.on('unknownGame', () => {
+        displayError('That game does not exist');
+    });
+
+    sock.on('gameFull', () => {
+        displayError('The game is full');
+    });
+}
 
 function initGame() {
-    sock.on('init', handleInit);
+    sock.on('init', (data) => {
+        handleInit(data);
+        disableMainMenu();
+    });
     sock.on('update', update);
     const gameCanvas = document.querySelector('canvas');
     // gameCanvas.addEventListener('mousedown', function (e) {
@@ -51,6 +101,7 @@ function initGame() {
     renderer.run();
 }
 
+initMainMenu();
 initGame();
 
 // function initGame() {

@@ -24,7 +24,7 @@ function initLobby() {
     });
 
     sock.on('gameCode', (code) => {
-        codeDisplay.innerHTML = code;
+        codeDisplay.innerHTML = 'Room name: ' + code;
         username.disabled = true;
         room.disabled = true;
         joinBtn.disabled = true;

@@ -7,12 +7,13 @@ body {
 .game-holder {
     display: flex;
     margin-top: 100px;
-    width: 1750px;
+    width: 1560px;
+    height: 720px;
     /*background-color: red;*/
     box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.1); /*Temporal*/
 }
 
-@media (max-width: 1750px) {
+@media (max-width: 1600px) {
     body {
         justify-content: start;
     }
@@ -31,7 +32,7 @@ body {
     position: relative;
     z-index: 1;
     width: 300px;
-    height: 750px;
+    height: 680px;
     padding: 20px;
 
     background-color: rgb(245, 245, 245);

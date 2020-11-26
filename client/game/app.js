@@ -1,19 +1,13 @@
 const world = new World();
 let playerNumber;
 const sock = io();
-
 const username = document.querySelector('#username'),
     room = document.querySelector('#room'),
     createBtn = document.querySelector('#create'),
     joinBtn = document.querySelector('#join'),
     lobby = document.querySelector('#lobby'),
-    gameHolder = document.querySelector('.game-holder'),
     codeDisplay = document.querySelector('#room-name'),
     errMsg = document.querySelector('#err-msg');
-
-function setRoomNumber(code) {
-    codeDisplay.innerHTML = 'Room name: ' + code;
-}
 
 function disableMainMenu() {
     username.disabled = true;
@@ -27,9 +21,37 @@ function disableMainMenu() {
     }, 250);
 }
 
-function displayError(err) {
-    errMsg.innerHTML = err;
-    errMsg.style.display = 'inline';
+function initMainMenu() {
+    username.value = '';
+    room.value = '';
+
+    createBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sock.emit('createGame', username.value);
+    });
+    joinBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        sock.emit('joinGame', { username: username.value, room: room.value });
+    });
+
+    sock.on('gameCode', setRoomNumber);
+
+    sock.on('unknownGame', () => {
+        displayError('That game does not exist');
+    });
+
+    sock.on('gameFull', () => {
+        displayError('The game is full');
+    });
+
+    function setRoomNumber(code) {
+        codeDisplay.innerHTML = 'Room name: ' + code;
+    }
+
+    function displayError(err) {
+        errMsg.innerHTML = err;
+        errMsg.style.display = 'inline';
+    }
 }
 
 function handleInit(dataObj) {
@@ -58,30 +80,6 @@ function update(dataList) {
         const { id, position, vertices } = data;
         world.updateEntity(id, { position, vertices });
     }
-}
-
-function initMainMenu() {
-    username.value = '';
-    room.value = '';
-
-    createBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        sock.emit('createGame', username.value);
-    });
-    joinBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        sock.emit('joinGame', { username: username.value, room: room.value });
-    });
-
-    sock.on('gameCode', setRoomNumber);
-
-    sock.on('unknownGame', () => {
-        displayError('That game does not exist');
-    });
-
-    sock.on('gameFull', () => {
-        displayError('The game is full');
-    });
 }
 
 function initGame() {

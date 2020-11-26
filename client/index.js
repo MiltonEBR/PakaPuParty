@@ -6,7 +6,8 @@ function initLobby() {
         createBtn = document.querySelector('#create'),
         joinBtn = document.querySelector('#join'),
         lobby = document.querySelector('#lobby'),
-        gameHolder = document.querySelector('.game-holder');
+        gameHolder = document.querySelector('.game-holder'),
+        codeDisplay = document.querySelector('#room-name');
 
     username.value = '';
     room.value = '';
@@ -21,7 +22,8 @@ function initLobby() {
         sock.emit('joinGame', { username: username.value, room: room.value });
     });
 
-    sock.on('startGame', () => {
+    sock.on('gameCode', (code) => {
+        codeDisplay.innerHTML = code;
         username.disabled = true;
         room.disabled = true;
         joinBtn.disabled = true;
@@ -31,11 +33,6 @@ function initLobby() {
             lobby.innerHTML = '';
             lobby.style.display = 'none';
         }, 250);
-        // const canvas = document.createElement('canvas');
-        // canvas.width = 1470;
-        // canvas.height = 750;
-        // canvas.id = 'game';
-        // gameHolder.appendChild(canvas);
     });
 }
 

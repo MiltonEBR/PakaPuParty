@@ -1,8 +1,11 @@
 const world = new World();
+let playerNumber;
 
 function handleInit(dataObj) {
     const tiles = dataObj.tiles,
-        players = dataObj.players;
+        players = dataObj.players,
+        number = dataObj.playerNumber;
+    console.log(players);
     for (let tile of tiles) {
         if (world.verifyData(tile)) {
             world.createTile(tile);
@@ -13,9 +16,14 @@ function handleInit(dataObj) {
             world.createPlayer(player);
         } //Else throw an error?
     }
+
+    if (number) {
+        playerNumber = number;
+    }
 }
 
 function update(dataList) {
+    console.log('updating');
     for (let data of dataList) {
         const { id, position, vertices } = data;
         world.updateEntity(id, { position, vertices });

@@ -7,7 +7,8 @@ function initLobby() {
         joinBtn = document.querySelector('#join'),
         lobby = document.querySelector('#lobby'),
         gameHolder = document.querySelector('.game-holder'),
-        codeDisplay = document.querySelector('#room-name');
+        codeDisplay = document.querySelector('#room-name'),
+        errMsg = document.querySelector('#err-msg');
 
     username.value = '';
     room.value = '';
@@ -33,6 +34,16 @@ function initLobby() {
             lobby.innerHTML = '';
             lobby.style.display = 'none';
         }, 250);
+    });
+
+    sock.on('unknownGame', () => {
+        errMsg.innerHTML = 'That game does not exist';
+        errMsg.style.display = 'inline';
+    });
+
+    sock.on('gameFull', () => {
+        errMsg.innerHTML = 'The game is full';
+        errMsg.style.display = 'inline';
     });
 }
 

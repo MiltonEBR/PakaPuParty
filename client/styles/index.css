@@ -78,9 +78,22 @@
     justify-content: center;
 }
 
+#username {
+    margin-bottom: 15px;
+}
+
 #room {
     width: 224px;
     border-radius: 0px 20px 20px 0px;
+}
+
+#err-msg {
+    margin-top: 35px;
+    font-style: italic;
+    font-size: 2em;
+    color: red;
+
+    display: none;
 }
 
 #join {
@@ -98,7 +111,7 @@
 }
 
 #create {
-    margin: 50px 0px 30px 0px;
+    margin-top: 40px;
     width: 500px;
     position: relative;
     z-index: 0;

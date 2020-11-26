@@ -63,7 +63,7 @@ io.on('connection', (client) => {
             numClients = Object.keys(allUsers).length;
         }
 
-        if (numClients === 0 || numClients >= 8) {
+        if (numClients === 0) {
             client.emit('unknownGame');
             return;
         } else if (numClients >= 8) {

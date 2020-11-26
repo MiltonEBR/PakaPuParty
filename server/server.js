@@ -19,29 +19,92 @@ const io = socketio(server);
 // const clientRooms = {};
 // const games = {};
 
-// const handleCreate = (name, priv) => {
-//     let roomName = makeid(5);
-//     games[roomName] = new Game();
-//     return roomName;
-// };
-
-// const handleJoin = (name, room) => {
-//     if (games[room]) {
-//     }
-// };
-
 // const game = new Game();
 // game.createBox({ x: 245, y: 160 });
+const games = {};
+const clientRooms = {};
+
 io.on('connection', (client) => {
     console.log('s1 conected');
-    client.on('joinGame', (msg) => {
-        console.log(msg);
-        client.emit('startGame');
-    });
 
-    client.on('createGame', (msg) => {
-        console.log(msg);
-    });
+    client.on('createGame', handleCreateGame);
+    client.on('joinGame', handleJoinGame);
+
+    function handleCreateGame(msg) {
+        const username = msg.username;
+        let roomName = makeId(5);
+        clientRooms[client.id] = roomName;
+        games[roomName] = new Game();
+
+        client.emit('gameCode', roomName);
+
+        client.join(roomName);
+
+        let playerNumber = games[roomName].createPlayer();
+
+        let serializedData = games[roomName].serializeAll();
+        serializedData.playerNumber = playerNumber;
+        client.emit('init', serializedData);
+    }
+
+    function handleJoinGame(msg) {
+        const username = msg.username,
+            roomName = msg.room;
+
+        const room = io.sockets.adapter.rooms[roomName];
+
+        let allUsers;
+        if (room) {
+            allUsers = room.sockets;
+        }
+
+        let numClients = 0;
+        if (allUsers) {
+            numClients = Object.keys(allUsers).length;
+        }
+
+        if (numClients === 0 || numClients >= 8) {
+            client.emit('unknownGame');
+            return;
+        } else if (numClients >= 8) {
+            client.emit('gameFull');
+            return;
+        }
+
+        client.join(roomName);
+
+        clientRooms[client.id] = roomName;
+        let playerNumber = games[roomName].createPlayer();
+        let serializedData = games[roomName].serializeAll();
+        serializedData.playerNumber = playerNumber;
+        client.emit('gameCode', roomName);
+        client.emit('init', serializedData);
+
+        if (numClients === 1) {
+            startInverval(roomName);
+        }
+    }
+
+    function startInverval(room) {
+        const invervalId = setInterval(function () {
+            let updateData = games[room].serializeAll().players;
+            emitUpdate(room, updateData);
+        }, 20);
+    }
+
+    function emitUpdate(roomName, updateData) {
+        io.sockets.in(roomName).emit('update', updateData);
+    }
+
+    function makeId(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
     // game.createPlayer();
     // const serializedData = game.serializeAll();
     // client.emit('init', serializedData);

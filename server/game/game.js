@@ -39,7 +39,7 @@ class Game {
     }
 
     createPlayer() {
-        this._playerList.push(new Player(this._gameBoard.tiles[0], this));
+        return this._playerList.push(new Player(this._gameBoard.tiles[0], this));
     }
 
     createInstance(x, y, sX, sY, options) {

@@ -6,7 +6,7 @@ body {
 
 .game-holder {
     display: flex;
-    margin-top: 100px;
+    margin-top: 125px;
     width: 1560px;
     height: 720px;
     /*background-color: red;*/

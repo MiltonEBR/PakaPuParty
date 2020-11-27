@@ -29,6 +29,10 @@ class Game {
         this.createBoard();
     }
 
+    get playerList() {
+        return this._playerList;
+    }
+
     get filterList() {
         return this._filterList;
     }

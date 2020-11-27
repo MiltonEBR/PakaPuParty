@@ -52,14 +52,28 @@ class Game {
         return newInstance;
     }
 
-    // createBox({ x, y }) {
-    //     //Test purposes
-    //     const test = Bodies.rectangle(x, y, 50, 50);
-    //     World.add(this.world, test);
-    //     this._playerList.push(test);
-    // }
+    serialize() {
+        //Serialize called on every update
+        const serializeVertices = (vertexArray) => {
+            const serializedList = vertexArray.map((vertex) => {
+                return { x: vertex.x, y: vertex.y };
+            });
+
+            return serializedList;
+        };
+
+        const players = this._playerList.map((player) => {
+            return {
+                id: player.instance.id,
+                position: player.instance.position,
+                vertices: serializeVertices(player.instance.vertices),
+            };
+        });
+        return [...players];
+    }
 
     serializeAll() {
+        //Serialize called on joining/init
         const serializeVertices = (vertexArray) => {
             const serializedList = vertexArray.map((vertex) => {
                 return { x: vertex.x, y: vertex.y };

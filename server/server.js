@@ -64,10 +64,10 @@ io.on('connection', (client) => {
         }
 
         if (numClients === 0) {
-            client.emit('unknownGame');
+            client.emit('err', 'Thw game does not exist');
             return;
         } else if (numClients >= 8) {
-            client.emit('gameFull');
+            client.emit('err', 'The game is full');
             return;
         }
 
@@ -79,6 +79,7 @@ io.on('connection', (client) => {
         io.sockets
             .in(roomName)
             .emit('playerJoined', games[roomName].playerList[playerNumber - 1].serialize());
+
         client.emit('gameCode', roomName);
         client.join(roomName);
         client.emit('init', serializedData);
@@ -90,7 +91,7 @@ io.on('connection', (client) => {
 
     function startInverval(room) {
         const invervalId = setInterval(function () {
-            let updateData = games[room].serializeAll().players;
+            let updateData = games[room].serialize();
             emitUpdate(room, updateData);
         }, 20);
     }
@@ -108,12 +109,4 @@ io.on('connection', (client) => {
         }
         return result;
     }
-    // game.createPlayer();
-    // const serializedData = game.serializeAll();
-    // client.emit('init', serializedData);
-    // console.log('someone conected');
-    // setInterval(function () {
-    //     let message = game.serializeAll().players;
-    //     client.emit('update', message);
-    // }, 20);
 });

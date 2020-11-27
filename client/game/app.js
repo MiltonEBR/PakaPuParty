@@ -75,7 +75,6 @@ function handleInit(dataObj) {
 }
 
 function update(dataList) {
-    console.log('updating');
     for (let data of dataList) {
         const { id, position, vertices } = data;
         world.updateEntity(id, { position, vertices });
@@ -88,6 +87,11 @@ function initGame() {
         disableMainMenu();
     });
     sock.on('update', update);
+
+    sock.on('playerJoined', (playerData) => {
+        world.createPlayer(playerData);
+    });
+
     const gameCanvas = document.querySelector('canvas');
     // gameCanvas.addEventListener('mousedown', function (e) {
     //     console.log(getCursorPosition(this, e));

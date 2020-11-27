@@ -1,6 +1,7 @@
 const world = new World();
 let playerNumber;
 const sock = io();
+
 const username = document.querySelector('#username'),
     room = document.querySelector('#room'),
     createBtn = document.querySelector('#create'),
@@ -36,12 +37,8 @@ function initMainMenu() {
 
     sock.on('gameCode', setRoomNumber);
 
-    sock.on('unknownGame', () => {
-        displayError('That game does not exist');
-    });
-
-    sock.on('gameFull', () => {
-        displayError('The game is full');
+    sock.on('err', (msg) => {
+        displayError(msg);
     });
 
     function setRoomNumber(code) {
@@ -93,9 +90,6 @@ function initGame() {
     });
 
     const gameCanvas = document.querySelector('canvas');
-    // gameCanvas.addEventListener('mousedown', function (e) {
-    //     console.log(getCursorPosition(this, e));
-    // });
 
     const renderer = new Renderer(world.entities, gameCanvas, {
         wireframes: true,

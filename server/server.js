@@ -25,7 +25,7 @@ const games = {};
 const clientRooms = {};
 
 io.on('connection', (client) => {
-    console.log('s1 conected');
+    console.log('someone conected');
 
     client.on('createGame', handleCreateGame);
     client.on('joinGame', handleJoinGame);
@@ -71,13 +71,16 @@ io.on('connection', (client) => {
             return;
         }
 
-        client.join(roomName);
-
         clientRooms[client.id] = roomName;
         let playerNumber = games[roomName].createPlayer();
         let serializedData = games[roomName].serializeAll();
         serializedData.playerNumber = playerNumber;
+
+        io.sockets
+            .in(roomName)
+            .emit('playerJoined', games[roomName].playerList[playerNumber - 1].serialize());
         client.emit('gameCode', roomName);
+        client.join(roomName);
         client.emit('init', serializedData);
 
         if (numClients === 1) {

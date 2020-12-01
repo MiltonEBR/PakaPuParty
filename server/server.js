@@ -40,7 +40,7 @@ io.on('connection', (client) => {
 
         client.join(roomName);
 
-        let playerNumber = games[roomName].createPlayer();
+        let playerNumber = games[roomName].createPlayer(username);
 
         let serializedData = games[roomName].serializeAll();
         serializedData.playerNumber = playerNumber;
@@ -66,19 +66,20 @@ io.on('connection', (client) => {
         if (numClients === 0) {
             client.emit('err', 'Thw game does not exist');
             return;
-        } else if (numClients >= 8) {
+        } else if (numClients >= 8 || games[roomName].playerList.length >= 8) {
+            //Second conditional it's because exiting the browser currently leaves your player "online"
             client.emit('err', 'The game is full');
             return;
         }
 
         clientRooms[client.id] = roomName;
-        let playerNumber = games[roomName].createPlayer();
+        let playerNumber = games[roomName].createPlayer(username);
         let serializedData = games[roomName].serializeAll();
         serializedData.playerNumber = playerNumber;
 
         io.sockets
             .in(roomName)
-            .emit('playerJoined', games[roomName].playerList[playerNumber - 1].serialize());
+            .emit('playerJoined', games[roomName].playerList[playerNumber - 1].serializeAll());
 
         client.emit('gameCode', roomName);
         client.join(roomName);

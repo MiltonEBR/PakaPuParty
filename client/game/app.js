@@ -117,6 +117,10 @@ function initPlayerSelect() {
             playerSelection.style.display = 'flex';
         }
 
+        document
+            .getElementById(`holder-${playerUsername}`)
+            .querySelector('.player-txt').style.color = 'rgb(137, 129, 68)';
+
         readyBtn.addEventListener('click', () => {
             sock.emit('ready', { username: playerUsername, number: playerNumber });
         });

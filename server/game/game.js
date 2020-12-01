@@ -42,8 +42,8 @@ class Game {
         this._gameBoard.createBoard('debug', { x: 100, y: 200 });
     }
 
-    createPlayer() {
-        return this._playerList.push(new Player(this._gameBoard.tiles[0], this));
+    createPlayer(name) {
+        return this._playerList.push(new Player(name, this._gameBoard.tiles[0], this));
     }
 
     createInstance(x, y, sX, sY, options) {
@@ -87,6 +87,7 @@ class Game {
                 id: player.instance.id,
                 position: player.instance.position,
                 vertices: serializeVertices(player.instance.vertices),
+                username: player.username,
             };
         });
         return { players, tiles: this._gameBoard.serialize() };

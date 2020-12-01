@@ -1,9 +1,10 @@
 const Matter = require('matter-js');
 
 class Player {
-    constructor(spawnTile, game) {
+    constructor(name, spawnTile, game) {
         this._currentTile = spawnTile;
         this._game = game;
+        this._name = name;
         this._instance;
         //this._items;
         //this._socket;
@@ -14,6 +15,10 @@ class Player {
 
     move() {
         Matter.Body.setVelocity(this._instance, { x: 1, y: 0 });
+    }
+
+    get username() {
+        return this._name;
     }
 
     get instance() {
@@ -51,6 +56,19 @@ class Player {
                 return { x: vertex.x, y: vertex.y };
             }),
             points: this._points,
+        };
+    }
+
+    serializeAll() {
+        const player = this._instance;
+        return {
+            id: player.id,
+            position: player.position,
+            vertices: player.vertices.map((vertex) => {
+                return { x: vertex.x, y: vertex.y };
+            }),
+            points: this._points,
+            username: this._name,
         };
     }
 }

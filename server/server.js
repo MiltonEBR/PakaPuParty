@@ -16,11 +16,6 @@ const server = app.listen(3000, () => {
 
 const io = socketio(server);
 
-// const clientRooms = {};
-// const games = {};
-
-// const game = new Game();
-// game.createBox({ x: 245, y: 160 });
 const games = {};
 const clientRooms = {};
 
@@ -29,6 +24,10 @@ io.on('connection', (client) => {
 
     client.on('createGame', handleCreateGame);
     client.on('joinGame', handleJoinGame);
+    client.on('ready', (player) => {
+        const roomName = clientRooms[client.id];
+        io.sockets.in(roomName).emit('playerReady', player.username);
+    });
 
     function handleCreateGame(msg) {
         const username = msg.username;
@@ -45,9 +44,13 @@ io.on('connection', (client) => {
 
         let playerNumber = games[roomName].createPlayer(username);
 
-        let serializedData = games[roomName].serializeAll();
-        serializedData.playerNumber = playerNumber;
-        client.emit('init', serializedData);
+        // let serializedData = games[roomName].serializeAll();
+        let serializedData = games[roomName].playerList.map((player) => {
+            return player.serializeAll();
+        });
+
+        client.emit('playerSelection', { players: serializedData, number: playerNumber, username });
+        // client.emit('init', serializedData);
     }
 
     function handleJoinGame(msg) {
@@ -76,12 +79,16 @@ io.on('connection', (client) => {
             //Second conditional it's because exiting the browser currently leaves your player "online"
             client.emit('err', 'The game is full');
             return;
+        } else if (games[roomName].inProgress) {
+            client.emit('err', 'Game in progress');
+            return;
         }
-
         clientRooms[client.id] = roomName;
         let playerNumber = games[roomName].createPlayer(username);
-        let serializedData = games[roomName].serializeAll();
-        serializedData.playerNumber = playerNumber;
+        let serializedData = games[roomName].playerList.map((player) => {
+            return player.serializeAll();
+        });
+        // let serializedData = games[roomName].serializeAll();
 
         io.sockets
             .in(roomName)
@@ -89,11 +96,12 @@ io.on('connection', (client) => {
 
         client.emit('gameCode', roomName);
         client.join(roomName);
-        client.emit('init', serializedData);
+        client.emit('playerSelection', { players: serializedData, number: playerNumber, username });
+        // client.emit('init', serializedData);
 
-        if (numClients === 1) {
-            startInverval(roomName);
-        }
+        // if (numClients === 1) {
+        //     startInverval(roomName);
+        // }
     }
 
     function startInverval(room) {

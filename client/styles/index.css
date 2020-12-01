@@ -91,6 +91,7 @@
 
 #room-name {
     position: absolute;
+    z-index: 110;
     right: 25px;
     top: 15px;
     font-size: 1.5em;

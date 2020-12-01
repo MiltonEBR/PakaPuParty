@@ -65,6 +65,8 @@ body {
     font-size: 2em;
     max-width: 300px;
     margin-left: 20px;
+
+    transition: color 200ms;
 }
 
 .player-holder > .player-icon {

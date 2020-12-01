@@ -41,6 +41,7 @@ class World {
             index: 1,
         });
         newPlayer.username = initialData.username;
+        newPlayer.points = initialData.points;
 
         return newPlayer;
     }

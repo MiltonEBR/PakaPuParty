@@ -83,12 +83,7 @@ class Game {
         };
 
         const players = this._playerList.map((player) => {
-            return {
-                id: player.instance.id,
-                position: player.instance.position,
-                vertices: serializeVertices(player.instance.vertices),
-                username: player.username,
-            };
+            return player.serializeAll();
         });
         return { players, tiles: this._gameBoard.serialize() };
     }

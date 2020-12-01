@@ -52,7 +52,7 @@ function initMainMenu() {
     }
 }
 
-function addPlayerScoreBoard(name, color) {
+function addPlayerScoreBoard(name, points, color) {
     const playerHolder = document.createElement('div');
     playerHolder.classList.add('player-holder');
     const playerIcon = document.createElement('div');
@@ -62,9 +62,14 @@ function addPlayerScoreBoard(name, color) {
     playerText.classList.add('player-txt');
     playerText.id = 'player-name-' + name;
     playerText.innerText = name;
+    const playerPoints = document.createElement('div');
+    playerPoints.classList.add('player-points');
+    playerPoints.id = 'player-score-' + name;
+    playerPoints.innerText = points + ' p.';
 
     playerHolder.appendChild(playerIcon);
     playerHolder.appendChild(playerText);
+    playerHolder.appendChild(playerPoints);
 
     scoreBoard.appendChild(playerHolder);
 }
@@ -81,7 +86,7 @@ function handleInit(dataObj) {
     for (let player of players) {
         if (world.verifyData(player)) {
             const newPlayer = world.createPlayer(player);
-            addPlayerScoreBoard(player.username, newPlayer.render.strokeStyle);
+            addPlayerScoreBoard(newPlayer.username, newPlayer.points, newPlayer.render.strokeStyle);
         } //Else throw an error?
     }
 
@@ -106,7 +111,11 @@ function initGame() {
 
     sock.on('playerJoined', (playerData) => {
         const joinedPlayer = world.createPlayer(playerData);
-        addPlayerScoreBoard(playerData.username, joinedPlayer.render.strokeStyle);
+        addPlayerScoreBoard(
+            joinedPlayer.username,
+            joinedPlayer.points,
+            joinedPlayer.render.strokeStyle
+        );
     });
 
     const gameCanvas = document.querySelector('canvas');

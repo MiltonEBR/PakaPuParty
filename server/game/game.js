@@ -17,6 +17,7 @@ class Game {
         this.world.gravity = { scale: 0, x: 0, y: 0 };
         this._gameBoard = null;
         this._playerList = [];
+        this._inProgress = false;
 
         setInterval(function () {
             Engine.update(engine, 20);
@@ -27,6 +28,10 @@ class Game {
         };
 
         this.createBoard();
+    }
+
+    get inProgress() {
+        return this._inProgress;
     }
 
     get playerList() {

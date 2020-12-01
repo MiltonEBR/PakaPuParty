@@ -67,7 +67,7 @@ body {
     font-weight: 700;
     font-size: 1.4em;
     margin-left: 10px;
-    max-width: 150px;
+    max-width: 120px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -80,6 +80,14 @@ body {
     height: 35px;
     background-color: blue;
     border-radius: 20px;
+}
+
+.player-points {
+    position: absolute;
+    right: 30px;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: rgb(151, 132, 24);
 }
 
 #items-holder {

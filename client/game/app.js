@@ -1,5 +1,6 @@
 const world = new World();
 let playerNumber;
+let playerUsername;
 const sock = io();
 
 const username = document.querySelector('#username'),
@@ -9,18 +10,24 @@ const username = document.querySelector('#username'),
     lobby = document.querySelector('#lobby'),
     codeDisplay = document.querySelector('#room-name'),
     errMsg = document.querySelector('#err-msg'),
-    scoreBoard = document.querySelector('#scoreboard');
+    scoreBoard = document.querySelector('#scoreboard'),
+    form = document.querySelector('#lobby-form'),
+    playerSelection = document.querySelector('#player-selection'),
+    readyBtn = document.querySelector('#start-game');
 
-function disableMainMenu() {
+async function disableMainMenu() {
     username.disabled = true;
     room.disabled = true;
     joinBtn.disabled = true;
     createBtn.disabled = true;
-    lobby.classList.add('fade-out');
-    setTimeout(() => {
-        lobby.innerHTML = '';
-        lobby.style.display = 'none';
-    }, 250);
+    form.classList.add('fade-out');
+    await new Promise((res) => {
+        setTimeout(() => {
+            form.innerHTML = '';
+            form.style.display = 'none';
+            res();
+        }, 250);
+    });
 }
 
 function initMainMenu() {
@@ -69,6 +76,75 @@ function initMainMenu() {
     }
 }
 
+function initPlayerSelect() {
+    sock.on('playerSelection', handlePlayerSelect);
+
+    sock.on('playerJoined', handlePlayerJoined);
+
+    sock.on('playerReady', handlePlayerReady);
+
+    async function handlePlayerSelect(data) {
+        await disableMainMenu();
+
+        const players = data.players;
+        playerNumber = data.number;
+        playerUsername = data.username;
+        for (player of players) {
+            const playerHolder = document.createElement('div');
+            playerHolder.classList.add('player-holder');
+            playerHolder.id = `holder-${player.username}`;
+
+            if (playerUsername === player.username) {
+                playerHolder.innerHTML = `
+                <button id="select-left" class="select-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="player-icon"></div>
+                <button id="select-right" class="select-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <span class="player-txt">${player.username}</span>
+                <i class="fas fa-check-square ready" ></i>`;
+            } else {
+                playerHolder.innerHTML = `
+                <div class="player-icon"></div>
+                <span class="player-txt">${player.username}</span>
+                <i class="fas fa-check-square ready" ></i>`;
+            }
+
+            playerSelection.appendChild(playerHolder);
+            playerSelection.appendChild(readyBtn);
+            playerSelection.style.display = 'flex';
+        }
+
+        readyBtn.addEventListener('click', () => {
+            sock.emit('ready', { username: playerUsername, number: playerNumber });
+        });
+    }
+
+    function handlePlayerJoined(player) {
+        const playerHolder = document.createElement('div');
+        playerHolder.classList.add('player-holder');
+
+        playerHolder.innerHTML = `
+                <div id="icon-player-${player.username}" class="player-icon"></div>
+                <span id="text-player-${player.username}" class="player-txt">${player.username}</span>
+                <i class="fas fa-check-square ready" style="display: none;"></i>`;
+
+        playerSelection.appendChild(playerHolder);
+        playerSelection.appendChild(readyBtn);
+    }
+
+    function handlePlayerReady(username) {
+        if (username === playerUsername) {
+            readyBtn.disabled = true;
+            readyBtn.innerText = 'Ready';
+        }
+        const check = document.getElementById(`holder-${username}`).querySelector('.ready');
+        check.style.opacity = '1';
+    }
+}
+
 function addPlayerScoreBoard(name, points, color) {
     const playerHolder = document.createElement('div');
     playerHolder.classList.add('player-holder');
@@ -93,8 +169,7 @@ function addPlayerScoreBoard(name, points, color) {
 
 function handleInit(dataObj) {
     const tiles = dataObj.tiles,
-        players = dataObj.players,
-        number = dataObj.playerNumber;
+        players = dataObj.players;
     for (let tile of tiles) {
         if (world.verifyData(tile)) {
             world.createTile(tile);
@@ -105,10 +180,6 @@ function handleInit(dataObj) {
             const newPlayer = world.createPlayer(player);
             addPlayerScoreBoard(newPlayer.username, newPlayer.points, newPlayer.render.strokeStyle);
         } //Else throw an error?
-    }
-
-    if (number) {
-        playerNumber = number;
     }
 }
 
@@ -126,14 +197,14 @@ function initGame() {
     });
     sock.on('update', update);
 
-    sock.on('playerJoined', (playerData) => {
-        const joinedPlayer = world.createPlayer(playerData);
-        addPlayerScoreBoard(
-            joinedPlayer.username,
-            joinedPlayer.points,
-            joinedPlayer.render.strokeStyle
-        );
-    });
+    // sock.on('playerJoined', (playerData) => {
+    //     const joinedPlayer = world.createPlayer(playerData);
+    //     addPlayerScoreBoard(
+    //         joinedPlayer.username,
+    //         joinedPlayer.points,
+    //         joinedPlayer.render.strokeStyle
+    //     );
+    // });
 
     const gameCanvas = document.querySelector('canvas');
 
@@ -144,6 +215,7 @@ function initGame() {
 }
 
 initMainMenu();
+initPlayerSelect();
 initGame();
 
 // function initGame() {

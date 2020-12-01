@@ -125,11 +125,12 @@ function initPlayerSelect() {
     function handlePlayerJoined(player) {
         const playerHolder = document.createElement('div');
         playerHolder.classList.add('player-holder');
+        playerHolder.id = `holder-${player.username}`;
 
         playerHolder.innerHTML = `
                 <div id="icon-player-${player.username}" class="player-icon"></div>
                 <span id="text-player-${player.username}" class="player-txt">${player.username}</span>
-                <i class="fas fa-check-square ready" style="display: none;"></i>`;
+                <i class="fas fa-check-square ready"></i>`;
 
         playerSelection.appendChild(playerHolder);
         playerSelection.appendChild(readyBtn);
@@ -142,6 +143,8 @@ function initPlayerSelect() {
         }
         const check = document.getElementById(`holder-${username}`).querySelector('.ready');
         check.style.opacity = '1';
+        const text = document.getElementById(`holder-${username}`).querySelector('.player-txt');
+        text.style.color = 'rgb(83, 163, 83)';
     }
 }
 

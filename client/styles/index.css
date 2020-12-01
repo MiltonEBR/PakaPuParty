@@ -76,6 +76,8 @@
     flex-wrap: wrap;
     align-content: start;
     justify-content: center;
+
+    transition: opacity 250ms;
 }
 
 #username {

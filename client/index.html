@@ -7,6 +7,7 @@
             href="https://fonts.googleapis.com/css2?family=Dosis:wght@700&family=Nunito:wght@400;700&display=swap"
             rel="stylesheet"
         />
+        <script src="https://kit.fontawesome.com/d9fef58c4b.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="./public/styles/style.css" />
         <link rel="stylesheet" href="./public/styles/index.css" />
         <link rel="stylesheet" href="./public/styles/game.css" />
@@ -38,6 +39,21 @@
                 <button id="create" type="button" class="lobby-btn">Create Game</button>
                 <span id="err-msg"></span>
             </form>
+            <div id="player-selection" class="info-holder">
+                <div class="player-holder">
+                    <button id="select-left" class="select-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="player-icon"></div>
+                    <button id="select-right" class="select-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <span class="player-txt">Mr. FlyingD</span>
+                    <i class="fas fa-check-square ready"></i>
+                </div>
+
+                <button id="start-game">Ready</button>
+            </div>
         </section>
 
         <span id="room-name"></span>

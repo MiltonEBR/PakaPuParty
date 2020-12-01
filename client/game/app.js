@@ -27,12 +27,29 @@ function initMainMenu() {
     username.value = '';
     room.value = '';
 
+    const checkUsername = (name) => {
+        if (name === '') {
+            displayError('Please enter a name');
+            return false;
+        } else if (name.length > 10) {
+            displayError('Name must be between 1 and 10 characters');
+            return false;
+        } else if (name.includes('-') || name.includes('<') || name.includes('>')) {
+            displayError(`Name can't include "-, <, >"`);
+            return false;
+        }
+
+        return true;
+    };
+
     createBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        if (!checkUsername(username.value)) return;
         sock.emit('createGame', { username: username.value });
     });
     joinBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        if (!checkUsername(username.value)) return;
         sock.emit('joinGame', { username: username.value, room: room.value });
     });
 

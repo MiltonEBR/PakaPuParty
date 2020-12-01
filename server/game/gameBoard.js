@@ -7,7 +7,7 @@ class GameBoard {
 
     createBoard(name, { x, y }) {
         //Returns an array of the map tiles for the engine to run depending on map name
-        const tileWidth = 50;
+        const tileWidth = 75;
         const spacing = tileWidth * 2;
         const createTile = (x, y) => {
             const tile = this._game.createInstance(x, y, tileWidth, tileWidth, {

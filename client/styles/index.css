@@ -100,6 +100,7 @@
     font-style: italic;
     font-size: 2em;
     color: red;
+    text-align: center;
 
     display: none;
 }

@@ -40,6 +40,8 @@ class World {
             lineWidth: 4,
             index: 1,
         });
+        newPlayer.username = initialData.username;
+
         return newPlayer;
     }
 

@@ -8,7 +8,8 @@ const username = document.querySelector('#username'),
     joinBtn = document.querySelector('#join'),
     lobby = document.querySelector('#lobby'),
     codeDisplay = document.querySelector('#room-name'),
-    errMsg = document.querySelector('#err-msg');
+    errMsg = document.querySelector('#err-msg'),
+    scoreBoard = document.querySelector('#scoreboard');
 
 function disableMainMenu() {
     username.disabled = true;
@@ -28,7 +29,7 @@ function initMainMenu() {
 
     createBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        sock.emit('createGame', username.value);
+        sock.emit('createGame', { username: username.value });
     });
     joinBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -51,6 +52,23 @@ function initMainMenu() {
     }
 }
 
+function addPlayerScoreBoard(name, color) {
+    const playerHolder = document.createElement('div');
+    playerHolder.classList.add('player-holder');
+    const playerIcon = document.createElement('div');
+    playerIcon.classList.add('player-icon');
+    playerIcon.style.backgroundColor = color;
+    const playerText = document.createElement('div');
+    playerText.classList.add('player-txt');
+    playerText.id = 'player-name-' + name;
+    playerText.innerText = name;
+
+    playerHolder.appendChild(playerIcon);
+    playerHolder.appendChild(playerText);
+
+    scoreBoard.appendChild(playerHolder);
+}
+
 function handleInit(dataObj) {
     const tiles = dataObj.tiles,
         players = dataObj.players,
@@ -62,7 +80,8 @@ function handleInit(dataObj) {
     }
     for (let player of players) {
         if (world.verifyData(player)) {
-            world.createPlayer(player);
+            const newPlayer = world.createPlayer(player);
+            addPlayerScoreBoard(player.username, newPlayer.render.strokeStyle);
         } //Else throw an error?
     }
 
@@ -86,7 +105,8 @@ function initGame() {
     sock.on('update', update);
 
     sock.on('playerJoined', (playerData) => {
-        world.createPlayer(playerData);
+        const joinedPlayer = world.createPlayer(playerData);
+        addPlayerScoreBoard(playerData.username, joinedPlayer.render.strokeStyle);
     });
 
     const gameCanvas = document.querySelector('canvas');

@@ -100,10 +100,13 @@ body {
 }
 
 .ready {
+    opacity: 0;
     position: absolute;
     right: 30px;
     color: rgb(83, 163, 83);
     font-size: 2.5em;
+
+    transition: opacity 200ms;
 }
 
 #start-game {
@@ -118,6 +121,11 @@ body {
     font-size: 1.5em;
     border-width: 5px;
     border-radius: 15px;
+}
+
+#start-game:disabled {
+    border-color: rgb(83, 163, 83);
+    color: rgb(83, 163, 83);
 }
 
 .player-holder {

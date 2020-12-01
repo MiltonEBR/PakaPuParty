@@ -32,6 +32,9 @@ io.on('connection', (client) => {
 
     function handleCreateGame(msg) {
         const username = msg.username;
+        if (!verifyUsername(username)) {
+            return;
+        }
         let roomName = makeId(5);
         clientRooms[client.id] = roomName;
         games[roomName] = new Game();
@@ -50,6 +53,9 @@ io.on('connection', (client) => {
     function handleJoinGame(msg) {
         const username = msg.username,
             roomName = msg.room;
+        if (!verifyUsername(username)) {
+            return;
+        }
 
         const room = io.sockets.adapter.rooms[roomName];
 
@@ -64,7 +70,7 @@ io.on('connection', (client) => {
         }
 
         if (numClients === 0) {
-            client.emit('err', 'Thw game does not exist');
+            client.emit('err', 'The game does not exist');
             return;
         } else if (numClients >= 8 || games[roomName].playerList.length >= 8) {
             //Second conditional it's because exiting the browser currently leaves your player "online"
@@ -109,5 +115,19 @@ io.on('connection', (client) => {
             result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
+    }
+
+    function verifyUsername(name) {
+        if (
+            name === '' ||
+            name.length > 10 ||
+            name.includes('-') ||
+            name.includes('<') ||
+            name.includes('>')
+        ) {
+            client.emit('err', 'Invalid username');
+            return false;
+        }
+        return true;
     }
 });

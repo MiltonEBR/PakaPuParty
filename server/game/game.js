@@ -41,6 +41,19 @@ class Game {
         this.createBoard();
     }
 
+    removePlayer(num) {
+        const usedColor = this._playerList[num].color;
+        this._colors[
+            this._colors.findIndex((colorObj) => colorObj.color === usedColor)
+        ].used = false;
+
+        const removedPlayer = this._playerList.splice(num, 1);
+        World.remove(this.world, removedPlayer[0].instance);
+        this._readyList.splice(num, 1);
+
+        return removedPlayer[0].username;
+    }
+
     availableUsername(name) {
         for (let player of this._playerList) {
             if (player.username === name) return false;

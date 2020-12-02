@@ -50,7 +50,6 @@ body {
     z-index: 0;
     width: 450px;
 
-    margin-top: 100px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -110,6 +109,16 @@ body {
     font-size: 2.5em;
 
     transition: opacity 200ms;
+}
+
+#start-info {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: rgb(102, 102, 102);
+    font-family: 'Dosis';
+    box-shadow: 0px 1px rgb(160, 160, 160);
 }
 
 #start-game {

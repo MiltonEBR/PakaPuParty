@@ -49,16 +49,17 @@ io.on('connection', (client) => {
             return player.serializeAll();
         });
 
-        client.emit('playerSelection', { players: serializedData, number: playerNumber, username });
+        client.emit('playerSelection', {
+            players: serializedData,
+            number: playerNumber,
+            username,
+        });
         // client.emit('init', serializedData);
     }
 
     function handleJoinGame(msg) {
         const username = msg.username,
             roomName = msg.room;
-        if (!verifyUsername(username)) {
-            return;
-        }
 
         const room = io.sockets.adapter.rooms[roomName];
 
@@ -82,6 +83,11 @@ io.on('connection', (client) => {
         } else if (games[roomName].inProgress) {
             client.emit('err', 'Game in progress');
             return;
+        } else if (!verifyUsername(username)) {
+            return;
+        } else if (!games[roomName].availableUsername(username)) {
+            client.emit('err', 'Username in use');
+            return;
         }
         clientRooms[client.id] = roomName;
         let playerNumber = games[roomName].createPlayer(username);
@@ -96,7 +102,12 @@ io.on('connection', (client) => {
 
         client.emit('gameCode', roomName);
         client.join(roomName);
-        client.emit('playerSelection', { players: serializedData, number: playerNumber, username });
+        console.log(serializedData);
+        client.emit('playerSelection', {
+            players: serializedData,
+            number: playerNumber,
+            username,
+        });
         // client.emit('init', serializedData);
 
         // if (numClients === 1) {

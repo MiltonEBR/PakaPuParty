@@ -18,6 +18,16 @@ class Game {
         this._gameBoard = null;
         this._playerList = [];
         this._inProgress = false;
+        this._colors = [
+            { color: 'blue', used: false },
+            { color: 'green', used: false },
+            { color: 'yellow', used: false },
+            { color: 'purple', used: false },
+            { color: 'white', used: false },
+            { color: 'pink', used: false },
+            { color: 'red', used: false },
+            { color: 'brown', used: false },
+        ];
 
         setInterval(function () {
             Engine.update(engine, 20);
@@ -28,6 +38,30 @@ class Game {
         };
 
         this.createBoard();
+    }
+
+    availableUsername(name) {
+        for (let player of this._playerList) {
+            if (player.username === name) return false;
+        }
+
+        return true;
+    }
+
+    getAvailableColor(current) {
+        let newColor = null;
+        for (let colorObj of this._colors) {
+            if (current && colorObj.color === current) {
+                colorObj.used = false;
+            }
+
+            if (!colorObj.used && newColor === null) {
+                colorObj.used = true;
+                newColor = colorObj.color;
+            }
+        }
+
+        return newColor;
     }
 
     get inProgress() {
@@ -48,7 +82,9 @@ class Game {
     }
 
     createPlayer(name) {
-        return this._playerList.push(new Player(name, this._gameBoard.tiles[0], this));
+        const newPlayer = new Player(name, this._gameBoard.tiles[0], this);
+        newPlayer.color = this.getAvailableColor();
+        return this._playerList.push(newPlayer);
     }
 
     createInstance(x, y, sX, sY, options) {

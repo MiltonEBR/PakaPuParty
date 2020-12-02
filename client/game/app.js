@@ -93,13 +93,12 @@ function initPlayerSelect() {
             const playerHolder = document.createElement('div');
             playerHolder.classList.add('player-holder');
             playerHolder.id = `holder-${player.username}`;
-
             if (playerUsername === player.username) {
                 playerHolder.innerHTML = `
                 <button id="select-left" class="select-arrow">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <div class="player-icon"></div>
+                <div class="player-icon" style="background-color:${player.color};"></div>
                 <button id="select-right" class="select-arrow">
                     <i class="fas fa-chevron-right"></i>
                 </button>
@@ -107,7 +106,7 @@ function initPlayerSelect() {
                 <i class="fas fa-check-square ready" ></i>`;
             } else {
                 playerHolder.innerHTML = `
-                <div class="player-icon"></div>
+                <div class="player-icon" style="background-color:${player.color};"></div>
                 <span class="player-txt">${player.username}</span>
                 <i class="fas fa-check-square ready" ></i>`;
             }
@@ -132,8 +131,8 @@ function initPlayerSelect() {
         playerHolder.id = `holder-${player.username}`;
 
         playerHolder.innerHTML = `
-                <div id="icon-player-${player.username}" class="player-icon"></div>
-                <span id="text-player-${player.username}" class="player-txt">${player.username}</span>
+                <div class="player-icon" style="background-color:${player.color};"></div>
+                <span class="player-txt">${player.username}</span>
                 <i class="fas fa-check-square ready"></i>`;
 
         playerSelection.appendChild(playerHolder);

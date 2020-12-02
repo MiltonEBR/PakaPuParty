@@ -9,12 +9,17 @@ class Player {
         //this._items;
         //this._socket;
         this._points = 0;
+        this._color = '';
 
         this.spawn(spawnTile.position);
     }
 
     move() {
         Matter.Body.setVelocity(this._instance, { x: 1, y: 0 });
+    }
+
+    set color(color) {
+        this._color = color;
     }
 
     get username() {
@@ -69,6 +74,7 @@ class Player {
             }),
             points: this._points,
             username: this._name,
+            color: this._color,
         };
     }
 }

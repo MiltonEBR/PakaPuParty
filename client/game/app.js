@@ -85,6 +85,8 @@ function initPlayerSelect() {
 
     sock.on('colorChange', handleColorChange);
 
+    sock.on('playerDisconnect', handleDisconnect);
+
     async function handlePlayerSelect(data) {
         await disableMainMenu();
 
@@ -181,6 +183,13 @@ function initPlayerSelect() {
         document
             .getElementById(`holder-${username}`)
             .querySelector('.player-icon').style.backgroundColor = color;
+    }
+
+    function handleDisconnect(data) {
+        playerNumber = data[playerUsername];
+        const playerToRemove = document.getElementById(`holder-${data.removed}`);
+        playerToRemove.parentNode.removeChild(playerToRemove);
+        // playerSelection.remove(document.getElementById(`holder-${data.removed}`));
     }
 }
 

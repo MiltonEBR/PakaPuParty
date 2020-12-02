@@ -91,6 +91,8 @@ function initPlayerSelect() {
         playerNumber = num;
     });
 
+    sock.on('unReady', handleUnReady);
+
     async function handlePlayerSelect(data) {
         await disableMainMenu();
 
@@ -179,6 +181,19 @@ function initPlayerSelect() {
         }
         const check = document.getElementById(`holder-${username}`).querySelector('.ready');
         check.style.opacity = '1';
+    }
+
+    function handleUnReady() {
+        readyBtn.disabled = false;
+        readyBtn.innerText = 'Not Ready';
+        const leftArrow = document.getElementById('select-left'),
+            rightArrow = document.getElementById('select-right');
+        rightArrow.disabled = false;
+        rightArrow.style.removeProperty('display');
+        leftArrow.disabled = false;
+        leftArrow.style.removeProperty('display');
+        const check = document.getElementById(`holder-${playerUsername}`).querySelector('.ready');
+        check.style.opacity = '0';
     }
 
     function handleColorChange(data) {

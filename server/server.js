@@ -26,6 +26,7 @@ io.on('connection', (client) => {
     client.on('joinGame', handleJoinGame);
     client.on('ready', (player) => {
         const roomName = clientRooms[client.id];
+        if (games[roomName].playerList.length <= 1) return;
         games[roomName].readyList[parseInt(player.number) - 1] = true;
         io.sockets.in(roomName).emit('playerReady', player.username);
     });

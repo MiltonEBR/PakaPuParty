@@ -18,6 +18,10 @@ class Player {
         Matter.Body.setVelocity(this._instance, { x: 1, y: 0 });
     }
 
+    get color() {
+        return this._color;
+    }
+
     set color(color) {
         this._color = color;
     }

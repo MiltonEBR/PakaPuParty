@@ -28,6 +28,12 @@ io.on('connection', (client) => {
         const roomName = clientRooms[client.id];
         io.sockets.in(roomName).emit('playerReady', player.username);
     });
+    client.on('nextColor', (data) => {
+        handleColorChange(data, 1);
+    });
+    client.on('backColor', (data) => {
+        handleColorChange(data, -1);
+    });
 
     function handleCreateGame(msg) {
         const username = msg.username;
@@ -102,7 +108,6 @@ io.on('connection', (client) => {
 
         client.emit('gameCode', roomName);
         client.join(roomName);
-        console.log(serializedData);
         client.emit('playerSelection', {
             players: serializedData,
             number: playerNumber,
@@ -148,5 +153,20 @@ io.on('connection', (client) => {
             return false;
         }
         return true;
+    }
+
+    function handleColorChange(playerId, side) {
+        const roomName = clientRooms[client.id];
+        const targetPlayer = games[roomName].playerList[parseInt(playerId) - 1];
+        let newColor;
+        if (side === 1) {
+            newColor = games[roomName].getNextColor(targetPlayer.color);
+        } else if (side === -1) {
+            newColor = games[roomName].getLastColor(targetPlayer.color);
+        }
+        targetPlayer.color = newColor;
+        io.sockets
+            .in(roomName)
+            .emit('colorChange', { username: targetPlayer.username, color: targetPlayer.color });
     }
 });

@@ -48,16 +48,44 @@ class Game {
         return true;
     }
 
-    getAvailableColor(current) {
-        let newColor = null;
-        for (let colorObj of this._colors) {
-            if (current && colorObj.color === current) {
-                colorObj.used = false;
-            }
+    getNextColor(current) {
+        let newColor = current ? current : null;
+        let currentIndex = current
+            ? this._colors.findIndex((el) => {
+                  return el.color === current;
+              })
+            : 0;
 
-            if (!colorObj.used && newColor === null) {
-                colorObj.used = true;
-                newColor = colorObj.color;
+        for (let i = currentIndex; i < this._colors.length; i++) {
+            if (!this._colors[i].used) {
+                newColor = this._colors[i].color;
+                this._colors[i].used = true;
+                if (i !== currentIndex) {
+                    this._colors[currentIndex].used = false;
+                }
+                break;
+            }
+        }
+
+        return newColor;
+    }
+
+    getLastColor(current) {
+        let newColor = current ? current : null;
+        let currentIndex = current
+            ? this._colors.findIndex((el) => {
+                  return el.color === current;
+              })
+            : this._colors.length - 1;
+
+        for (let i = currentIndex; i >= 0; i--) {
+            if (!this._colors[i].used) {
+                newColor = this._colors[i].color;
+                this._colors[i].used = true;
+                if (i !== currentIndex) {
+                    this._colors[currentIndex].used = false;
+                }
+                break;
             }
         }
 
@@ -83,7 +111,7 @@ class Game {
 
     createPlayer(name) {
         const newPlayer = new Player(name, this._gameBoard.tiles[0], this);
-        newPlayer.color = this.getAvailableColor();
+        newPlayer.color = this.getNextColor();
         return this._playerList.push(newPlayer);
     }
 

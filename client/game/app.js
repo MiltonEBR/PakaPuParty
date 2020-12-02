@@ -83,6 +83,8 @@ function initPlayerSelect() {
 
     sock.on('playerReady', handlePlayerReady);
 
+    sock.on('colorChange', handleColorChange);
+
     async function handlePlayerSelect(data) {
         await disableMainMenu();
 
@@ -123,6 +125,15 @@ function initPlayerSelect() {
         readyBtn.addEventListener('click', () => {
             sock.emit('ready', { username: playerUsername, number: playerNumber });
         });
+
+        const leftArrow = document.getElementById('select-left');
+        leftArrow.addEventListener('click', () => {
+            sock.emit('backColor', playerNumber);
+        });
+        const rightArrow = document.getElementById('select-right');
+        rightArrow.addEventListener('click', () => {
+            sock.emit('nextColor', playerNumber);
+        });
     }
 
     function handlePlayerJoined(player) {
@@ -148,6 +159,14 @@ function initPlayerSelect() {
         check.style.opacity = '1';
         const text = document.getElementById(`holder-${username}`).querySelector('.player-txt');
         text.style.color = 'rgb(83, 163, 83)';
+    }
+
+    function handleColorChange(data) {
+        const username = data.username;
+        const color = data.color;
+        document
+            .getElementById(`holder-${username}`)
+            .querySelector('.player-icon').style.backgroundColor = color;
     }
 }
 

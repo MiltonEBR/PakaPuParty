@@ -18,6 +18,7 @@ const io = socketio(server);
 
 const games = {};
 const clientRooms = {};
+const clientPlayerNumber = {};
 
 io.on('connection', (client) => {
     console.log('someone conected');
@@ -37,6 +38,23 @@ io.on('connection', (client) => {
         handleColorChange(data, -1);
     });
 
+    client.on('disconnecting', () => {
+        const roomName = clientRooms[client.id];
+        if (!roomName) return;
+
+        delete clientRooms[client.id];
+        const numberLeft = parseInt(clientPlayerNumber[client.id]);
+        delete clientPlayerNumber[client.id];
+        const removedName = games[roomName].removePlayer(numberLeft - 1);
+        let serializedData = {};
+        for (let i = 0; i < games[roomName].playerList.length; i++) {
+            const player = games[roomName].playerList[i];
+            serializedData[player.username] = i + 1;
+        }
+        serializedData.removed = removedName;
+        io.sockets.in(roomName).emit('playerDisconnect', serializedData);
+    });
+
     function handleCreateGame(msg) {
         const username = msg.username;
         if (!verifyUsername(username)) {
@@ -51,7 +69,7 @@ io.on('connection', (client) => {
         client.join(roomName);
 
         let playerNumber = games[roomName].createPlayer(username);
-
+        clientPlayerNumber[client.id] = playerNumber;
         // let serializedData = games[roomName].serializeAll();
         let serializedData = games[roomName].playerList.map((player) => {
             return player.serializeAll();
@@ -100,6 +118,7 @@ io.on('connection', (client) => {
         }
         clientRooms[client.id] = roomName;
         let playerNumber = games[roomName].createPlayer(username);
+        clientPlayerNumber[client.id] = playerNumber;
         let serializedData = games[roomName].playerList.map((player) => {
             return player.serializeAll();
         });

@@ -60,7 +60,7 @@ class Game {
             if (!this._colors[i].used) {
                 newColor = this._colors[i].color;
                 this._colors[i].used = true;
-                if (i !== currentIndex) {
+                if (i !== currentIndex && current) {
                     this._colors[currentIndex].used = false;
                 }
                 break;

@@ -132,11 +132,12 @@ function initPlayerSelect() {
             sock.emit('ready', { username: playerUsername, number: playerNumber });
         });
 
-        const leftArrow = document.getElementById('select-left');
+        const leftArrow = document.getElementById('select-left'),
+            rightArrow = document.getElementById('select-right');
         leftArrow.addEventListener('click', () => {
             sock.emit('backColor', playerNumber);
         });
-        const rightArrow = document.getElementById('select-right');
+
         rightArrow.addEventListener('click', () => {
             sock.emit('nextColor', playerNumber);
         });
@@ -160,11 +161,18 @@ function initPlayerSelect() {
         if (username === playerUsername) {
             readyBtn.disabled = true;
             readyBtn.innerText = 'Ready';
+            const leftArrow = document.getElementById('select-left'),
+                rightArrow = document.getElementById('select-right');
+            rightArrow.disabled = true;
+            rightArrow.style.display = 'none';
+            leftArrow.disabled = true;
+            leftArrow.style.display = 'none';
+        } else {
+            const text = document.getElementById(`holder-${username}`).querySelector('.player-txt');
+            text.style.color = 'rgb(83, 163, 83)';
         }
         const check = document.getElementById(`holder-${username}`).querySelector('.ready');
         check.style.opacity = '1';
-        const text = document.getElementById(`holder-${username}`).querySelector('.player-txt');
-        text.style.color = 'rgb(83, 163, 83)';
     }
 
     function handleColorChange(data) {

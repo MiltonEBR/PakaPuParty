@@ -88,10 +88,12 @@ function initPlayerSelect() {
     async function handlePlayerSelect(data) {
         await disableMainMenu();
 
-        const players = data.players;
+        const players = data.players,
+            readyList = data.readyList;
         playerNumber = data.number;
         playerUsername = data.username;
-        for (player of players) {
+        for (let i = 0; i < players.length; i++) {
+            const player = players[i];
             const playerHolder = document.createElement('div');
             playerHolder.classList.add('player-holder');
             playerHolder.id = `holder-${player.username}`;
@@ -116,6 +118,10 @@ function initPlayerSelect() {
             playerSelection.appendChild(playerHolder);
             playerSelection.appendChild(readyBtn);
             playerSelection.style.display = 'flex';
+
+            if (readyList[i]) {
+                handlePlayerReady(player.username);
+            }
         }
 
         document

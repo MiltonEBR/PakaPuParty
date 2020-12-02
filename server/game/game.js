@@ -17,6 +17,7 @@ class Game {
         this.world.gravity = { scale: 0, x: 0, y: 0 };
         this._gameBoard = null;
         this._playerList = [];
+        this._readyList = [];
         this._inProgress = false;
         this._colors = [
             { color: 'blue', used: false },
@@ -104,6 +105,10 @@ class Game {
         return this._filterList;
     }
 
+    get readyList() {
+        return this._readyList;
+    }
+
     createBoard() {
         this._gameBoard = new GameBoard(this);
         this._gameBoard.createBoard('debug', { x: 100, y: 200 });
@@ -112,6 +117,7 @@ class Game {
     createPlayer(name) {
         const newPlayer = new Player(name, this._gameBoard.tiles[0], this);
         newPlayer.color = this.getNextColor();
+        this._readyList.push(false);
         return this._playerList.push(newPlayer);
     }
 

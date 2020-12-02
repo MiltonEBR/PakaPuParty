@@ -26,6 +26,7 @@ io.on('connection', (client) => {
     client.on('joinGame', handleJoinGame);
     client.on('ready', (player) => {
         const roomName = clientRooms[client.id];
+        games[roomName].readyList[parseInt(player.number) - 1] = true;
         io.sockets.in(roomName).emit('playerReady', player.username);
     });
     client.on('nextColor', (data) => {
@@ -59,6 +60,7 @@ io.on('connection', (client) => {
             players: serializedData,
             number: playerNumber,
             username,
+            readyList: games[roomName].readyList,
         });
         // client.emit('init', serializedData);
     }
@@ -112,6 +114,7 @@ io.on('connection', (client) => {
             players: serializedData,
             number: playerNumber,
             username,
+            readyList: games[roomName].readyList,
         });
         // client.emit('init', serializedData);
 

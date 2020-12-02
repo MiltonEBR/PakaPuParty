@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 });
 
 const server = app.listen(3000, () => {
-    console.log('listening');
+    console.log('listening on port *:3000');
 });
 
 const io = socketio(server);
@@ -46,13 +46,17 @@ io.on('connection', (client) => {
         const numberLeft = parseInt(clientPlayerNumber[client.id]);
         delete clientPlayerNumber[client.id];
         const removedName = games[roomName].removePlayer(numberLeft - 1);
-        let serializedData = {};
-        for (let i = 0; i < games[roomName].playerList.length; i++) {
-            const player = games[roomName].playerList[i];
-            serializedData[player.username] = i + 1;
+
+        const room = io.sockets.adapter.rooms[roomName];
+        const sockets = Object.keys(room.sockets);
+        for (socket of sockets) {
+            if (clientPlayerNumber[socket] > numberLeft) {
+                clientPlayerNumber[socket] -= 1;
+                io.to(socket).emit('updateNumber', clientPlayerNumber[socket]);
+            }
         }
-        serializedData.removed = removedName;
-        io.sockets.in(roomName).emit('playerDisconnect', serializedData);
+
+        io.sockets.in(roomName).emit('playerDisconnect', removedName);
     });
 
     function handleCreateGame(msg) {

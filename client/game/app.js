@@ -227,7 +227,7 @@ function initPlayerSelect() {
             }
         } else {
             world.deleteEntity(id);
-            popUpMsg(`Player ${removedName} left`);
+            popUpMsg(`${removedName} left the game`);
         }
     }
 }
@@ -237,7 +237,7 @@ function popUpMsg(msg) {
     popUp.classList.add('pop-up');
     popUp.innerText = msg;
     menu.insertBefore(popUp, menu.querySelector('#items-holder'));
-    const time = 3000;
+    const time = 4000;
     setTimeout(() => {
         popUp.style.opacity = '0';
     }, time - 1000);

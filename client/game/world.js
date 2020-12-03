@@ -3,6 +3,10 @@ class World {
         this._entities = {};
     }
 
+    deleteEntity(id) {
+        delete this._entities[id];
+    }
+
     verifyData(data) {
         //Verifies if the data can be transformed into an entity
         if (!data.position || !data.vertices || data.id === null || data.id === undefined) {

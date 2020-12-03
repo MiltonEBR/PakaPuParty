@@ -24,7 +24,7 @@ class Game {
             { color: 'green', used: false },
             { color: 'yellow', used: false },
             { color: 'purple', used: false },
-            { color: 'white', used: false },
+            { color: 'gray', used: false },
             { color: 'pink', used: false },
             { color: 'red', used: false },
             { color: 'brown', used: false },

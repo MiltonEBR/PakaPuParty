@@ -25,17 +25,12 @@ io.on('connection', (client) => {
 
     client.on('createGame', handleCreateGame);
     client.on('joinGame', handleJoinGame);
-    client.on('ready', (player) => {
-        const roomName = clientRooms[client.id];
-        if (games[roomName].playerList.length <= 1) return;
-        games[roomName].readyList[parseInt(player.number) - 1] = true;
-        io.sockets.in(roomName).emit('playerReady', player.username);
+    client.on('ready', handleReady);
+    client.on('nextColor', (playerId) => {
+        handleColorChange(playerId, 1);
     });
-    client.on('nextColor', (data) => {
-        handleColorChange(data, 1);
-    });
-    client.on('backColor', (data) => {
-        handleColorChange(data, -1);
+    client.on('backColor', (playerId) => {
+        handleColorChange(playerId, -1);
     });
 
     client.on('disconnecting', () => {
@@ -133,7 +128,6 @@ io.on('connection', (client) => {
         let serializedData = games[roomName].playerList.map((player) => {
             return player.serializeAll();
         });
-        // let serializedData = games[roomName].serializeAll();
 
         io.sockets
             .in(roomName)
@@ -147,11 +141,22 @@ io.on('connection', (client) => {
             username,
             readyList: games[roomName].readyList,
         });
-        // client.emit('init', serializedData);
+    }
 
-        // if (numClients === 1) {
-        //     startInverval(roomName);
-        // }
+    function handleReady(player) {
+        const roomName = clientRooms[client.id];
+        if (games[roomName].playerList.length <= 1) return;
+        games[roomName].readyList[parseInt(player.number) - 1] = true;
+        io.sockets.in(roomName).emit('playerReady', player.username);
+
+        if (
+            games[roomName].readyList.length > 1 &&
+            !games[roomName].readyList.some((ready) => ready === false)
+        ) {
+            const serializedData = games[roomName].serializeAll();
+            io.sockets.in(roomName).emit('init', serializedData);
+            startInverval(roomName);
+        }
     }
 
     function startInverval(room) {

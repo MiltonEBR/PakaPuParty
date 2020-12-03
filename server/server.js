@@ -51,12 +51,9 @@ io.on('connection', (client) => {
             }
         }
 
-        if (room.length <= 2) {
-            games[roomName].readyList.forEach((ready, i) => {
-                games[roomName].readyList[i] = false;
-            });
-            io.sockets.in(roomName).emit('unReady');
-        }
+        games[roomName].readyList.forEach((ready, i) => {
+            games[roomName].readyList[i] = false;
+        });
 
         io.sockets.in(roomName).emit('playerDisconnect', removedName);
     });

@@ -30,6 +30,18 @@ async function disableMainMenu() {
     });
 }
 
+async function disableLobby() {
+    readyBtn.disabled = true;
+    lobby.classList.add('fade-out');
+    await new Promise((res) => {
+        setTimeout(() => {
+            lobby.innerHTML = '';
+            lobby.style.display = 'none';
+            res();
+        }, 250);
+    });
+}
+
 function initMainMenu() {
     username.value = '';
     room.value = '';
@@ -258,18 +270,9 @@ function update(dataList) {
 function initGame() {
     sock.on('init', (data) => {
         handleInit(data);
-        disableMainMenu();
+        disableLobby();
     });
-    sock.on('update', update);
-
-    // sock.on('playerJoined', (playerData) => {
-    //     const joinedPlayer = world.createPlayer(playerData);
-    //     addPlayerScoreBoard(
-    //         joinedPlayer.username,
-    //         joinedPlayer.points,
-    //         joinedPlayer.render.strokeStyle
-    //     );
-    // });
+    // sock.on('update', update);
 
     const gameCanvas = document.querySelector('canvas');
 

@@ -40,7 +40,8 @@ io.on('connection', (client) => {
         delete clientRooms[client.id];
         const numberLeft = parseInt(clientPlayerNumber[client.id]);
         delete clientPlayerNumber[client.id];
-        const removedName = games[roomName].removePlayer(numberLeft - 1);
+
+        const removedPlayer = games[roomName].removePlayer(numberLeft - 1);
 
         const room = io.sockets.adapter.rooms[roomName];
         const sockets = Object.keys(room.sockets);
@@ -51,11 +52,18 @@ io.on('connection', (client) => {
             }
         }
 
-        games[roomName].readyList.forEach((ready, i) => {
-            games[roomName].readyList[i] = false;
-        });
+        if (!games[roomName].inProgress) {
+            games[roomName].readyList.forEach((ready, i) => {
+                games[roomName].readyList[i] = false;
+            });
+        }
 
-        io.sockets.in(roomName).emit('playerDisconnect', removedName);
+        io.sockets
+            .in(roomName)
+            .emit('playerDisconnect', {
+                removedName: removedPlayer.username,
+                id: removedPlayer.instance.id,
+            });
     });
 
     function handleCreateGame(msg) {
@@ -158,6 +166,7 @@ io.on('connection', (client) => {
 
     function startInverval(room) {
         const invervalId = setInterval(function () {
+            games[room].startGame();
             let updateData = games[room].serialize();
             emitUpdate(room, updateData);
         }, 20);

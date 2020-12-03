@@ -103,8 +103,6 @@ function initPlayerSelect() {
         playerNumber = num;
     });
 
-    sock.on('unReady', handleUnReady);
-
     async function handlePlayerSelect(data) {
         await disableMainMenu();
 
@@ -195,19 +193,6 @@ function initPlayerSelect() {
         check.style.opacity = '1';
     }
 
-    function handleUnReady() {
-        readyBtn.disabled = false;
-        readyBtn.innerText = 'Not Ready';
-        const leftArrow = document.getElementById('select-left'),
-            rightArrow = document.getElementById('select-right');
-        rightArrow.disabled = false;
-        rightArrow.style.removeProperty('display');
-        leftArrow.disabled = false;
-        leftArrow.style.removeProperty('display');
-        const check = document.getElementById(`holder-${playerUsername}`).querySelector('.ready');
-        check.style.opacity = '0';
-    }
-
     function handleColorChange(data) {
         const username = data.username;
         const color = data.color;
@@ -219,6 +204,25 @@ function initPlayerSelect() {
     function handleDisconnect(removedName) {
         const playerToRemove = document.getElementById(`holder-${removedName}`);
         playerToRemove.parentNode.removeChild(playerToRemove);
+
+        readyBtn.disabled = false;
+        readyBtn.innerText = 'Not Ready';
+        const leftArrow = document.getElementById('select-left'),
+            rightArrow = document.getElementById('select-right');
+        rightArrow.disabled = false;
+        rightArrow.style.removeProperty('display');
+        leftArrow.disabled = false;
+        leftArrow.style.removeProperty('display');
+
+        const playerHolders = playerSelection.querySelectorAll('.player-holder');
+        for (holder of playerHolders) {
+            const check = holder.querySelector('.ready');
+            check.style.opacity = '0';
+            if (holder.id !== `holder-${playerUsername}`) {
+                const text = holder.querySelector('.player-txt');
+                text.style.color = 'black';
+            }
+        }
     }
 }
 
@@ -244,29 +248,6 @@ function addPlayerScoreBoard(name, points, color) {
     scoreBoard.appendChild(playerHolder);
 }
 
-function handleInit(dataObj) {
-    const tiles = dataObj.tiles,
-        players = dataObj.players;
-    for (let tile of tiles) {
-        if (world.verifyData(tile)) {
-            world.createTile(tile);
-        } //Else throw an error?
-    }
-    for (let player of players) {
-        if (world.verifyData(player)) {
-            const newPlayer = world.createPlayer(player);
-            addPlayerScoreBoard(newPlayer.username, newPlayer.points, newPlayer.render.strokeStyle);
-        } //Else throw an error?
-    }
-}
-
-function update(dataList) {
-    for (let data of dataList) {
-        const { id, position, vertices } = data;
-        world.updateEntity(id, { position, vertices });
-    }
-}
-
 function initGame() {
     sock.on('init', (data) => {
         handleInit(data);
@@ -280,6 +261,33 @@ function initGame() {
         wireframes: true,
     });
     renderer.run();
+
+    function handleInit(dataObj) {
+        const tiles = dataObj.tiles,
+            players = dataObj.players;
+        for (let tile of tiles) {
+            if (world.verifyData(tile)) {
+                world.createTile(tile);
+            } //Else throw an error?
+        }
+        for (let player of players) {
+            if (world.verifyData(player)) {
+                const newPlayer = world.createPlayer(player);
+                addPlayerScoreBoard(
+                    newPlayer.username,
+                    newPlayer.points,
+                    newPlayer.render.strokeStyle
+                );
+            } //Else throw an error?
+        }
+    }
+
+    function update(dataList) {
+        for (let data of dataList) {
+            const { id, position, vertices } = data;
+            world.updateEntity(id, { position, vertices });
+        }
+    }
 }
 
 initMainMenu();

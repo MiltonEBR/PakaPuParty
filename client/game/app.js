@@ -1,6 +1,5 @@
 const world = new World();
-let playerNumber;
-let playerUsername;
+let playerNumber, playerUsername;
 const sock = io();
 
 const username = document.querySelector('#username'),
@@ -13,7 +12,8 @@ const username = document.querySelector('#username'),
     scoreBoard = document.querySelector('#scoreboard'),
     form = document.querySelector('#lobby-form'),
     playerSelection = document.querySelector('#player-selection'),
-    readyBtn = document.querySelector('#start-game');
+    readyBtn = document.querySelector('#start-game'),
+    menu = document.querySelector('#menu');
 
 async function disableMainMenu() {
     username.disabled = true;
@@ -30,16 +30,13 @@ async function disableMainMenu() {
     });
 }
 
-async function disableLobby() {
+function disableLobby() {
     readyBtn.disabled = true;
     lobby.classList.add('fade-out');
-    await new Promise((res) => {
-        setTimeout(() => {
-            lobby.innerHTML = '';
-            lobby.style.display = 'none';
-            res();
-        }, 250);
-    });
+    setTimeout(() => {
+        lobby.innerHTML = '';
+        lobby.style.display = 'none';
+    }, 250);
 }
 
 function initMainMenu() {
@@ -201,34 +198,58 @@ function initPlayerSelect() {
             .querySelector('.player-icon').style.backgroundColor = color;
     }
 
-    function handleDisconnect(removedName) {
+    function handleDisconnect(removed) {
+        const removedName = removed.removedName,
+            id = removed.id;
+
         const playerToRemove = document.getElementById(`holder-${removedName}`);
         playerToRemove.parentNode.removeChild(playerToRemove);
-
-        readyBtn.disabled = false;
-        readyBtn.innerText = 'Not Ready';
         const leftArrow = document.getElementById('select-left'),
             rightArrow = document.getElementById('select-right');
-        rightArrow.disabled = false;
-        rightArrow.style.removeProperty('display');
-        leftArrow.disabled = false;
-        leftArrow.style.removeProperty('display');
 
-        const playerHolders = playerSelection.querySelectorAll('.player-holder');
-        for (holder of playerHolders) {
-            const check = holder.querySelector('.ready');
-            check.style.opacity = '0';
-            if (holder.id !== `holder-${playerUsername}`) {
-                const text = holder.querySelector('.player-txt');
-                text.style.color = 'black';
+        if (leftArrow && rightArrow) {
+            readyBtn.disabled = false;
+            readyBtn.innerText = 'Not Ready';
+
+            rightArrow.disabled = false;
+            rightArrow.style.removeProperty('display');
+            leftArrow.disabled = false;
+            leftArrow.style.removeProperty('display');
+
+            const playerHolders = playerSelection.querySelectorAll('.player-holder');
+            for (holder of playerHolders) {
+                const check = holder.querySelector('.ready');
+                check.style.opacity = '0';
+                if (holder.id !== `holder-${playerUsername}`) {
+                    const text = holder.querySelector('.player-txt');
+                    text.style.color = 'black';
+                }
             }
+        } else {
+            world.deleteEntity(id);
+            popUpMsg(`Player ${removedName} left`);
         }
     }
+}
+
+function popUpMsg(msg) {
+    const popUp = document.createElement('div');
+    popUp.classList.add('pop-up');
+    popUp.innerText = msg;
+    menu.insertBefore(popUp, menu.querySelector('#items-holder'));
+    const time = 3000;
+    setTimeout(() => {
+        popUp.style.opacity = '0';
+    }, time - 1000);
+    setTimeout(() => {
+        popUp.parentNode.removeChild(popUp);
+    }, time);
 }
 
 function addPlayerScoreBoard(name, points, color) {
     const playerHolder = document.createElement('div');
     playerHolder.classList.add('player-holder');
+    playerHolder.id = `holder-${name}`;
     const playerIcon = document.createElement('div');
     playerIcon.classList.add('player-icon');
     playerIcon.style.backgroundColor = color;
@@ -236,6 +257,7 @@ function addPlayerScoreBoard(name, points, color) {
     playerText.classList.add('player-txt');
     playerText.id = 'player-name-' + name;
     playerText.innerText = name;
+    if (name === playerUsername) playerText.style.color = 'rgb(137, 129, 68)';
     const playerPoints = document.createElement('div');
     playerPoints.classList.add('player-points');
     playerPoints.id = 'player-score-' + name;

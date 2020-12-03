@@ -51,7 +51,7 @@ class Game {
         World.remove(this.world, removedPlayer[0].instance);
         this._readyList.splice(num, 1);
 
-        return removedPlayer[0].username;
+        return removedPlayer[0];
     }
 
     availableUsername(name) {
@@ -120,6 +120,10 @@ class Game {
 
     get readyList() {
         return this._readyList;
+    }
+
+    startGame() {
+        this._inProgress = true;
     }
 
     createBoard() {

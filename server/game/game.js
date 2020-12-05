@@ -29,6 +29,7 @@ class Game {
             { color: 'red', used: false },
             { color: 'brown', used: false },
         ];
+        this._currentTurn = 0;
 
         setInterval(function () {
             Engine.update(engine, 20);
@@ -124,6 +125,8 @@ class Game {
 
     startGame() {
         this._inProgress = true;
+        this._currentTurn = 0;
+        return this._playerList[this._currentTurn].username;
     }
 
     createBoard() {

@@ -33,38 +33,7 @@ io.on('connection', (client) => {
         handleColorChange(playerId, -1);
     });
 
-    client.on('disconnecting', () => {
-        const roomName = clientRooms[client.id];
-        if (!roomName) return;
-
-        delete clientRooms[client.id];
-        const numberLeft = parseInt(clientPlayerNumber[client.id]);
-        delete clientPlayerNumber[client.id];
-
-        const removedPlayer = games[roomName].removePlayer(numberLeft - 1);
-
-        const room = io.sockets.adapter.rooms[roomName];
-        const sockets = Object.keys(room.sockets);
-        for (socket of sockets) {
-            if (clientPlayerNumber[socket] > numberLeft) {
-                clientPlayerNumber[socket] -= 1;
-                io.to(socket).emit('updateNumber', clientPlayerNumber[socket]);
-            }
-        }
-
-        if (!games[roomName].inProgress) {
-            games[roomName].readyList.forEach((ready, i) => {
-                games[roomName].readyList[i] = false;
-            });
-        }
-
-        io.sockets
-            .in(roomName)
-            .emit('playerDisconnect', {
-                removedName: removedPlayer.username,
-                id: removedPlayer.instance.id,
-            });
-    });
+    client.on('disconnecting', handleDisconnecting);
 
     function handleCreateGame(msg) {
         const username = msg.username;
@@ -162,6 +131,37 @@ io.on('connection', (client) => {
             io.sockets.in(roomName).emit('init', serializedData);
             startInverval(roomName);
         }
+    }
+
+    function handleDisconnecting() {
+        const roomName = clientRooms[client.id];
+        if (!roomName) return;
+
+        delete clientRooms[client.id];
+        const numberLeft = parseInt(clientPlayerNumber[client.id]);
+        delete clientPlayerNumber[client.id];
+
+        const removedPlayer = games[roomName].removePlayer(numberLeft - 1);
+
+        const room = io.sockets.adapter.rooms[roomName];
+        const sockets = Object.keys(room.sockets);
+        for (socket of sockets) {
+            if (clientPlayerNumber[socket] > numberLeft) {
+                clientPlayerNumber[socket] -= 1;
+                io.to(socket).emit('updateNumber', clientPlayerNumber[socket]);
+            }
+        }
+
+        if (!games[roomName].inProgress) {
+            games[roomName].readyList.forEach((ready, i) => {
+                games[roomName].readyList[i] = false;
+            });
+        }
+
+        io.sockets.in(roomName).emit('playerDisconnect', {
+            removedName: removedPlayer.username,
+            id: removedPlayer.instance.id,
+        });
     }
 
     function startInverval(room) {

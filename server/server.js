@@ -26,12 +26,7 @@ io.on('connection', (client) => {
     client.on('createGame', handleCreateGame);
     client.on('joinGame', handleJoinGame);
     client.on('ready', handleReady);
-    client.on('nextColor', (playerId) => {
-        handleColorChange(playerId, 1);
-    });
-    client.on('backColor', (playerId) => {
-        handleColorChange(playerId, -1);
-    });
+    client.on('getColor', handleColorChange);
 
     client.on('disconnecting', handleDisconnecting);
 
@@ -200,7 +195,10 @@ io.on('connection', (client) => {
         return true;
     }
 
-    function handleColorChange(playerId, side) {
+    function handleColorChange(data) {
+        const playerId = data.playerNum;
+        const side = data.side === 'left' ? -1 : 1;
+
         const roomName = clientRooms[client.id];
         const targetPlayer = games[roomName].playerList[parseInt(playerId) - 1];
         let newColor;

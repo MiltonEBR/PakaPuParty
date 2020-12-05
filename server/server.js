@@ -124,6 +124,10 @@ io.on('connection', (client) => {
         ) {
             const serializedData = games[roomName].serializeAll();
             io.sockets.in(roomName).emit('init', serializedData);
+
+            const turn = games[roomName].startGame();
+            io.sockets.in(roomName).emit('playerTurn', turn);
+
             startInverval(roomName);
         }
     }
@@ -161,7 +165,6 @@ io.on('connection', (client) => {
 
     function startInverval(room) {
         const invervalId = setInterval(function () {
-            games[room].startGame();
             let updateData = games[room].serialize();
             emitUpdate(room, updateData);
         }, 20);

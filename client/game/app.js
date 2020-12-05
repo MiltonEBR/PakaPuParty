@@ -150,11 +150,11 @@ function initPlayerSelect() {
         const leftArrow = document.getElementById('select-left'),
             rightArrow = document.getElementById('select-right');
         leftArrow.addEventListener('click', () => {
-            sock.emit('backColor', playerNumber);
+            sock.emit('getColor', { playerNum: playerNumber, side: 'left' });
         });
 
         rightArrow.addEventListener('click', () => {
-            sock.emit('nextColor', playerNumber);
+            sock.emit('getColor', { playerNum: playerNumber, side: 'right' });
         });
     }
 

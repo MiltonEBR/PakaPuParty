@@ -277,6 +277,13 @@ function initGame() {
     });
     // sock.on('update', update);
 
+    sock.on('playerTurn', (username) => {
+        console.log('a');
+        const turnHolder = scoreBoard.querySelector(`#holder-${username}`);
+        console.log(turnHolder);
+        turnHolder.classList.add('current-turn');
+    });
+
     const gameCanvas = document.querySelector('canvas');
 
     const renderer = new Renderer(world.entities, gameCanvas, {

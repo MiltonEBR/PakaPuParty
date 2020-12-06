@@ -15,6 +15,27 @@ class World {
         return true;
     }
 
+    createTxt(initialData) {
+        const newTxt = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'rgb(0, 0, 0)';
+                ctx.font = '20px Arial';
+                let x, y;
+                x = this.player.position.x;
+                y = this.player.position.y;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'Middle';
+                ctx.fillText('Turn', x, y - 40);
+            },
+            index: 10,
+        });
+        newTxt.render.player = {
+            position: { x: initialData.position.x, y: initialData.position.y },
+        };
+
+        return newTxt;
+    }
+
     createTile(initialData) {
         const newTile = this.createEntity(initialData, {
             wireframe: true,
@@ -41,29 +62,33 @@ class World {
     }
 
     createEntity(initialData, renderSettings) {
-        const { position, vertices, id } = initialData;
+        const { position, id } = initialData;
         if (this._entities[id]) {
             return;
         }
 
-        const newEntity = { position, vertices, render: {} };
-
-        const { wireframe, lineWidth, strokeStyle, index } = renderSettings;
+        const newEntity = { position, render: {} };
+        if (initialData.vertices) {
+            newEntity.vertices = initialData.vertices;
+        }
 
         const render = newEntity.render;
-        if (wireframe) {
-            render.wireframe = wireframe;
+        if (renderSettings.wireframe) {
+            render.wireframe = renderSettings.wireframe;
         }
-        if (lineWidth) {
-            render.lineWidth = lineWidth;
+        if (renderSettings.lineWidth) {
+            render.lineWidth = renderSettings.lineWidth;
         }
-        if (strokeStyle) {
-            render.strokeStyle = strokeStyle;
+        if (renderSettings.strokeStyle) {
+            render.strokeStyle = renderSettings.strokeStyle;
         }
-        if (index) {
-            render.index = index;
+        if (renderSettings.index) {
+            render.index = renderSettings.index;
         } else {
             render.index = 0;
+        }
+        if (renderSettings.draw) {
+            render.draw = renderSettings.draw;
         }
 
         this._entities[id] = newEntity;
@@ -79,6 +104,21 @@ class World {
         for (let value in data) {
             if (entity[value]) {
                 entity[value] = data[value];
+            }
+        }
+
+        return entity;
+    }
+
+    updateRender(id, data) {
+        if (!this._entities[id]) {
+            return;
+        }
+        const entity = this._entities[id];
+        for (let value in data) {
+            if (entity.render[value]) {
+                console.log('in');
+                entity.render[value] = data[value];
             }
         }
 

@@ -221,8 +221,11 @@ body {
     align-items: center;
     justify-content: center;
 }
+.item-ico:disabled > i {
+    opacity: 0.5;
+}
 
-.item-ico:active {
+.item-ico:enabled:active {
     background-color: rgb(214, 214, 214);
 }
 

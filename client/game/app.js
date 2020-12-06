@@ -274,7 +274,7 @@ const dice = document.getElementById('dice');
 
 function initItemButtons() {
     dice.addEventListener('click', () => {
-        sock.emit('rollDice', { username: playerUsername, number: playerNumber });
+        sock.emit('preview', { username: playerUsername, number: playerNumber, item: 'dice' });
     });
 
     disableItems();
@@ -300,14 +300,18 @@ function initGame() {
         handleInit(data);
         disableLobby();
 
+        world.createTxt({ id: '#1', position: { x: -10, y: -10 } });
         renderer.run();
     });
     // sock.on('update', update);
 
-    sock.on('playerTurn', (username) => {
+    sock.on('playerTurn', (data) => {
+        const username = data.username,
+            id = data.id;
         const turnHolder = scoreBoard.querySelector(`#holder-${username}`);
         turnHolder.classList.add('current-turn');
 
+        console.log(world.updateRender('#1', { player: world.entities[id] }));
         if (username === playerUsername) {
             enableItems();
         }

@@ -126,7 +126,7 @@ class Game {
     startGame() {
         this._inProgress = true;
         this._currentTurn = 0;
-        return this._playerList[this._currentTurn].username;
+        return this._playerList[this._currentTurn];
     }
 
     createBoard() {

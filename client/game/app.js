@@ -270,11 +270,21 @@ function addPlayerScoreBoard(name, points, color) {
     scoreBoard.appendChild(playerHolder);
 }
 
+const gameCanvas = document.querySelector('canvas');
 const dice = document.getElementById('dice');
+const turn = { item: '', clicked: false };
 
 function initItemButtons() {
+    gameCanvas.addEventListener('click', () => {
+        if (turn.clicked) {
+            sock.emit('confirmTurn', { number: playerNumber, item: turn.item });
+        }
+    });
+
     dice.addEventListener('click', () => {
-        sock.emit('preview', { username: playerUsername, number: playerNumber, item: 'dice' });
+        turn.item = '';
+        turn.clicked = false;
+        sock.emit('preview', { number: playerNumber, item: 'dice' });
     });
 
     disableItems();
@@ -291,7 +301,6 @@ function enableItems() {
 function initGame() {
     initItemButtons();
 
-    const gameCanvas = document.querySelector('canvas');
     const renderer = new Renderer(world.entities, gameCanvas, {
         wireframes: true,
     });
@@ -301,6 +310,10 @@ function initGame() {
         disableLobby();
 
         world.createTurnIndicator({ id: '#1', position: { x: -10, y: -10 } });
+        world.createMessage(
+            { id: '#2', position: { x: gameCanvas.width / 2, y: -100 } },
+            'Click to throw dice'
+        );
         renderer.run();
     });
     // sock.on('update', update);
@@ -311,9 +324,27 @@ function initGame() {
         const turnHolder = scoreBoard.querySelector(`#holder-${username}`);
         turnHolder.classList.add('current-turn');
 
-        console.log(world.updateRender('#1', { player: world.entities[id] }));
+        world.updateEntity('#1', { player: world.entities[id] });
         if (username === playerUsername) {
             enableItems();
+        }
+    });
+
+    sock.on('preview', (data) => {
+        const username = data.username;
+        if (username === playerUsername) {
+            world.updateEntity('#2', { position: { x: gameCanvas.width / 2, y: 30 } });
+            turn.item = data.item;
+            turn.clicked = true;
+        }
+
+        switch (data.item) {
+            case 'dice':
+                console.log('Player ' + username + ' clicked the dice once');
+                break;
+
+            default:
+                break;
         }
     });
 

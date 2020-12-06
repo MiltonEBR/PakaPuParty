@@ -15,7 +15,7 @@ class World {
         return true;
     }
 
-    createTxt(initialData) {
+    createTurnIndicator(initialData) {
         const newTxt = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'rgb(0, 0, 0)';

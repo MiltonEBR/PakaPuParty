@@ -1,6 +1,6 @@
 class Renderer {
     constructor(entities, canvas, options) {
-        this.entities = entities;
+        this._entities = entities;
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
 
@@ -11,30 +11,26 @@ class Renderer {
         }
     }
 
-    entitiesByIndex() {
-        const entitiesByIndex = {};
-        for (let id in this.entities) {
-            const ent = this.entities[id];
-            if (!ent.render.index) {
-                if (!entitiesByIndex[0]) entitiesByIndex[0] = [];
-                entitiesByIndex[0].push(ent);
-            } else {
-                if (!entitiesByIndex[ent.render.index]) entitiesByIndex[ent.render.index] = [];
-                entitiesByIndex[ent.render.index].push(ent);
+    entitiesByIndex(entitiesById) {
+        for (id in entitiesById) {
+            const entity = entitiesById[id];
+            if (!this._entitiesRenderer[entity.render.index]) {
+                this._entitiesRenderer[entity.render.index] = [];
             }
+            this._entitiesRenderer[entity.render.index].push(entity.render);
         }
 
-        return entitiesByIndex;
+        console.log(this._entitiesRenderer);
     }
 
     draw() {
         const ctx = this.ctx;
         const options = this.options;
 
-        //console.log(this.entitiesByIndex());
+        const entityList = Object.values(this._entities);
+        entityList.sort((a, b) => a.render.index - b.render.index); //Most eficient sort method?
 
-        for (let id in this.entities) {
-            const ent = this.entities[id];
+        for (let ent of entityList) {
             if (ent.render.draw) {
                 ent.render.draw(ctx);
             }

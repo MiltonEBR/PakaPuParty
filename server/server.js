@@ -30,6 +30,13 @@ io.on('connection', (client) => {
 
     client.on('disconnecting', handleDisconnecting);
 
+    client.on('preview', handlePreview);
+
+    client.on('confirmTurn', () => {
+        //Game logic
+        console.log('Confirmed');
+    });
+
     function handleCreateGame(msg) {
         const username = msg.username;
         if (!verifyUsername(username)) {
@@ -216,5 +223,13 @@ io.on('connection', (client) => {
         io.sockets
             .in(roomName)
             .emit('colorChange', { username: targetPlayer.username, color: targetPlayer.color });
+    }
+
+    function handlePreview(data) {
+        const roomName = clientRooms[client.id];
+        if (clientPlayerNumber[client.id] === data.number) {
+            const username = games[roomName].playerList[data.number - 1].username;
+            io.sockets.in(roomName).emit('preview', { username, item: data.item });
+        }
     }
 });

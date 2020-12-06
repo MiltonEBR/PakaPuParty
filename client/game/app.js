@@ -270,7 +270,27 @@ function addPlayerScoreBoard(name, points, color) {
     scoreBoard.appendChild(playerHolder);
 }
 
+const dice = document.getElementById('dice');
+
+function initItemButtons() {
+    dice.addEventListener('click', () => {
+        sock.emit('rollDice', { username: playerUsername, number: playerNumber });
+    });
+
+    disableItems();
+}
+
+function disableItems() {
+    dice.disabled = true;
+}
+
+function enableItems() {
+    dice.disabled = false;
+}
+
 function initGame() {
+    initItemButtons();
+
     sock.on('init', (data) => {
         handleInit(data);
         disableLobby();
@@ -280,6 +300,10 @@ function initGame() {
     sock.on('playerTurn', (username) => {
         const turnHolder = scoreBoard.querySelector(`#holder-${username}`);
         turnHolder.classList.add('current-turn');
+
+        if (username === playerUsername) {
+            enableItems();
+        }
     });
 
     const gameCanvas = document.querySelector('canvas');

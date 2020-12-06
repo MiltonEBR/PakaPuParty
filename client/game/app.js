@@ -300,7 +300,7 @@ function initGame() {
         handleInit(data);
         disableLobby();
 
-        world.createTxt({ id: '#1', position: { x: -10, y: -10 } });
+        world.createTurnIndicator({ id: '#1', position: { x: -10, y: -10 } });
         renderer.run();
     });
     // sock.on('update', update);

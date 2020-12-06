@@ -3,6 +3,18 @@ class World {
         this._entities = {};
     }
 
+    containtsId(id) {
+        return this._entities[id] ? true : false;
+    }
+
+    moveOutOfVision(id) {
+        const ent = this._entities[id];
+        if (ent) {
+            ent.position.x = -100;
+            ent.position.y = -100;
+        }
+    }
+
     deleteEntity(id) {
         delete this._entities[id];
     }
@@ -15,23 +27,45 @@ class World {
         return true;
     }
 
-    createTurnIndicator(initialData) {
+    createMessage(initialData, txt) {
+        const newMsg = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'rgb(0, 0, 0)';
+                ctx.font = '40px Arial';
+                let x, y;
+                x = newMsg.position.x;
+                y = newMsg.position.y;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'Middle';
+                ctx.fillText(txt, x, y);
+            },
+            index: 10,
+        });
+
+        return newMsg;
+    }
+
+    createTurnIndicator(initialData, player) {
         const newTxt = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'rgb(0, 0, 0)';
                 ctx.font = '20px Arial';
                 let x, y;
-                x = this.player.position.x;
-                y = this.player.position.y;
+                x = newTxt.player.position.x;
+                y = newTxt.player.position.y;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'Middle';
                 ctx.fillText('Turn', x, y - 40);
             },
             index: 10,
         });
-        newTxt.render.player = {
-            position: { x: initialData.position.x, y: initialData.position.y },
-        };
+        if (player) {
+            newTxt.player = player;
+        } else {
+            newTxt.player = {
+                position: { x: initialData.position.x, y: initialData.position.y },
+            };
+        }
 
         return newTxt;
     }

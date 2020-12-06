@@ -291,9 +291,16 @@ function enableItems() {
 function initGame() {
     initItemButtons();
 
+    const gameCanvas = document.querySelector('canvas');
+    const renderer = new Renderer(world.entities, gameCanvas, {
+        wireframes: true,
+    });
+
     sock.on('init', (data) => {
         handleInit(data);
         disableLobby();
+
+        renderer.run();
     });
     // sock.on('update', update);
 
@@ -305,13 +312,6 @@ function initGame() {
             enableItems();
         }
     });
-
-    const gameCanvas = document.querySelector('canvas');
-
-    const renderer = new Renderer(world.entities, gameCanvas, {
-        wireframes: true,
-    });
-    renderer.run();
 
     function handleInit(dataObj) {
         const tiles = dataObj.tiles,

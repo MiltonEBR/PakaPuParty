@@ -38,7 +38,7 @@ class Renderer {
             let optionsWireframe =
                 options.wireframes && (ent.render.wireframe || ent.render.wireframe === undefined);
 
-            if (optionsWireframe || ent.render.wireframe) {
+            if ((optionsWireframe || ent.render.wireframe) && ent.vertices) {
                 ctx.beginPath();
                 ctx.moveTo(ent.vertices[0].x, ent.vertices[0].y);
 

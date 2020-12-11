@@ -32,10 +32,7 @@ io.on('connection', (client) => {
 
     client.on('preview', handlePreview);
 
-    client.on('confirmTurn', () => {
-        //Game logic
-        console.log('Confirmed');
-    });
+    client.on('confirmTurn', handleConfirmTurn);
 
     function handleCreateGame(msg) {
         const username = msg.username;
@@ -50,7 +47,7 @@ io.on('connection', (client) => {
 
         client.join(roomName);
 
-        let playerNumber = games[roomName].createPlayer(username);
+        let playerNumber = games[roomName].createPlayer(username, client);
         clientPlayerNumber[client.id] = playerNumber;
         // let serializedData = games[roomName].serializeAll();
         let serializedData = games[roomName].playerList.map((player) => {
@@ -230,6 +227,20 @@ io.on('connection', (client) => {
         if (clientPlayerNumber[client.id] === data.number) {
             const username = games[roomName].playerList[data.number - 1].username;
             io.sockets.in(roomName).emit('preview', { username, item: data.item });
+        }
+    }
+
+    function handleConfirmTurn(data) {
+        const roomName = clientRooms[client.id];
+        if (
+            clientPlayerNumber[client.id] === data.number &&
+            data.number - 1 === games[roomName].currentTurn
+        ) {
+            const username = games[roomName].playerList[data.number - 1].username;
+            if (data.item === 'dice') {
+                const dice = games[roomName].throwDice(data.number - 1);
+                io.sockets.in(roomName).emit('confirmTurn', { username, item: 'dice', val: dice });
+            }
         }
     }
 });

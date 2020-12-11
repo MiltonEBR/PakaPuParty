@@ -316,7 +316,7 @@ function initGame() {
         );
         renderer.run();
     });
-    // sock.on('update', update);
+    sock.on('update', update);
 
     sock.on('playerTurn', (data) => {
         const username = data.username,

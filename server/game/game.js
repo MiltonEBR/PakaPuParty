@@ -39,6 +39,24 @@ class Game {
             world: 0x0001,
         };
 
+        Events.on(this.engine, 'collisionStart', (e) => {
+            for (let pair of e.pairs) {
+                const bodyA = pair.bodyA,
+                    bodyB = pair.bodyB;
+                let playerInstance =
+                    bodyA.label === 'player' ? bodyA : bodyB.label === 'player' ? bodyB : null;
+                let tile = bodyA.label === 'tile' ? bodyA : bodyB.label === 'tile' ? bodyB : null;
+
+                if (playerInstance && tile) {
+                    const fullPlayer = this._playerList.find(
+                        (player) => player.instance.id === playerInstance.id
+                    );
+
+                    fullPlayer.tileCollision();
+                }
+            }
+        });
+
         this.createBoard();
     }
 
@@ -111,6 +129,10 @@ class Game {
         return this._inProgress;
     }
 
+    get currentTurn() {
+        return this._currentTurn;
+    }
+
     get playerList() {
         return this._playerList;
     }
@@ -126,6 +148,7 @@ class Game {
     startGame() {
         this._inProgress = true;
         this._currentTurn = 0;
+        this.playerList[this._currentTurn].turn();
         return this._playerList[this._currentTurn];
     }
 
@@ -134,10 +157,31 @@ class Game {
         this._gameBoard.createBoard('debug', { x: 100, y: 200 });
     }
 
-    createPlayer(name) {
-        const newPlayer = new Player(name, this._gameBoard.tiles[0], this);
+    createPlayer(name, sock) {
+        const newPlayer = new Player(name, this._gameBoard.tiles[0], this, sock);
         newPlayer.color = this.getNextColor();
         this._readyList.push(false);
+        // const a = e.pairs[0].bodyA;
+        // const b = e.pairs[0].bodyB;
+        // let playerColl;
+        // let tileColl;
+        // if (a.label === 'player') {
+        //     playerColl = a;
+        // } else if (b.label === 'player') {
+        //     playerColl = b;
+        // }
+        // if (b.label === 'tile') {
+        //     tileColl = b;
+        // } else if (a.label === 'tile') {
+        //     tileColl = a;
+        // }
+        // if (playerColl && tileColl) {
+        //     if (playerColl.game.targetTile === tileColl) {
+        //         playerColl.game.stop();
+        //         dirArrows.setToTile(playerColl.game.currentTile);
+        //     }
+        // }
+
         return this._playerList.push(newPlayer);
     }
 
@@ -181,6 +225,16 @@ class Game {
             return player.serializeAll();
         });
         return { players, tiles: this._gameBoard.serialize() };
+    }
+
+    throwDice(playerNum) {
+        const diceRes = Math.floor(Math.random() * 6) + 1;
+
+        setTimeout(() => {
+            this._playerList[playerNum].move(diceRes);
+        }, 1500);
+
+        return diceRes;
     }
 }
 

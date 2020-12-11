@@ -325,15 +325,19 @@ function initGame() {
         turnHolder.classList.add('current-turn');
 
         world.updateEntity('#1', { player: world.entities[id] });
-        if (username === playerUsername) {
-            enableItems();
-        }
+    });
+
+    sock.on('yourTurn', () => {
+        enableItems();
     });
 
     sock.on('preview', (data) => {
         const username = data.username;
         if (username === playerUsername) {
-            world.updateEntity('#2', { position: { x: gameCanvas.width / 2, y: 30 } });
+            world.updateEntity('#2', {
+                position: { x: gameCanvas.width / 2, y: 30 },
+                txt: 'Click to throw dice',
+            });
             turn.item = data.item;
             turn.clicked = true;
         }
@@ -341,6 +345,23 @@ function initGame() {
         switch (data.item) {
             case 'dice':
                 console.log('Player ' + username + ' clicked the dice once');
+                break;
+
+            default:
+                break;
+        }
+    });
+
+    sock.on('confirmTurn', (data) => {
+        if (data.username === playerUsername) {
+            disableItems();
+        }
+        switch (data.item) {
+            case 'dice':
+                world.updateEntity('#2', {
+                    position: { x: gameCanvas.width / 2, y: 30 },
+                    txt: `${data.username} threw a ${data.val}`,
+                });
                 break;
 
             default:

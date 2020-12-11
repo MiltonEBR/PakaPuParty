@@ -52,7 +52,7 @@ class Game {
                         (player) => player.instance.id === playerInstance.id
                     );
 
-                    fullPlayer.tileCollision();
+                    fullPlayer.tileCollision(tile);
                 }
             }
         });
@@ -231,7 +231,7 @@ class Game {
         const diceRes = Math.floor(Math.random() * 6) + 1;
 
         setTimeout(() => {
-            this._playerList[playerNum].move(diceRes);
+            this._playerList[playerNum].moveTiles(diceRes);
         }, 1500);
 
         return diceRes;

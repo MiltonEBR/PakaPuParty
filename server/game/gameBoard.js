@@ -29,6 +29,18 @@ class GameBoard {
                 });
             };
 
+            tile.getWalkableTiles = () => {
+                const walkableTiles = {};
+
+                for (let side of ['top', 'bot', 'left', 'right']) {
+                    if (tile[side].tile && tile[side].canMove) {
+                        walkableTiles[side] = tile[side].tile;
+                    }
+                }
+
+                return walkableTiles;
+            };
+
             tile.orientation = 0;
 
             tile.updateOrientation = () => {

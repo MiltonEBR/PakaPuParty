@@ -37,10 +37,11 @@ class World {
                 y = newMsg.position.y;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'Middle';
-                ctx.fillText(txt, x, y);
+                ctx.fillText(newMsg.txt, x, y);
             },
             index: 10,
         });
+        newMsg.txt = txt;
 
         return newMsg;
     }

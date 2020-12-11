@@ -31,7 +31,7 @@ class Player {
             this.moveTo(availableTiles[availableKeys[0]].position);
         } else {
             this._instance.frictionAir = 0.05;
-            sock.emit('selectDirection', { options: availableKeys });
+            this._socket.emit('selectDirection', { options: availableKeys });
         }
     }
 
@@ -88,7 +88,7 @@ class Player {
         const { x, y } = position;
         const playerSize = 50;
         this._instance = this._game.createInstance(x, y, playerSize, playerSize, {
-            frictionAir: 0.0,
+            frictionAir: 0.05,
             // restitution: 0.0,
             // density: 1,
             collisionFilter: {

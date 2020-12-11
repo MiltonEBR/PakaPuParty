@@ -298,6 +298,9 @@ function enableItems() {
     dice.disabled = false;
 }
 
+let dirArrows;
+let yourEntity;
+
 function initGame() {
     initItemButtons();
 
@@ -314,6 +317,7 @@ function initGame() {
             { id: '#2', position: { x: gameCanvas.width / 2, y: -100 } },
             'Click to throw dice'
         );
+        dirArrows = world.createDirArrows('#3', yourEntity);
         renderer.run();
     });
     sock.on('update', update);
@@ -369,6 +373,10 @@ function initGame() {
         }
     });
 
+    sock.on('selectDirection', (data) => {
+        console.log(dirArrows.getArea('top'));
+    });
+
     function handleInit(dataObj) {
         const tiles = dataObj.tiles,
             players = dataObj.players;
@@ -385,6 +393,9 @@ function initGame() {
                     newPlayer.points,
                     newPlayer.render.strokeStyle
                 );
+                if (newPlayer.username === playerUsername) {
+                    yourEntity = newPlayer;
+                }
             } //Else throw an error?
         }
     }

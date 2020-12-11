@@ -46,6 +46,77 @@ class World {
         return newMsg;
     }
 
+    createDirArrows(id, player) {
+        const width = 30,
+            heigth = 40;
+
+        const initialData = { id, position: { x: -50, y: -50 } };
+
+        initialData.id = id + '.1';
+        const top = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'red';
+                top.position = {
+                    x: top.player.position.x,
+                    y: top.player.position.y - 50,
+                };
+                top.size = { x: width, y: heigth };
+                ctx.fillRect(top.position.x, top.position.y, top.size.x, top.size.y);
+            },
+        });
+
+        initialData.id = id + '.2';
+        const bot = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'red';
+                bot.position = {
+                    x: bot.player.position.x,
+                    y: bot.player.position.y + 50,
+                };
+                bot.size = { x: width, y: heigth };
+                ctx.fillRect(bot.position.x, bot.position.y, bot.size.x, bot.size.y);
+            },
+        });
+
+        initialData.id = id + '.3';
+        const right = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'red';
+                right.position = {
+                    x: right.player.position.x + 50,
+                    y: right.player.position.y,
+                };
+                right.size = { x: heigth, y: width };
+                ctx.fillRect(right.position.x, right.position.y, right.size.x, right.size.y);
+            },
+        });
+
+        initialData.id = id + '.4';
+        const left = this.createEntity(initialData, {
+            draw(ctx) {
+                ctx.fillStyle = 'red';
+                left.position = {
+                    x: left.player.position.x - 50,
+                    y: left.player.position.y,
+                };
+                left.size = { x: heigth, y: width };
+                ctx.fillRect(left.position.x, left.position.y, left.size.x, left.size.y);
+            },
+        });
+
+        const dirArrows = { top, bot, left, right };
+
+        for (let side in dirArrows) {
+            dirArrows[side].player = player;
+        }
+
+        dirArrows.getArea = (side) => {
+            return { position: dirArrows[side].position, size: dirArrows[side].size };
+        };
+
+        return dirArrows;
+    }
+
     createTurnIndicator(initialData, player) {
         const newTxt = this.createEntity(initialData, {
             draw(ctx) {

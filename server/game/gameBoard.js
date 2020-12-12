@@ -198,13 +198,32 @@ class GameBoard {
         if (name === 'debug') {
             addTile('right');
             canMove('left', false);
+            addTile('right');
+            canMove('left', false);
+
             addTile('top', true);
+            addTile('bot', true);
+
             addTile('right');
+            canMove('left', false);
             addTile('right');
+            canMove('left', false);
+
             addTile('bot');
+            canMove('top', false);
+            addTile('bot');
+            canMove('top', false);
+
             addTile('left');
+            canMove('right', false);
+            addTile('left');
+            canMove('right', false);
+
             addTile('top');
+            canMove('bot', false);
             addTile('top');
+            canMove('bot', false);
+
             updateTileOrientation();
         }
     }

@@ -56,62 +56,93 @@ class World {
         const top = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'red';
-                top.position = {
-                    x: top.player.position.x,
-                    y: top.player.position.y - 50,
-                };
-                top.size = { x: width, y: heigth };
+                top.updatePos();
                 ctx.fillRect(top.position.x, top.position.y, top.size.x, top.size.y);
             },
+            hide: true,
         });
+        top.updatePos = () => {
+            top.position = {
+                x: top.player.position.x - width / 2,
+                y: top.player.position.y - 30 - heigth,
+            };
+            top.size = { x: width, y: heigth };
+        };
 
         initialData.id = id + '.2';
         const bot = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'red';
-                bot.position = {
-                    x: bot.player.position.x,
-                    y: bot.player.position.y + 50,
-                };
-                bot.size = { x: width, y: heigth };
+                bot.updatePos();
                 ctx.fillRect(bot.position.x, bot.position.y, bot.size.x, bot.size.y);
             },
+            hide: true,
         });
+        bot.updatePos = () => {
+            bot.position = {
+                x: bot.player.position.x - width / 2,
+                y: bot.player.position.y + 30,
+            };
+            bot.size = { x: width, y: heigth };
+        };
 
         initialData.id = id + '.3';
         const right = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'red';
-                right.position = {
-                    x: right.player.position.x + 50,
-                    y: right.player.position.y,
-                };
-                right.size = { x: heigth, y: width };
+                right.updatePos();
                 ctx.fillRect(right.position.x, right.position.y, right.size.x, right.size.y);
             },
+            hide: true,
         });
+        right.updatePos = () => {
+            right.position = {
+                x: right.player.position.x + 30,
+                y: right.player.position.y - width / 2,
+            };
+            right.size = { x: heigth, y: width };
+        };
 
         initialData.id = id + '.4';
         const left = this.createEntity(initialData, {
             draw(ctx) {
                 ctx.fillStyle = 'red';
-                left.position = {
-                    x: left.player.position.x - 50,
-                    y: left.player.position.y,
-                };
-                left.size = { x: heigth, y: width };
+                left.updatePos();
                 ctx.fillRect(left.position.x, left.position.y, left.size.x, left.size.y);
             },
+            hide: true,
         });
+        left.updatePos = () => {
+            left.position = {
+                x: left.player.position.x - 30 - heigth,
+                y: left.player.position.y - width / 2,
+            };
+            left.size = { x: heigth, y: width };
+        };
 
         const dirArrows = { top, bot, left, right };
 
         for (let side in dirArrows) {
             dirArrows[side].player = player;
+            dirArrows[side].updatePos();
         }
 
         dirArrows.getArea = (side) => {
             return { position: dirArrows[side].position, size: dirArrows[side].size };
+        };
+
+        dirArrows.setVisible = (sides) => {
+            sides.forEach((side) => {
+                if (dirArrows[side]) {
+                    dirArrows[side].render.hide = false;
+                }
+            });
+        };
+
+        dirArrows.hide = () => {
+            for (let side in dirArrows) {
+                dirArrows[side].render = hide = true;
+            }
         };
 
         return dirArrows;
@@ -195,6 +226,11 @@ class World {
         }
         if (renderSettings.draw) {
             render.draw = renderSettings.draw;
+        }
+        if (renderSettings.hide) {
+            render.hide = true;
+        } else {
+            render.hide = false;
         }
 
         this._entities[id] = newEntity;

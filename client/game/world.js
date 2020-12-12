@@ -140,8 +140,8 @@ class World {
         };
 
         dirArrows.hide = () => {
-            for (let side in dirArrows) {
-                dirArrows[side].render = hide = true;
+            for (let side of ['top', 'bot', 'right', 'left']) {
+                dirArrows[side].render.hide = true;
             }
         };
 

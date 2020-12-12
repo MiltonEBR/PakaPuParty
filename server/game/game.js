@@ -231,10 +231,17 @@ class Game {
         const diceRes = Math.floor(Math.random() * 6) + 1;
 
         setTimeout(() => {
-            this._playerList[playerNum].moveTiles(diceRes);
+            this._playerList[playerNum].setMoves(diceRes);
+            this._playerList[playerNum].moveTiles();
         }, 1500);
 
         return diceRes;
+    }
+
+    emitToPlayers(emit, data) {
+        for (let player of this._playerList) {
+            player.socket.emit(emit, data);
+        }
     }
 }
 

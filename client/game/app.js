@@ -306,7 +306,8 @@ function initItemButtons() {
             for (let side of sides) {
                 dirArrows[side];
                 if (isInside(mousePos, dirArrows.getArea(side)) && !dirArrows[side].render.hide) {
-                    console.log(side + ' clicked');
+                    dirArrows.hide();
+                    sock.emit('selectDirection', { number: playerNumber, dir: side });
                     break;
                 }
             }
@@ -369,20 +370,26 @@ function initGame() {
 
     sock.on('preview', (data) => {
         const username = data.username;
-        if (username === playerUsername) {
-            world.updateEntity('#2', {
-                position: { x: gameCanvas.width / 2, y: 30 },
-                txt: 'Click to throw dice',
-            });
-            turn.item = data.item;
-            turn.clicked = true;
-        }
 
         switch (data.item) {
             case 'dice':
+                if (username === playerUsername) {
+                    world.updateEntity('#2', {
+                        position: { x: gameCanvas.width / 2, y: 30 },
+                        txt: 'Click to throw dice',
+                    });
+                    turn.item = data.item;
+                    turn.clicked = true;
+                }
                 console.log('Player ' + username + ' clicked the dice once');
                 break;
 
+            case 'diceLeft':
+                world.updateEntity('#2', {
+                    position: { x: gameCanvas.width / 2, y: 30 },
+                    txt: username + ' has ' + data.val + ' moves left',
+                });
+                break;
             default:
                 break;
         }
@@ -391,6 +398,8 @@ function initGame() {
     sock.on('confirmTurn', (data) => {
         if (data.username === playerUsername) {
             disableItems();
+            turn.clicked = false;
+            turn.item = '';
         }
         switch (data.item) {
             case 'dice':

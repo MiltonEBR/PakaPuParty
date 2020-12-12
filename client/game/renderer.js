@@ -31,6 +31,10 @@ class Renderer {
         entityList.sort((a, b) => a.render.index - b.render.index); //Most eficient sort method?
 
         for (let ent of entityList) {
+            if (ent.render.hide) {
+                continue;
+            }
+
             if (ent.render.draw) {
                 ent.render.draw(ctx);
             }

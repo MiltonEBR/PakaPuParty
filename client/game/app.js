@@ -298,17 +298,17 @@ function initItemButtons() {
             sock.emit('confirmTurn', { number: playerNumber, item: turn.item });
         }
 
-        if (selectDir) {
+        if (selectDir && dirArrows !== undefined) {
             const mousePos = getMousePos(gameCanvas, e);
 
-            if (isInside(mousePos, dirArrows.getArea('top'))) {
-                console.log('top clicked');
-            } else if (isInside(mousePos, dirArrows.getArea('bot'))) {
-                console.log('bot clicked');
-            } else if (isInside(mousePos, dirArrows.getArea('right'))) {
-                console.log('right clicked');
-            } else if (isInside(mousePos, dirArrows.getArea('left'))) {
-                console.log('left clicked');
+            const sides = ['top', 'left', 'right', 'bot'];
+
+            for (let side of sides) {
+                dirArrows[side];
+                if (isInside(mousePos, dirArrows.getArea(side)) && !dirArrows[side].render.hide) {
+                    console.log(side + ' clicked');
+                    break;
+                }
             }
         }
     });

@@ -34,6 +34,8 @@ io.on('connection', (client) => {
 
     client.on('confirmTurn', handleConfirmTurn);
 
+    client.on('selectDirection', handleSelectDirection);
+
     function handleCreateGame(msg) {
         const username = msg.username;
         if (!verifyUsername(username)) {
@@ -96,7 +98,7 @@ io.on('connection', (client) => {
             return;
         }
         clientRooms[client.id] = roomName;
-        let playerNumber = games[roomName].createPlayer(username);
+        let playerNumber = games[roomName].createPlayer(username, client);
         clientPlayerNumber[client.id] = playerNumber;
         let serializedData = games[roomName].playerList.map((player) => {
             return player.serializeAll();
@@ -241,6 +243,16 @@ io.on('connection', (client) => {
                 const dice = games[roomName].throwDice(data.number - 1);
                 io.sockets.in(roomName).emit('confirmTurn', { username, item: 'dice', val: dice });
             }
+        }
+    }
+
+    function handleSelectDirection(data) {
+        const roomName = clientRooms[client.id];
+        if (
+            clientPlayerNumber[client.id] === data.number &&
+            data.number - 1 === games[roomName].currentTurn
+        ) {
+            games[roomName].playerList[data.number - 1].moveTiles(data.dir);
         }
     }
 });

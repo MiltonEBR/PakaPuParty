@@ -273,11 +273,43 @@ function addPlayerScoreBoard(name, points, color) {
 const gameCanvas = document.querySelector('canvas');
 const dice = document.getElementById('dice');
 const turn = { item: '', clicked: false };
+let selectDir = false;
+
+function getMousePos(canvas, event) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+    };
+}
+
+function isInside(pos, rect) {
+    return (
+        pos.x > rect.position.x &&
+        pos.x < rect.position.x + rect.size.x &&
+        pos.y < rect.position.y + rect.size.y &&
+        pos.y > rect.position.y
+    );
+}
 
 function initItemButtons() {
-    gameCanvas.addEventListener('click', () => {
+    gameCanvas.addEventListener('click', (e) => {
         if (turn.clicked) {
             sock.emit('confirmTurn', { number: playerNumber, item: turn.item });
+        }
+
+        if (selectDir) {
+            const mousePos = getMousePos(gameCanvas, e);
+
+            if (isInside(mousePos, dirArrows.getArea('top'))) {
+                console.log('top clicked');
+            } else if (isInside(mousePos, dirArrows.getArea('bot'))) {
+                console.log('bot clicked');
+            } else if (isInside(mousePos, dirArrows.getArea('right'))) {
+                console.log('right clicked');
+            } else if (isInside(mousePos, dirArrows.getArea('left'))) {
+                console.log('left clicked');
+            }
         }
     });
 
@@ -374,7 +406,10 @@ function initGame() {
     });
 
     sock.on('selectDirection', (data) => {
-        console.log(dirArrows.getArea('top'));
+        setTimeout(() => {
+            dirArrows.setVisible([...data.options]);
+            selectDir = true;
+        }, 1000);
     });
 
     function handleInit(dataObj) {

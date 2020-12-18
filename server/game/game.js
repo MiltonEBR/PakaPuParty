@@ -152,6 +152,10 @@ class Game {
         return this._playerList[this._currentTurn];
     }
 
+    nextTurn() {
+        //Next turn logic
+    }
+
     createBoard() {
         this._gameBoard = new GameBoard(this);
         this._gameBoard.createBoard('debug', { x: 100, y: 200 });

@@ -97,6 +97,7 @@ class Player {
 
             if (this.movesLeft - 1 <= 0) {
                 const game = this._game;
+                this._turn = false;
                 setTimeout(() => {
                     game.nextTurn();
                 }, 1500);
@@ -105,7 +106,7 @@ class Player {
 
         this.movesLeft = Math.max(Math.min(this.movesLeft - 1, Math.max(0, 6)), Math.min(0, 6));
 
-        if (this.movesLeft < 1) {
+        if (this.movesLeft < 1 || !this._turn) {
             this._instance.frictionAir = 0.05;
         } else {
             this.moveTiles();

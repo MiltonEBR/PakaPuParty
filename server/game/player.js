@@ -13,12 +13,14 @@ class Player {
         this._color = '';
         this.movesLeft = 0;
         this.speed = 2;
+        this._turn = false;
 
         this.spawn(spawnTile.position);
     }
 
     turn() {
         this._socket.emit('yourTurn');
+        this._turn = true;
     }
 
     setMoves(num) {
@@ -86,12 +88,19 @@ class Player {
 
     tileCollision(tile) {
         this._currentTile = tile;
-        if (this.movesLeft - 1 >= 0) {
+        if (this._turn) {
             this._game.emitToPlayers('preview', {
                 item: 'diceLeft',
                 val: this.movesLeft - 1,
                 username: this._name,
             });
+
+            if (this.movesLeft - 1 <= 0) {
+                const game = this._game;
+                setTimeout(() => {
+                    game.nextTurn();
+                }, 1500);
+            }
         }
 
         this.movesLeft = Math.max(Math.min(this.movesLeft - 1, Math.max(0, 6)), Math.min(0, 6));

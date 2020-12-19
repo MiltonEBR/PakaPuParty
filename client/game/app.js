@@ -358,10 +358,19 @@ function initGame() {
     sock.on('playerTurn', (data) => {
         const username = data.username,
             id = data.id;
+
+        const currentTurn = scoreBoard.querySelector('.current-turn');
+        if (currentTurn) {
+            currentTurn.classList.remove('current-turn');
+        }
         const turnHolder = scoreBoard.querySelector(`#holder-${username}`);
         turnHolder.classList.add('current-turn');
 
         world.updateEntity('#1', { player: world.entities[id] });
+        world.updateEntity('#2', {
+            position: { x: gameCanvas.width / 2, y: 40 },
+            txt: ' ',
+        });
     });
 
     sock.on('yourTurn', () => {

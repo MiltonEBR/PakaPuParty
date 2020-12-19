@@ -116,15 +116,17 @@ class Player {
     }
 
     spawn(position) {
-        const { x, y } = position;
+        let { x, y } = position;
+        x += Math.floor(Math.random() * 21) * (Math.random() < 0.5 ? -1 : 1);
+        y += Math.floor(Math.random() * 21) * (Math.random() < 0.5 ? -1 : 1);
         const playerSize = 50;
         this._instance = this._game.createInstance(x, y, playerSize, playerSize, {
             frictionAir: 0.05,
-            inertia: Infinity,
+            // inertia: Infinity,
             // restitution: 0.0,
             // density: 1,
             collisionFilter: {
-                category: this._game.filterList.world,
+                category: this._game.filterList.player,
                 mask: this._game.filterList.world,
             },
         });

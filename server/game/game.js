@@ -37,6 +37,7 @@ class Game {
 
         this._filterList = {
             world: 0x0001,
+            player: 0x0002,
         };
 
         Events.on(this.engine, 'collisionStart', (e) => {
@@ -153,7 +154,13 @@ class Game {
     }
 
     nextTurn() {
-        //Next turn logic
+        this._currentTurn = (this._currentTurn + 1) % this.playerList.length;
+        const currentPlayer = this.playerList[this._currentTurn];
+        currentPlayer.turn();
+        this.emitToPlayers('playerTurn', {
+            username: currentPlayer.username,
+            id: currentPlayer.instance.id,
+        });
     }
 
     createBoard() {

@@ -16,6 +16,6 @@ The reason the game uses [Matter.js](https://brm.io/matter-js/) it's because it 
 
 ## Why I stopped
 
-I decided to stop the development as the project wasn't a challenge anymore and became a cycle of implementing already known logic and fixing non-challenging problems.
+I decided to stop the development as the project wasn't a challenge anymore and became a cycle of implementing already known logic and fixing simple problems.
 
 And the challenges that I did encounter were about game-development rather than increasing my software developer skills, therefore I decided to finish this project unfinished but in a working state and focus into new topics and projects that I find interesting.

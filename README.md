@@ -1,4 +1,5 @@
 # PakaPuParty
+![](https://github.com/MiltonEBR/PakaPuParty/blob/main/readmelogo.png)
 ## The idea
 PakaPuParty was meant to be a multiplayer party game inspired by Mario Party, Pummel Party and browser games like agar.io and skribbl.io.
 The objective was to put into practice what I learned from a 52 hour bootcamp on JavaScript.

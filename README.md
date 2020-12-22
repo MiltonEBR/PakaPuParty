@@ -7,6 +7,8 @@ The objective was to put into practice what I learned from a 52 hour bootcamp on
 ## What it is
 A game can be created with up to 8 players, in this game, you can throw the dice and select in which direction you want to go. Once your moves are done, the turn changes to the next player and continues indefinetly.
 
+![Demo GIF](https://github.com/MiltonEBR/PakaPuParty/blob/main/demo.gif)
+
 The server was made in [Node.js](https://nodejs.org) with the use of [Express.js](https://expressjs.com) and [socket.io](https://socket.io/). Thanks to [socket.io](https://socket.io/) and it's rooms, players can create multiple rooms. Each room gives them a randomly generated code, that other people can use to join the game.
 Before the game starts, you are sent into a lobby where you can choose your color. Once all the players are ready, the game will start.
 
